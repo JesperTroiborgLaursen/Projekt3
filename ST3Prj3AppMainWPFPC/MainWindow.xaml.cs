@@ -1,5 +1,4 @@
-﻿using ST3Prj3AppMainWPFPC.Data;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,8 +12,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using AppMainWPFPC.Data;
 
-namespace ST3Prj3AppMainWPFPC
+namespace AppMainWPFPC
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

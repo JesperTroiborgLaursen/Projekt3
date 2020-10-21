@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ST3Prj3AppMainWPFPC.Data;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -8,8 +7,9 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using AppMainWPFPC.Data;
 
-namespace ST3Prj3AppMainWPFPC
+namespace AppMainWPFPC
 {
     /// <summary>
     /// Interaction logic for App.xaml

@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using AppMainWPFPC.Models;
 using Microsoft.EntityFrameworkCore;
-using ST3Prj3AppMainWPFPC.Models;
 
-namespace ST3Prj3AppMainWPFPC.Data
+namespace AppMainWPFPC.Data
 {
     public class EmployeeDbContext : DbContext
     {

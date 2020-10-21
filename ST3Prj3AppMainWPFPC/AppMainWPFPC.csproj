@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>AppMainWPFPC</AssemblyName>
+    <RootNamespace>AppMainWPFPC</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="3.1.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ST3Prj3BusinessLogicCore\BusinessLogicCore.csproj" />
+    <ProjectReference Include="..\ST3Prj3DataAccessLogicCore\DataAccessLogicCore.csproj" />
+    <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />
+    <ProjectReference Include="..\ST3Prj3InterfacesCore\InterfacesCore.csproj" />
+    <ProjectReference Include="..\ST3Prj3MainAndWPFLogicCorePC\MainAndWPFLogicCorePC.csproj" />
+  </ItemGroup>
+
+</Project>

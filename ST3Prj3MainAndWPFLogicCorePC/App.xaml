@@ -1,7 +1,7 @@
-﻿<Application x:Class="ST3Prj3MainAndWPFLogicCorePC.App"
+﻿<Application x:Class="MainAndWPFLogicCorePC.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ST3Prj3MainAndWPFLogicCorePC"
+             xmlns:local="clr-namespace:MainAndWPFLogicCorePC"
              Startup="OnStartup">
     <Application.Resources>
          

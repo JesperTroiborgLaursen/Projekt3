@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ST3Prj3AppMainWPFPC.Models
+namespace AppMainWPFPC.Models
 {
     public class Employee
     {

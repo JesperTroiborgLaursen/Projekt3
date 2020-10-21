@@ -1,19 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using ST3Prj3BusinessLogicCore.Controller;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
+using BusinessLogicCore.Controller;
 using System.Windows;
-using ST3Prj3InterfacesCore;
-using ST3Prj3DataAccessLogicCore.Data; //Using a EF Core DbContext
-using ST3Prj3DataAccessLogicCore.Boundaries;//Using own boundary classe
-using ST3Prj3BusinessLogicCore.Controller;
+using InterfacesCore;
+using DataAccessLogicCore.Data; //Using a EF Core DbContext
+using DataAccessLogicCore.Boundaries;//Using own boundary classe
 
-namespace ST3Prj3MainAndWPFLogicCorePC
+namespace MainAndWPFLogicCorePC
 {
     /// <summary>
     /// Interaction logic for App.xaml
