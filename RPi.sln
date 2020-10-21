@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3Prj3AppMainRPICore", "ST3Prj3AppMainRPICore\ST3Prj3AppMainRPICore.csproj", "{442877F4-A8A4-484C-BF16-6E3889F95FEF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3Prj3AppMainWPFPC", "ST3Prj3AppMainWPFPC\ST3Prj3AppMainWPFPC.csproj", "{90D3DCB9-2F5B-42CD-881A-EE307DCF1C20}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3Prj3BusinessLogicCore", "ST3Prj3BusinessLogicCore\ST3Prj3BusinessLogicCore.csproj", "{F8485F94-73B0-4DD5-A347-5EED25D276E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3Prj3DataAccessLogicCore", "ST3Prj3DataAccessLogicCore\ST3Prj3DataAccessLogicCore.csproj", "{AED7BA7E-0038-4B62-97C7-A3AA04A8E912}"
@@ -15,11 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3Prj3DomaineCore", "ST3Pr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3Prj3InterfacesCore", "ST3Prj3InterfacesCore\ST3Prj3InterfacesCore.csproj", "{38C16090-E27B-4A05-9890-57C596F1D556}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3Prj3MainAndWPFLogicCorePC", "ST3Prj3MainAndWPFLogicCorePC\ST3Prj3MainAndWPFLogicCorePC.csproj", "{F68EBEEA-39AC-4CB7-9205-A95F30D55D34}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ST3PRrj3PresentationLogicCoreRPI", "ST3PRJ3PresentationLogicCoreRPI\ST3PRrj3PresentationLogicCoreRPI.csproj", "{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WpfApp2", "WpfApp2\WpfApp2.csproj", "{69908FE0-BB55-4406-8DBC-8AF3B668880A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,10 +25,6 @@ Global
 		{442877F4-A8A4-484C-BF16-6E3889F95FEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{442877F4-A8A4-484C-BF16-6E3889F95FEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{442877F4-A8A4-484C-BF16-6E3889F95FEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{90D3DCB9-2F5B-42CD-881A-EE307DCF1C20}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{90D3DCB9-2F5B-42CD-881A-EE307DCF1C20}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{90D3DCB9-2F5B-42CD-881A-EE307DCF1C20}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{90D3DCB9-2F5B-42CD-881A-EE307DCF1C20}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F8485F94-73B0-4DD5-A347-5EED25D276E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F8485F94-73B0-4DD5-A347-5EED25D276E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8485F94-73B0-4DD5-A347-5EED25D276E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,18 +41,10 @@ Global
 		{38C16090-E27B-4A05-9890-57C596F1D556}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{38C16090-E27B-4A05-9890-57C596F1D556}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38C16090-E27B-4A05-9890-57C596F1D556}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F68EBEEA-39AC-4CB7-9205-A95F30D55D34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F68EBEEA-39AC-4CB7-9205-A95F30D55D34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F68EBEEA-39AC-4CB7-9205-A95F30D55D34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F68EBEEA-39AC-4CB7-9205-A95F30D55D34}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69908FE0-BB55-4406-8DBC-8AF3B668880A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69908FE0-BB55-4406-8DBC-8AF3B668880A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69908FE0-BB55-4406-8DBC-8AF3B668880A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69908FE0-BB55-4406-8DBC-8AF3B668880A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
