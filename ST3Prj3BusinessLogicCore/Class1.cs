@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ST3Prj3BusinessLogicCore
+namespace BusinessLogicCore
 {
     public class Class1
     {

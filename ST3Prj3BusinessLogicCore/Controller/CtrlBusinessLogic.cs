@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ST3Prj3InterfacesCore;
-using ST3Prj3DomaineCore;
+using InterfacesCore;
+using DomaineCore;
 
-namespace ST3Prj3BusinessLogicCore.Controller
+namespace BusinessLogicCore.Controller
 {
     public class CtrlBusinessLogic : iBusinessLogic
     {

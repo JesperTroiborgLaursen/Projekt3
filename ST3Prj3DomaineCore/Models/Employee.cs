@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace ST3Prj3DomaineCore.Models
+namespace DomaineCore.Models
 {
     public class Employee
     {

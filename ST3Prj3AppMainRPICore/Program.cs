@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using ST3PRJ3PresentationLogicCoreRPI.Boundaries;
-using ST3Prj3BusinessLogicCore.Controller; //Her findes den konkrete implementation af BL
-using ST3Prj3DataAccessLogicCore.Boundaries; //Her findes den konkrete implementation af DAL
-using ST3Prj3InterfacesCore; //Her er kontrakter/interfaces defineret
+using PresentationLogicCoreRPI.Boundaries;
+using BusinessLogicCore.Controller; //Her findes den konkrete implementation af BL
+using DataAccessLogicCore.Boundaries; //Her findes den konkrete implementation af DAL
+using InterfacesCore; //Her er kontrakter/interfaces defineret
 
-namespace ST3Prj3AppMainCore
+namespace AppMainCore
 {
     class Program
     {

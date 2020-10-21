@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  
+	<PropertyGroup>
+		<OutputType>Library</OutputType>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<RootNamespace>PresentationLogicCoreRPI</RootNamespace>
+		<AssemblyName>PresentationLogicCoreRPI</AssemblyName>
+	</PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />
+    <ProjectReference Include="..\ST3Prj3InterfacesCore\InterfacesCore.csproj" />
+  </ItemGroup>
+
+</Project>

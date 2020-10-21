@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 //using System.Windows.Forms;//Tilføjes
-using ST3Prj3InterfacesCore;
+using InterfacesCore;
 
 
-namespace ST3PRJ3PresentationLogicCoreRPI.Boundaries
+namespace PresentationLogicCoreRPI.Boundaries
 
 {
     public class SimpelCtrlRPIUI : iPresentationLogic

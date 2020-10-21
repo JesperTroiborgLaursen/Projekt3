@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ST3Prj3InterfacesCore.BusinesLogic
+namespace InterfacesCore.BusinesLogic
 {
     //Læg mærke til at namespace for projektet er udvidet med folderens navn "ST2Prj2Interfaces.BusinesLogik"
     interface InterfaceEnElleAndenController

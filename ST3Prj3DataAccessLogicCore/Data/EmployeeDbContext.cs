@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
-using ST3Prj3DomaineCore.Models;
+using DomaineCore.Models;
 
-namespace ST3Prj3DataAccessLogicCore.Data
+namespace DataAccessLogicCore.Data
 {
     public class EmployeeDbContext : DbContext
     {

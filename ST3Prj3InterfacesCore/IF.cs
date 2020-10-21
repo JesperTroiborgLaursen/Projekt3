@@ -5,7 +5,7 @@
 /// En yderliger opdeling af med namespaces under namespaces ST3Prj3InterfacesCore
 /// eks "ST3Prj3InterfacesCore.BusinessLogic.SpecialFunctions" kan overvejes.
 /// </summary>
-namespace ST3Prj3InterfacesCore
+namespace InterfacesCore
 {
     public interface iDataAccessLogic
     {

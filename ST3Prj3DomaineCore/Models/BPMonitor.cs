@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ST3Prj3DomaineCore.Models
+namespace DomaineCore.Models
 {
     class BPMonitor
     {
