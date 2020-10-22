@@ -10,6 +10,12 @@ namespace DomaineCore.Models
         public DateTime Date { get; set; }
 
         public List<Sample> SampleList;
+
+        public SamplePack(DateTime date, int id)
+        {
+            ID = id;
+            Date = date;
+        }
     }
 
 

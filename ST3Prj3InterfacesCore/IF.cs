@@ -15,8 +15,7 @@ namespace InterfacesCore
 {
     public interface IDataAccessLogic
     {
-        int getSomeData();//Signatur
-        void saveSomeData(int val);
+        int GetLastSamplePackID();//Signatur
     }
     public interface IBusinessLogic
     {
