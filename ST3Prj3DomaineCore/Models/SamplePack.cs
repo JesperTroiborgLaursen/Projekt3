@@ -9,6 +9,8 @@ namespace DomaineCore.Models
 
         public DateTime Date { get; set; }
 
-        public List<Sample> SampleList { get; set; }
+        public List<Sample> SampleList;
     }
+
+
 }

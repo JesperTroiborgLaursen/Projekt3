@@ -2,7 +2,7 @@
 {
     public class Sample
     {
-        private short value;
+        private short value = 10;
 
         public short Value
         {

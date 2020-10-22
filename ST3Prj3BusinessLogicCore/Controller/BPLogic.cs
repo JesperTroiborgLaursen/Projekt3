@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using InterfacesCore;
 using DomaineCore;
+using DomaineCore.Models;
 
 namespace BusinessLogicCore.Controller
 {
@@ -12,7 +13,7 @@ namespace BusinessLogicCore.Controller
     {
         public SamplePack ReadAdc()
         {
-
+            return null;
         }
     }
 }
