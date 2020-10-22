@@ -8,15 +8,15 @@ using DomaineCore;
 
 namespace BusinessLogicCore.Controller
 {
-    public class CtrlBusinessLogic : iBusinessLogic
+    public class BatteryLogic : iBusinessLogic
     {
-        private iDataAccessLogic currentDal;
+        private IDataAccessLogic currentDal;
         /// <summary>
         /// In this constructor the DI instance may come from injection done in Main, the RPI version.
         /// Or comming from a DI Container, the WPF version 
         /// </summary>
         /// <param name="mydal"></param>
-        public CtrlBusinessLogic(iDataAccessLogic mydal) 
+        public BatteryLogic(IDataAccessLogic mydal) 
         {
             this.currentDal = mydal;
         }

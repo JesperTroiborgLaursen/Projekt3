@@ -18,7 +18,7 @@ namespace AppMainCore
         //Her kan overvejes en global systemdatamodel som så injectes i den forskellige lag
         private iPresentationLogic icurrentGUIPL;     
         private iBusinessLogic icurrentBL;       
-        private iDataAccessLogic icurrentDAL;
+        private IDataAccessLogic icurrentDAL;
 
         static void Main(string[] args)
         {
@@ -30,7 +30,7 @@ namespace AppMainCore
                        
             //Opsætning af referencer til implementationer af interfaces 
             icurrentDAL = new CtrlDataAccessLogic(); 
-            icurrentBL = new CtrlBusinessLogic(icurrentDAL);
+            icurrentBL = new BPLogic(icurrentDAL);
             icurrentGUIPL = new  SimpelCtrlRPIUI(icurrentBL);
             //Eller omstil til en anden for UI (User Interface)
             //icurrentGUIPL = new AnotherGUI(icurrentBL); 
