@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterfacesCore", "ST3Prj3In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PresentationLogicCoreRPI", "ST3PRJ3PresentationLogicCoreRPI\PresentationLogicCoreRPI.csproj", "{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPi_dotnet_core_Console_Application1", "RPi_dotnet_core_Console_Application1\RPi_dotnet_core_Console_Application1.csproj", "{BBC4CB85-F8BC-4F63-A869-B93D30124807}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

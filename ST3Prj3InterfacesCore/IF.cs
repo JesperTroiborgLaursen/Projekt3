@@ -7,7 +7,7 @@
 /// </summary>
 namespace InterfacesCore
 {
-    public interface iDataAccessLogic
+    public interface IDataAccessLogic
     {
         int getSomeData();//Signatur
         void saveSomeData(int val);

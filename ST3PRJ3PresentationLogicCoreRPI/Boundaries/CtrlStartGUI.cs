@@ -23,31 +23,4 @@ namespace PresentationLogicCoreRPI.Boundaries
             currentBL.doAnAlogrithm();
         }
     }
-    public class CtrlWPFGUI : iPresentationLogic
-    {
-        private iBusinessLogic currentBL;
-        public CtrlWPFGUI(iBusinessLogic mybl)
-        {
-            this.currentBL = mybl;
-        }
-
-        [STAThread]  //Tilføjes 
-        public void startUpGUI()
-        {
-            //Application.EnableVisualStyles(); //Tilføjes
-            //Application.SetCompatibleTextRenderingDefault(false); //Tiføjes
-            //Application.DoEvents();// Tilføjes
-            //Application.Run(new FormRunDAQ(currentBL)); //Tilføjes !!Dobbelt Dependency Injection!!
-            //                                            //currentBL.doAnAlogrithm(); Kaldet er nu flyttet/delegeret til Windows Form.
-
-        }
-    }
-
-    public class AnotherGUI : iPresentationLogic
-    {
-        public void startUpGUI()
-        {
-            throw new NotImplementedException();
-        }
-    }
 }
