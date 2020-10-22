@@ -8,7 +8,7 @@ using DomaineCore;
 
 namespace BusinessLogicCore.Controller
 {
-    public class CalibrateLogic : iBusinessLogic
+    public class CalibrateLogic : IBusinessLogic
     {
         private IDataAccessLogic currentDal;
         /// <summary>
@@ -29,7 +29,7 @@ namespace BusinessLogicCore.Controller
 
         
 
-        int iBusinessLogic.DoAnAlogrithm()
+        int IBusinessLogic.DoAnAlogrithm()
         {
             int x = currentDal.getSomeData();
             x = x + 5;

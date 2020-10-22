@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppMainRPICore", "ST3Prj3AppMainRPICore\AppMainRPICore.csproj", "{442877F4-A8A4-484C-BF16-6E3889F95FEF}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogicCore", "ST3Prj3BusinessLogicCore\BusinessLogicCore.csproj", "{F8485F94-73B0-4DD5-A347-5EED25D276E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLogicCore", "ST3Prj3DataAccessLogicCore\DataAccessLogicCore.csproj", "{AED7BA7E-0038-4B62-97C7-A3AA04A8E912}"
@@ -15,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterfacesCore", "ST3Prj3In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PresentationLogicCoreRPI", "ST3PRJ3PresentationLogicCoreRPI\PresentationLogicCoreRPI.csproj", "{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPi_dotnet_core_Console_Application1", "RPi_dotnet_core_Console_Application1\RPi_dotnet_core_Console_Application1.csproj", "{BBC4CB85-F8BC-4F63-A869-B93D30124807}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPIMain", "RPIMain\RPIMain.csproj", "{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +21,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{442877F4-A8A4-484C-BF16-6E3889F95FEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{442877F4-A8A4-484C-BF16-6E3889F95FEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{442877F4-A8A4-484C-BF16-6E3889F95FEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{442877F4-A8A4-484C-BF16-6E3889F95FEF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F8485F94-73B0-4DD5-A347-5EED25D276E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F8485F94-73B0-4DD5-A347-5EED25D276E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8485F94-73B0-4DD5-A347-5EED25D276E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -47,10 +41,10 @@ Global
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BBC4CB85-F8BC-4F63-A869-B93D30124807}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

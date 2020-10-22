@@ -5,6 +5,12 @@
 /// En yderliger opdeling af med namespaces under namespaces ST3Prj3InterfacesCore
 /// eks "ST3Prj3InterfacesCore.BusinessLogic.SpecialFunctions" kan overvejes.
 /// </summary>
+
+using System.Security.Cryptography;
+using RaspberryPiCore.ADC;
+using RaspberryPiCore.TWIST;
+using RaspberryPiCore.LCD;
+
 namespace InterfacesCore
 {
     public interface IDataAccessLogic
@@ -12,14 +18,15 @@ namespace InterfacesCore
         int getSomeData();//Signatur
         void saveSomeData(int val);
     }
-    public interface iBusinessLogic
+    public interface IBusinessLogic
     {
         void doAnAlogrithm();
 
         int DoAnAlogrithm();
+
     }
 
-    public interface iPresentationLogic
+    public interface IPresentationLogic
     {
          void startUpGUI();
     }

@@ -10,4 +10,16 @@
     <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="RaspberryCore">
+      <HintPath>..\..\..\..\..\..\RaspberryPi\RaspberryCore.dll</HintPath>
+    </Reference>
+    <Reference Include="RaspberryPi">
+      <HintPath>..\..\..\..\..\..\RaspberryPi\RaspberryPi.dll</HintPath>
+    </Reference>
+    <Reference Include="RaspberryPiDll">
+      <HintPath>..\..\..\..\..\..\RaspberryPi\RaspberryPiDll.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

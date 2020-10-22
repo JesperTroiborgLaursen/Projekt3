@@ -10,10 +10,10 @@ using InterfacesCore;
 namespace PresentationLogicCoreRPI.Boundaries
 
 {
-    public class SimpelCtrlRPIUI : iPresentationLogic
+    public class SimpelCtrlRPIUI : IPresentationLogic
     {
-        private iBusinessLogic currentBL;
-        public SimpelCtrlRPIUI(iBusinessLogic mybl)
+        private IBusinessLogic currentBL;
+        public SimpelCtrlRPIUI(IBusinessLogic mybl)
         {
             this.currentBL = mybl;
            

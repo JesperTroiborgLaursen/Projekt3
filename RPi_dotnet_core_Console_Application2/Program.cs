@@ -2,27 +2,15 @@
 using RaspberryPiCore.ADC;
 using RaspberryPiCore.TWIST;
 using RaspberryPiCore.LCD;
-using RPI;
 
 
-namespace BPMeasurer
+namespace Raspberry_Pi_Dot_Net_Core_Console_Application3
 {
     class Program
     {
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-
-            SerLCD lcd = new SerLCD();
-
-            ADC1015 adc = new ADC1015();
-            RPi rpi = new RPi();
-            adc.readADC_Differential_2_3();
-
-            ADC1115 adc2 = new ADC1115();
-
-
-
         }
     }
 }
