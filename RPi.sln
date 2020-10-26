@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterfacesCore", "ST3Prj3In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PresentationLogicCoreRPI", "ST3PRJ3PresentationLogicCoreRPI\PresentationLogicCoreRPI.csproj", "{44B5D29B-9A7E-4609-85B1-9B6B6BE96327}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RPIMain", "RPIMain\RPIMain.csproj", "{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPIMain", "RPIMain\RPIMain.csproj", "{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

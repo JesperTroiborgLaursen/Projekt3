@@ -8,7 +8,7 @@ using DomaineCore;
 
 namespace BusinessLogicCore.Controller
 {
-    public class CalibrateLogic : IBusinessLogic
+    public class CalibrateLogic// : IBusinessLogic
     {
         private IDataAccessLogic currentDal;
         /// <summary>
@@ -16,25 +16,25 @@ namespace BusinessLogicCore.Controller
         /// Or comming from a DI Container, the WPF version 
         /// </summary>
         /// <param name="mydal"></param>
-        public CalibrateLogic(IDataAccessLogic mydal) 
-        {
-            this.currentDal = mydal;
-        }
-        public void doAnAlogrithm()
-        {
-            int x = currentDal.getSomeData();
-            x =x + 5;
-            currentDal.saveSomeData(x);
-        }
+        //public CalibrateLogic(IDataAccessLogic mydal) 
+        //{
+        //    this.currentDal = mydal;
+        //}
+        //public void doAnAlogrithm()
+        //{
+        //    int x = currentDal.getSomeData();
+        //    x =x + 5;
+        //    currentDal.saveSomeData(x);
+        //}
 
         
 
-        int IBusinessLogic.DoAnAlogrithm()
-        {
-            int x = currentDal.getSomeData();
-            x = x + 5;
-            currentDal.saveSomeData(x);
-            return x;
-        }
+        //int IBusinessLogic.DoAnAlogrithm()
+        //{
+        //    int x = currentDal.getSomeData();
+        //    x = x + 5;
+        //    currentDal.saveSomeData(x);
+        //    return x;
+        //}
     }
 }

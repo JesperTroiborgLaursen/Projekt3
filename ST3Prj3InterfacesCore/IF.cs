@@ -7,6 +7,7 @@
 /// </summary>
 
 using System.Security.Cryptography;
+using DomaineCore.Models;
 using RaspberryPiCore.ADC;
 using RaspberryPiCore.TWIST;
 using RaspberryPiCore.LCD;
@@ -16,6 +17,11 @@ namespace InterfacesCore
     public interface IDataAccessLogic
     {
         int GetLastSamplePackID();//Signatur
+    }
+
+    public interface IDataBroadcastLogic
+    {
+        void BroadcastSamplePack(SamplePack samplePack);//Signatur
     }
     public interface IBusinessLogic
     {
