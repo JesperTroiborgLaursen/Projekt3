@@ -19,7 +19,7 @@ namespace DomaineCore.Models
 
         public override string ToString()
         {
-            string result = $"START \n {ID} \n {Date} \n";
+            string result = $"{ID} \n {Date} \n";
 
             foreach (var VARIABLE in SampleList)
             {

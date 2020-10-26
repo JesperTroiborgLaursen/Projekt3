@@ -4,11 +4,7 @@
     {
         private short value;
 
-        public short Value
-        {
-            get { return value; }
-            set { value = value; }
-        }
+        public short Value {get; set;}
 
     }
 }

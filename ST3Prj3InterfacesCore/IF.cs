@@ -23,16 +23,6 @@ namespace InterfacesCore
     {
         void BroadcastSamplePack(SamplePack samplePack);//Signatur
     }
-    public interface IBusinessLogic
-    {
-        void doAnAlogrithm();
 
-        int DoAnAlogrithm();
 
-    }
-
-    public interface IPresentationLogic
-    {
-         void startUpGUI();
-    }
 }
