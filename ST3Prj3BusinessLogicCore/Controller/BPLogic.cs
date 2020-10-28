@@ -13,7 +13,7 @@ using DataAccessLogicCore.Boundaries;
 
 namespace BusinessLogicCore.Controller
 {
-    public class BPLogic
+    public class BPLogic : IBusinessLogic
     {
         private ADC1015 adc;
         private CtrlDataAccessLogic cdal;
@@ -34,7 +34,7 @@ namespace BusinessLogicCore.Controller
             return samplePack;
         }
 
-        private int GenerateSamplePackID()
+        public int GenerateSamplePackID()
         {
             int lastId = cdal.GetLastSamplePackID();
             int newId = lastId++;

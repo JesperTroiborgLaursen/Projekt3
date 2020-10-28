@@ -24,5 +24,10 @@ namespace InterfacesCore
         void BroadcastSamplePack(SamplePack samplePack);//Signatur
     }
 
+    public interface IBusinessLogic
+    {
+        SamplePack ReadAdc();
+        int GenerateSamplePackID();
+    }
 
 }
