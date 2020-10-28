@@ -17,6 +17,11 @@ namespace DomaineCore.Models
             Date = date;
         }
 
+        public SamplePack()
+        {
+            
+        }
+
         public override string ToString()
         {
             string result = $"{ID} \n {Date} \n";

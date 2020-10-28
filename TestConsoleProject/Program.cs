@@ -4,6 +4,8 @@ using System.Net.Sockets;
 using System.Text;
 using BusinessLogicCore.Controller;
 using DataAccessLogicCore.Boundaries;
+using DomaineCore.Data;
+using DomaineCore.Models;
 
 namespace TestConsoleProject
 {
@@ -19,27 +21,31 @@ namespace TestConsoleProject
             //BPLogic bpLogic = new BPLogic();
 
             //broadcastLogic.BroadcastSamplePack(bpLogic.ReadAdc());
-            while (true)
-            {
-                Console.WriteLine("Ready to broadcast");
-                BroadcastMessage(Console.ReadLine());
-            }
+            //while (true)
+            //{
+            //    Console.WriteLine("Ready to broadcast");
+            //    BroadcastMessage(Console.ReadLine());
+            //}
 
-            void BroadcastMessage(String message)
-            {
-                IPAddress broadcast = IPAddress.Parse(ip);
-                Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+            //void BroadcastMessage(String message)
+            //{
+            //    IPAddress broadcast = IPAddress.Parse(ip);
+            //    Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-                byte[] sendbuf = Encoding.ASCII.GetBytes(message);
-                //byte[] sendbufhundred = new byte[100];
-                //sendbuf.CopyTo(sendbufhundred,0);
-                IPEndPoint ep = new IPEndPoint(broadcast, PORT);
+            //    byte[] sendbuf = Encoding.ASCII.GetBytes(message);
+            //    //byte[] sendbufhundred = new byte[100];
+            //    //sendbuf.CopyTo(sendbufhundred,0);
+            //    IPEndPoint ep = new IPEndPoint(broadcast, PORT);
 
-                s.SendTo(sendbuf, ep);
+            //    s.SendTo(sendbuf, ep);
 
-                Console.WriteLine("Message sent to the broadcast address");
-            }
+            //    Console.WriteLine("Message sent to the broadcast address");
+            //}
 
+
+                //db.Add(new SamplePack() {Date = DateTime.Now, ID = 1});
+                //Console.WriteLine("samplepack created");
+            
 
 
         }

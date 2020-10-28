@@ -6,4 +6,9 @@
     <RootNamespace>DomaineCore</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0-rc.2.20475.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="5.0.0-rc.2.20475.6" />
+  </ItemGroup>
+
 </Project>
