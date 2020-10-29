@@ -2,9 +2,15 @@
 {
     public class Sample
     {
-        private short value;
 
-        public short Value {get; set;}
+        private short _value;
+
+        public short Value
+        {
+            get => _value;
+            set => _value = value;
+        }
+
 
     }
 }

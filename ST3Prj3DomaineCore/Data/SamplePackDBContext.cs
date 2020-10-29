@@ -12,8 +12,8 @@ namespace DomaineCore.Data
         }
         public DbSet<SamplePack> SamplePacks { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite("Data Source=SamplePacks.db");
+        //protected override void OnConfiguring(DbContextOptionsBuilder options) erstattet af kode i factory
+        //    => options.UseSqlite("Data Source=SamplePacks.db");
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

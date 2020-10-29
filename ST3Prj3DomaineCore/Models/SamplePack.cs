@@ -19,7 +19,7 @@ namespace DomaineCore.Models
 
         public SamplePack()
         {
-            
+            SampleList = new List<Sample>();
         }
 
         public override string ToString()
