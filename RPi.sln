@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InterfacesCore", "ST3Prj3In
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPIMain", "RPIMain\RPIMain.csproj", "{BAA8F283-2F4B-4105-A9D6-F30006B08AE8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestConsoleProject", "TestConsoleProject\TestConsoleProject.csproj", "{A2DEF937-E3F1-4D1A-ADF6-51E52A7CD36E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsoleProject", "TestConsoleProject\TestConsoleProject.csproj", "{A2DEF937-E3F1-4D1A-ADF6-51E52A7CD36E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PRJ3UDPListenerTest", "..\PRJ3UDPListenerTest\PRJ3UDPListenerTest.csproj", "{6782400E-EA2F-4EBE-933C-1778787874CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{A2DEF937-E3F1-4D1A-ADF6-51E52A7CD36E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2DEF937-E3F1-4D1A-ADF6-51E52A7CD36E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2DEF937-E3F1-4D1A-ADF6-51E52A7CD36E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6782400E-EA2F-4EBE-933C-1778787874CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6782400E-EA2F-4EBE-933C-1778787874CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6782400E-EA2F-4EBE-933C-1778787874CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6782400E-EA2F-4EBE-933C-1778787874CF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
