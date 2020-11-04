@@ -28,7 +28,7 @@ namespace BusinessLogicCore.Controller
             SamplePack samplePack = new SamplePack(DateTime.Now, GenerateSamplePackID());
             for (int i = 0; i < 50; i++)
             {
-                samplePack.SampleList.Add(new Sample(){Value = adc.readADC_Differential_0_1()});
+                samplePack.SampleList.Add(new Sample(){Value = Convert.ToInt16(adc.readADC_SingleEnded(0))});
             }
 
             return samplePack;

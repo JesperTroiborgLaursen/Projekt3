@@ -20,4 +20,8 @@
     <ProjectReference Include="..\ST3Prj3InterfacesCore\InterfacesCore.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="bin\Debug\netcoreapp3.1\" />
+  </ItemGroup>
+
 </Project>

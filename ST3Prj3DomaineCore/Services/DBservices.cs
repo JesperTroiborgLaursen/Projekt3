@@ -20,14 +20,14 @@ namespace DomaineCore.Services
         }
 
 
-        public List<SamplePack> GetSamplePacks()
+        public List<SamplePack> GetAllSamplePacks()
         {
-            var samplePakker = context.SamplePacks
+            var resultingSamplePacks = context.SamplePacks
                 .OrderBy(e => e.ID)
                 .ToList();
 
 
-            return samplePakker;
+            return resultingSamplePacks;
         }
 
         public void AddSamplePack(SamplePack samplePack)
