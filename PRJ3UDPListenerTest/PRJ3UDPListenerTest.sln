@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30611.23
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PRJ3UDPListenerTest", "PRJ3UDPListenerTest.csproj", "{DB88892A-5BD4-472E-8A78-6A9EF6C597B0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DB88892A-5BD4-472E-8A78-6A9EF6C597B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB88892A-5BD4-472E-8A78-6A9EF6C597B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB88892A-5BD4-472E-8A78-6A9EF6C597B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB88892A-5BD4-472E-8A78-6A9EF6C597B0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E09DDAE1-AB60-4CC0-BFA6-E0114A2BB5FD}
+	EndGlobalSection
+EndGlobal
