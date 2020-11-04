@@ -28,7 +28,7 @@ namespace DomaineCore.Models
 
             foreach (var VARIABLE in SampleList)
             {
-                result = $"{result} \n{VARIABLE.Value.ToString()}";
+                result = $"{result} \n{VARIABLE.Value.ToString()}\n";
             }
 
             return result;
