@@ -24,13 +24,14 @@ namespace DomaineCore.Models
 
         public override string ToString()
         {
-            string result = $"{ID} \n {Date} \n";
+            string result = $"{ID} \r\n {Date}";
 
             foreach (var VARIABLE in SampleList)
             {
-                result = $"{result} \n{VARIABLE.Value.ToString()}\n";
+                result = $"{result} \r\n{VARIABLE.Value.ToString()}";
             }
 
+            result += "END";
             return result;
         }
     }

@@ -39,6 +39,9 @@ namespace RPITest
 
 
 
+            //b.BroadcastMessage(m.StartMeasurement().ToString());
+
+
             //while (true)
             //{
             //    samplePack = new SamplePack();

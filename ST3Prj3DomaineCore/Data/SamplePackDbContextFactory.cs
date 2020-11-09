@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using DomaineCore.Models;
 using DomaineCore.Services;
+using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;

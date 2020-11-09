@@ -57,24 +57,24 @@ namespace RPITest
 
 
 
-        //public SamplePack StartMeasurement()
-        //{
-        //    adc = new ADC1015();
-        //    ls = new List<Sample>();
+        public SamplePack StartMeasurement()
+        {
+            adc = new ADC1015();
+            ls = new List<Sample>();
 
-        //    samplePack = new SamplePack();
+            samplePack = new SamplePack();
 
-        //    for (int i = 0; i < 50; i++)
-        //    {
-        //        ls.Add(new Sample() { Value = Convert.ToInt16(adc.readADC_SingleEnded(0)) });
-        //    }
+            for (int i = 0; i < 50; i++)
+            {
+                ls.Add(new Sample() { Value = Convert.ToInt16(adc.readADC_Differential_0_1()) });
+            }
 
-        //    samplePack.SampleList = ls;
-        //    samplePack.Date = DateTime.Now;
-        //    samplePack.ID = id;
-        //    id++;
+            samplePack.SampleList = ls;
+            samplePack.Date = DateTime.Now;
+            samplePack.ID = id;
+            id++;
 
-        //    return samplePack;
-        //}
+            return samplePack;
+        }
     }
 }

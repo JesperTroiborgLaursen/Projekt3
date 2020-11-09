@@ -11,7 +11,7 @@ namespace RPITest
     public class Broadcast
     {
         private static int PORT = 11000;
-        private static string ip = "192.168.43.109"; //Standard networking broadcast IP
+        private static string ip = "192.168.137.30"; //Standard networking broadcast IP
         private BlockingCollection<DataContainer> _dataQueue;
 
         public Broadcast(BlockingCollection<DataContainer> dataQueue)
@@ -46,19 +46,19 @@ namespace RPITest
             }
 
         }
-        //public void BroadcastMessage(String message)
-        //{
-        //    IPAddress broadcast = IPAddress.Parse(ip);
-        //    Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+        public void BroadcastMessage(String message)
+        {
+            IPAddress broadcast = IPAddress.Parse(ip);
+            Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-        //    byte[] sendbuf = Encoding.ASCII.GetBytes(message);
-        //    //byte[] sendbufhundred = new byte[100];
-        //    //sendbuf.CopyTo(sendbufhundred,0);
-        //    IPEndPoint ep = new IPEndPoint(broadcast, PORT);
+            byte[] sendbuf = Encoding.ASCII.GetBytes(message);
+            //byte[] sendbufhundred = new byte[100];
+            //sendbuf.CopyTo(sendbufhundred,0);
+            IPEndPoint ep = new IPEndPoint(broadcast, PORT);
 
-        //    s.SendTo(sendbuf, ep);
+            s.SendTo(sendbuf, ep);
 
-        //    Console.WriteLine("Message sent to the broadcast address");
-        //}
+            Console.WriteLine("Message sent to the broadcast address");
+        }
     }
 }

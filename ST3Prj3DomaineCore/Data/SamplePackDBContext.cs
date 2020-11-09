@@ -17,17 +17,19 @@ namespace DomaineCore.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);
+            
 
             builder.Entity<SamplePack>()
-                .Property(e => e.ID)
+                .Property(e => e.ID).IsRequired()
                 .HasColumnType("int32");
             builder.Entity<SamplePack>()
-                .Property(e => e.Date)
+                .Property(e => e.Date).IsRequired()
                 .HasColumnType("DATETIME");
             builder.Entity<SamplePack>()
-                .Property(e => e.SampleList)
-                .HasColumnType("varbinary(max)");
+                .Property(e => e.SampleList).IsRequired()
+                .HasColumnType("BLOB");
+
+            base.OnModelCreating(builder);
         }
 
         
