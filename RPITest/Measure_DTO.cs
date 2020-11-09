@@ -2,7 +2,7 @@
 
 namespace RPITest
 {
-    public class DataContainer
+    public class Measure_DTO
     {
         public SamplePack SamplePack { get; set; }
     }

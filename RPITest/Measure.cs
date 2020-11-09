@@ -14,8 +14,10 @@ namespace RPITest
         private static SamplePack samplePack;
         private static List<Sample> ls;
         public int id { get; set; }
-        private BlockingCollection<DataContainer> _dataQueue = new BlockingCollection<DataContainer>();
+        private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
+        private BlockingCollection<Measure_DTO> _dataQueueMeasure = new BlockingCollection<Measure_DTO>();
 
+        //Stop til at stoppe måling. Når den skal stoppes, sættes denne til true.
         private bool stop = false;
         public bool Stop
         {
@@ -23,9 +25,10 @@ namespace RPITest
             set { stop = value; }
         }
 
-        public Measure(BlockingCollection<DataContainer> dataQueue)
+        public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast, BlockingCollection<Measure_DTO> dataQueueMeasure)
         {
-            _dataQueue = dataQueue;
+            _dataQueueBroadcast = dataQueueBroadcast;
+            _dataQueueMeasure = dataQueueMeasure;
         }
 
 
@@ -48,33 +51,13 @@ namespace RPITest
                 samplePack.ID = id;
                 id++;
 
-                DataContainer measurement = new DataContainer() {SamplePack = samplePack};
-                _dataQueue.Add(measurement);
+                Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
+                Measure_DTO measureDto = new Measure_DTO() { SamplePack = samplePack };
+                _dataQueueBroadcast.Add(broadcastDto);
+                _dataQueueMeasure.Add(measureDto);
             }
 
-            _dataQueue.CompleteAdding();
-        }
-
-
-
-        public SamplePack StartMeasurement()
-        {
-            adc = new ADC1015();
-            ls = new List<Sample>();
-
-            samplePack = new SamplePack();
-
-            for (int i = 0; i < 50; i++)
-            {
-                ls.Add(new Sample() { Value = Convert.ToInt16(adc.readADC_Differential_0_1()) });
-            }
-
-            samplePack.SampleList = ls;
-            samplePack.Date = DateTime.Now;
-            samplePack.ID = id;
-            id++;
-
-            return samplePack;
+            _dataQueueBroadcast.CompleteAdding();
         }
     }
 }

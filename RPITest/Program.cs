@@ -10,6 +10,7 @@ using DomaineCore.Models;
 using RaspberryPiCore.ADC;
 using RaspberryPiCore.TWIST;
 using RaspberryPiCore.LCD;
+using Thread = System.Threading.Thread;
 
 
 namespace RPITest
@@ -21,34 +22,38 @@ namespace RPITest
 
         private static Measure m;
         private static Broadcast b;
+        private static LCDProducer lcdProducer;
+        private static WriteToLCD writeToLcd;
         private static Thread mThread;
         private static Thread bThread;
-        private static BlockingCollection<DataContainer> dataQueue;
+        private static Thread lcdProducerThread;
+        private static Thread writeToLcdThread;
+        private static BlockingCollection<Broadcast_DTO> dataQueueBroadcast;
+        private static BlockingCollection<LCD_DTO> dataQueueLCD;
+        private static BlockingCollection<Measure_DTO> dataQueueMeasure;
 
         static void Main(string[] args)
         {
-            dataQueue = new BlockingCollection<DataContainer>();
-            m = new Measure(dataQueue);
-            b = new Broadcast(dataQueue);
+            dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
+            dataQueueLCD = new BlockingCollection<LCD_DTO>();
+            dataQueueMeasure = new BlockingCollection<Measure_DTO>();
+
+            m = new Measure(dataQueueBroadcast, dataQueueMeasure);
+            b = new Broadcast(dataQueueBroadcast);
+
+            lcdProducer = new LCDProducer(dataQueueLCD, dataQueueMeasure);
+            writeToLcd = new WriteToLCD(dataQueueLCD);
 
             mThread = new Thread(m.Run);
             bThread = new Thread(b.Run);
+            lcdProducerThread = new Thread(lcdProducer.Run);
+            writeToLcdThread = new Thread(writeToLcd.Run);
 
             mThread.Start();
             bThread.Start();
+            lcdProducerThread.Start();
+            writeToLcdThread.Start();
 
-
-
-            //b.BroadcastMessage(m.StartMeasurement().ToString());
-
-
-            //while (true)
-            //{
-            //    samplePack = new SamplePack();
-            //    samplePack = m.StartMeasurement();
-            //    Console.WriteLine("Ready to broadcast");
-            //    b.BroadcastMessage(samplePack.ToString());
-            //}
         }
 
     }

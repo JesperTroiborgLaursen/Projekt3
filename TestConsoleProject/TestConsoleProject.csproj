@@ -18,7 +18,7 @@
     <ProjectReference Include="..\ST3Prj3DataAccessLogicCore\DataAccessLogicCore.csproj" />
     <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />
     <ProjectReference Include="..\ST3Prj3InterfacesCore\InterfacesCore.csproj" />
-  </ItemGroup>
+  </ItemGroup>  
 
   <ItemGroup>
     <Folder Include="bin\Debug\netcoreapp3.1\" />
