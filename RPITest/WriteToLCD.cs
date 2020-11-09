@@ -20,6 +20,8 @@ namespace RPITest
 
             lcd = new SerLCD();
             lcd.lcdDisplay();
+            lcd.lcdSetBackLight(238, 29, 203); //Makes color pink
+            lcd.lcdSetContrast(0); //0 gives best contrast
         }
 
 
