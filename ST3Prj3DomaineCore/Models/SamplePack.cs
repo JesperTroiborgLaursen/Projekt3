@@ -9,17 +9,19 @@ namespace Domain.Models
 
         public DateTime Date { get; set; }
 
-        public List<Sample> SampleList;
+        //public List<Sample> SampleList;
+        public byte[] SampleList;
 
         public SamplePack(DateTime date, int id)
         {
             ID = id;
             Date = date;
+            SampleList = new byte[100];
         }
 
         public SamplePack()
         {
-            SampleList = new List<Sample>();
+            SampleList = new byte[100];
         }
 
         public override string ToString()
@@ -28,7 +30,7 @@ namespace Domain.Models
 
             foreach (var VARIABLE in SampleList)
             {
-                result = $"{result} \r\n{VARIABLE.Value.ToString()}";
+                result = $"{result} \r\n{VARIABLE.ToString()}";
             }
 
             result += "END";

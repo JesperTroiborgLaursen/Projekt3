@@ -9,10 +9,10 @@ namespace BusinessLogic.Operations
             double result = 0;
             foreach (var sample in samplePack.SampleList)
             {
-                result += sample.Value;
+                result += sample;
             }
 
-            double resultAvg = result / samplePack.SampleList.Count;
+            double resultAvg = result / samplePack.SampleList.Length;
 
             return resultAvg;
         }
