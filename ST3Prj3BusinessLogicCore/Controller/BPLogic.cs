@@ -14,16 +14,16 @@ namespace BusinessLogic.Controller
             //cdal = new CtrlDataAccessLogic();
         }
 
-        //public SamplePack ReadAdc()
-        //{
-        //    SamplePack samplePack = new SamplePack(DateTime.Now, GenerateSamplePackID());
-        //    for (int i = 0; i < 50; i++)
-        //    {
-        //        samplePack.SampleList.Add(new Sample(){Value = Convert.ToInt16(adc.readADC_SingleEnded(0))});
-        //    }
+        public SamplePack ReadAdc()
+        {
+            //SamplePack samplePack = new SamplePack(DateTime.Now, GenerateSamplePackID());
+            //for (int i = 0; i < 50; i++)
+            //{
+            //    samplePack.SampleList.Add(new Sample() { Value = Convert.ToInt16(adc.readADC_SingleEnded(0)) });
+            //}
 
-        //    return samplePack;
-        //}
+            return new SamplePack();
+        }
 
         //private int GenerateSamplePackID()
         //{

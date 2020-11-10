@@ -7,7 +7,7 @@
 /// </summary>
 
 using System.Security.Cryptography;
-using DomaineCore.Models;
+using Domain.Models;
 using RaspberryPiCore.ADC;
 using RaspberryPiCore.TWIST;
 using RaspberryPiCore.LCD;

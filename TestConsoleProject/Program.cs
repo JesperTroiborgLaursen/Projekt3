@@ -3,9 +3,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using BusinessLogic.Controller;
-using DataAccessLogicCore.Boundaries;
+using DataAccessLogic.Boundaries;
 using DomaineCore.Data;
-using DomaineCore.Models;
 
 namespace TestConsoleProject
 {
