@@ -1,6 +1,6 @@
-﻿using DomaineCore.Models;
+﻿using Domain.Models;
 
-namespace RPITest
+namespace Domain.DTOModels
 {
     public class Broadcast_DTO
     {

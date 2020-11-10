@@ -3,12 +3,12 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using DomaineCore.Models;
+using Domain.DTOModels;
+using Domain.Models;
 
-namespace RPITest
+namespace DataAccesLogic.Boundaries
 {
-    public class Broadcast
+    public class Broadcast //: IDataBroadcastLogic
     {
         private static int PORT = 11000;
         private static string ip = "192.168.137.30"; //Standard networking broadcast IP

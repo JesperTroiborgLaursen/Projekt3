@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using DomaineCore.Models;
+﻿using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace DomaineCore.Data

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DomaineCore.Models
+namespace Domain.Models
 {
     public class SamplePack
     {

@@ -1,6 +1,6 @@
-﻿using DomaineCore.Models;
+﻿using Domain.Models;
 
-namespace RPITest
+namespace BusinessLogic.Operations
 {
     public class BPAvg
     {

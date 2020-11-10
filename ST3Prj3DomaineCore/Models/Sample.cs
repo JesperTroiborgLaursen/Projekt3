@@ -1,4 +1,4 @@
-﻿namespace DomaineCore.Models
+﻿namespace Domain.Models
 {
     public class Sample
     {

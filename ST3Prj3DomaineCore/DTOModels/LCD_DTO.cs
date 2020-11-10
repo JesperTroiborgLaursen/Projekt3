@@ -1,4 +1,4 @@
-﻿namespace RPITest
+﻿namespace Domain.DTOModels
 {
     public class LCD_DTO
     {

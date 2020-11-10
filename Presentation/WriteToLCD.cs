@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Threading;
-using DomaineCore.Models;
+using Domain.DTOModels;
 using RaspberryPiCore.LCD;
 
-namespace RPITest
+namespace Presentation
 {
     public class WriteToLCD
     {

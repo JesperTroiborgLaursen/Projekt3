@@ -2,10 +2,11 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
-using DomaineCore.Models;
+using Domain.DTOModels;
+using Domain.Models;
 using RaspberryPiCore.ADC;
 
-namespace RPITest
+namespace DataAccesLogic.Boundaries
 {
     public class Measure
     {

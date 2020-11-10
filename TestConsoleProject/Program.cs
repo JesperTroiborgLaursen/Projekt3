@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using BusinessLogicCore.Controller;
+using BusinessLogic.Controller;
 using DataAccessLogicCore.Boundaries;
 using DomaineCore.Data;
 using DomaineCore.Models;

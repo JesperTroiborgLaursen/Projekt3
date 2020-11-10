@@ -2,24 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>BusinessLogicCore</AssemblyName>
-    <RootNamespace>BusinessLogicCore</RootNamespace>
+    <AssemblyName>BusinessLogic</AssemblyName>
+    <RootNamespace>BusinessLogic</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Operations\**" />
-    <EmbeddedResource Remove="Operations\**" />
-    <None Remove="Operations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Remove="Controller\LCDProducer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\ST3Prj3DataAccessLogicCore\DataAccessLogicCore.csproj" />
-    <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />
-    <ProjectReference Include="..\ST3Prj3InterfacesCore\InterfacesCore.csproj" />
+    <ProjectReference Include="..\ST3Prj3DomaineCore\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>

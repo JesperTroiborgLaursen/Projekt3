@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 //using PresentationLogicCoreRPI.Boundaries;
-using BusinessLogicCore.Controller; //Her findes den konkrete implementation af BL
+using BusinessLogic.Controller; //Her findes den konkrete implementation af BL
 using DataAccessLogicCore.Boundaries;
 using DomaineCore.Services;
 using DomaineCore.Data; //Her findes den konkrete implementation af DAL

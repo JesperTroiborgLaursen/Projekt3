@@ -1,14 +1,7 @@
-﻿using System.Collections.Generic;
-using DomaineCore.Models;
-using DomaineCore.Services;
-using Microsoft.Data.Sqlite;
+﻿using DomaineCore.Services;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using System;
 
 
 namespace DomaineCore.Data

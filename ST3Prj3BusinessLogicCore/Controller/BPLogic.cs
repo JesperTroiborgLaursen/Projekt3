@@ -1,44 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using InterfacesCore;
-using DomaineCore;
-using DomaineCore.Models;
+using Domain.Models;
 using RaspberryPiCore.ADC;
-using RaspberryPiCore.TWIST;
-using RaspberryPiCore.LCD;
-using DataAccessLogicCore.Boundaries;
 
-namespace BusinessLogicCore.Controller
+namespace BusinessLogic.Controller
 {
     public class BPLogic
     {
         private ADC1015 adc;
-        private CtrlDataAccessLogic cdal;
+        //private CtrlDataAccessLogic cdal;
         public BPLogic()
         {
             adc = new ADC1015();
-            cdal = new CtrlDataAccessLogic();
+            //cdal = new CtrlDataAccessLogic();
         }
 
-        public SamplePack ReadAdc()
-        {
-            SamplePack samplePack = new SamplePack(DateTime.Now, GenerateSamplePackID());
-            for (int i = 0; i < 50; i++)
-            {
-                samplePack.SampleList.Add(new Sample(){Value = Convert.ToInt16(adc.readADC_SingleEnded(0))});
-            }
+        //public SamplePack ReadAdc()
+        //{
+        //    SamplePack samplePack = new SamplePack(DateTime.Now, GenerateSamplePackID());
+        //    for (int i = 0; i < 50; i++)
+        //    {
+        //        samplePack.SampleList.Add(new Sample(){Value = Convert.ToInt16(adc.readADC_SingleEnded(0))});
+        //    }
 
-            return samplePack;
-        }
+        //    return samplePack;
+        //}
 
-        private int GenerateSamplePackID()
-        {
-            int lastId = cdal.GetLastSamplePackID();
-            int newId = lastId++;
-            return newId;
-        }
+        //private int GenerateSamplePackID()
+        //{
+        //    int lastId = cdal.GetLastSamplePackID();
+        //    int newId = lastId++;
+        //    return newId;
+        //}
     }
 }

@@ -3,10 +3,12 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
-using DomaineCore.Models;
+using BusinessLogic.Operations;
+using Domain.DTOModels;
+using Domain.Models;
 
 
-namespace RPITest
+namespace BussinessLogic.Controller
 {
     public class LCDProducer
     {

@@ -1,29 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using DomaineCore.Models;
-using InterfacesCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
-using System.IO;
-using System.Reflection.Metadata;
-using System.Runtime.CompilerServices;
-using System.Security.Cryptography;
+using Domain.Models;
 
 /// <summary>
 /// Metoder implemeteret som eksempler der overholder iDataAccessLogic intefacet
 /// Ændringer signaturer og til tilføjelse af metoder (nye signature) skal ske
 /// først skegennem ændringer i iDataAccessLogic interfacet
 /// </summary>
-namespace DataAccessLogicCore.Boundaries
+namespace DataAccessLogic.Boundaries
 {
-    public class BroadcastLogic : IDataBroadcastLogic
+    public class BroadcastLogic //: IDataBroadcastLogic
     {
         private const int PORT = 11000;
         private const string ip = "192.168.1.255"; //Standard networking broadcast IP

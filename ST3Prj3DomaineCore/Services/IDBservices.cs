@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DomaineCore.Models;
+﻿using System.Collections.Generic;
+using Domain.Models;
 
 namespace DomaineCore.Services
 {

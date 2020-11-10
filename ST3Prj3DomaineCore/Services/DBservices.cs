@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DomaineCore.Models;
+﻿using System.Collections.Generic;
 using System.Linq;
+using Domain.Models;
 using DomaineCore.Data;
 using Microsoft.Extensions.Configuration;
 

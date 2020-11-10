@@ -1,6 +1,8 @@
-﻿using DomaineCore.Models;
+﻿
 
-namespace RPITest
+using Domain.Models;
+
+namespace Domain.DTOModels
 {
     public class Measure_DTO
     {

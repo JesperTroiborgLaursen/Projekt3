@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Boundaries\Broadcast.cs" />
+    <Compile Remove="Boundaries\Measure.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="LocalDB.mdf" />
     <None Remove="LocalDB_log.ldf" />
   </ItemGroup>

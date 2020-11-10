@@ -2,24 +2,26 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyName>BusinessLogicCore</AssemblyName>
-    <RootNamespace>BusinessLogicCore</RootNamespace>
+    <RootNamespace>DataAccessLogic</RootNamespace>
+    <AssemblyName>DataAccessLogic</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Operations\**" />
-    <EmbeddedResource Remove="Operations\**" />
-    <None Remove="Operations\**" />
+    <Compile Remove="Boundaries\BroadcastLogic.cs" />
+    <Compile Remove="Boundaries\CtrlDataAccessLogic.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Controller\LCDProducer.cs" />
+    <None Remove="LocalDB.mdf" />
+    <None Remove="LocalDB_log.ldf" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ST3Prj3DataAccessLogicCore\DataAccessLogicCore.csproj" />
-    <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />
-    <ProjectReference Include="..\ST3Prj3InterfacesCore\InterfacesCore.csproj" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ST3Prj3DomaineCore\Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
