@@ -26,19 +26,26 @@ namespace RPIMain
         //private IBusinessLogic icurrentBL;
         //private IDataAccessLogic icurrentDAL;
         private static SamplePackDbContextFactory factory;
+        private static ServiceCollection services;
 
         static void Main(string[] args)
         {
             // Configuration/opsætning
             //var builder = new ConfigurationBuilder(); flyttet til factory
             //var configuration = builder.Build();
-            _ = new Program();
+            //_ = new Program();
+            factory = new SamplePackDbContextFactory();
+            services = new ServiceCollection();
+            SamplePackDBContext context = new SamplePackDBContext();
+           
 
-            var SPDBcontext = factory.CreateContext("DefaultConnection");
+            services.AddDbContext<SamplePackDBContext>();
 
-            SPDBcontext.Database.EnsureCreated();
+            //var SPDBcontext = factory.CreateContext("DefaultConnection");
 
-            SPDBcontext.Database.CanConnectAsync(); //oprette forbindelse testes her
+            //SPDBcontext.Database.EnsureCreated();
+
+            //SPDBcontext.Database.CanConnectAsync(); //oprette forbindelse testes her
 
 
             //// Database impl. flyttet til ContextFactory
@@ -61,6 +68,7 @@ namespace RPIMain
             //icurrentGUIPL = new AnotherGUI(icurrentBL); 
             //icurrentGUIPL.startUpGUI();//Trin start applikation
             factory = new SamplePackDbContextFactory();
+            services = new ServiceCollection();
 
         }
     }

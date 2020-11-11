@@ -13,7 +13,7 @@ namespace DataAccesLogic.Boundaries
         private static ADC1015 adc;
 
         private static SamplePack samplePack;
-        private static byte[] ls;
+        private static List<Sample> ls;
         private static short[] shortbuffer;
         public int id { get; set; }
         private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
@@ -38,18 +38,16 @@ namespace DataAccesLogic.Boundaries
         public void Run()
         {
             adc = new ADC1015();
-            ls = new byte[100]; // 1 short = 2 byte
-            shortbuffer = new short[50];
+            ls = new List<Sample>();
             while (!stop)
             {
                 samplePack = new SamplePack();
                 
                 for (int i = 0; i < 50; i++)
                 {
-                    shortbuffer[i] =  Convert.ToByte(adc.readADC_SingleEnded(0));
+                    ls.Add(new Sample() {Value = Convert.ToInt16(adc.readADC_SingleEnded(0))});
                 }
 
-                Buffer.BlockCopy(shortbuffer, 0, ls,0, shortbuffer.Length * 2);
                 samplePack.SampleList = ls;
                 samplePack.Date = DateTime.Now;
                 samplePack.ID = id;

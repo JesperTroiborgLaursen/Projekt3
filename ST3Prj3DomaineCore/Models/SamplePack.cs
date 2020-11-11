@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain.Models
 {
@@ -10,18 +11,18 @@ namespace Domain.Models
         public DateTime Date { get; set; }
 
         //public List<Sample> SampleList;
-        public byte[] SampleList;
+        public List<Sample> SampleList { get; set; }
 
         public SamplePack(DateTime date, int id)
         {
             ID = id;
             Date = date;
-            SampleList = new byte[100];
+            SampleList = new List<Sample>();
         }
-
+        
         public SamplePack()
         {
-            SampleList = new byte[100];
+            SampleList = new List<Sample>();
         }
 
         public override string ToString()

@@ -3,6 +3,7 @@ using System.Linq;
 using Domain.Models;
 using DomaineCore.Data;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DomaineCore.Services
 {
@@ -10,23 +11,17 @@ namespace DomaineCore.Services
     {
         private readonly IConfigurationRoot config;
         private readonly SamplePackDBContext context;
+        private ServiceCollection services;
 
         public DBservices(IConfigurationRoot configurationRoot, SamplePackDBContext samplePackDbContext)
         {
             config = configurationRoot;
             context = samplePackDbContext;
+
         }
 
 
-        public List<SamplePack> GetAllSamplePacks()
-        {
-            var resultingSamplePacks = context.SamplePacks
-                .OrderBy(e => e.ID)
-                .ToList();
-
-
-            return resultingSamplePacks;
-        }
+        
 
         public void AddSamplePack(SamplePack samplePack)
         {

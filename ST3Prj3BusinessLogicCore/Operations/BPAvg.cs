@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using System.Linq;
+using Domain.Models;
 
 namespace BusinessLogic.Operations
 {
@@ -9,10 +10,10 @@ namespace BusinessLogic.Operations
             double result = 0;
             foreach (var sample in samplePack.SampleList)
             {
-                result += sample;
+                result += sample.Value;
             }
 
-            double resultAvg = result / samplePack.SampleList.Length;
+            double resultAvg = result / samplePack.SampleList.Count();
 
             return resultAvg;
         }

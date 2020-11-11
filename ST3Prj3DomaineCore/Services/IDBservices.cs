@@ -5,7 +5,7 @@ namespace DomaineCore.Services
 {
     public interface IDBservices
     {
-        List<SamplePack> GetAllSamplePacks();
+        //List<SamplePack> GetAllSamplePacks();
         void AddSamplePack(SamplePack samplePack);
     }
 }

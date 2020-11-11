@@ -12,6 +12,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\ST3Prj3BusinessLogicCore\BusinessLogicCore.csproj" />
     <ProjectReference Include="..\ST3Prj3DataAccessLogicCore\DataAccessLogicCore.csproj" />
     <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />

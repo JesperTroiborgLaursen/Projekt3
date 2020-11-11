@@ -11,6 +11,8 @@
             set => _value = value;
         }
 
+        public int ID { get; set; }
+        public int SamplePackID { get; set; }
 
     }
 }
