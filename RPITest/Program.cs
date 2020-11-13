@@ -1,11 +1,11 @@
 ﻿using System.Collections.Concurrent;
+using System.Threading;
 using BussinessLogic.Controller;
 using DataAccesLogic.Boundaries;
 using Domain.Context;
 using Domain.DTOModels;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation;
-using Thread = System.Threading.Thread;
 
 
 namespace RPITest
