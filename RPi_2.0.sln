@@ -29,6 +29,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "ST3Prj3Bus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLogic", "ST3Prj3DataAccessLogicCore\DataAccessLogic.csproj", "{7FD08F80-29A8-4068-94BC-6AFF6335B96C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{72378B5F-ED99-49EF-A6DF-B93A8F1FE752}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{7FD08F80-29A8-4068-94BC-6AFF6335B96C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7FD08F80-29A8-4068-94BC-6AFF6335B96C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7FD08F80-29A8-4068-94BC-6AFF6335B96C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72378B5F-ED99-49EF-A6DF-B93A8F1FE752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72378B5F-ED99-49EF-A6DF-B93A8F1FE752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72378B5F-ED99-49EF-A6DF-B93A8F1FE752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72378B5F-ED99-49EF-A6DF-B93A8F1FE752}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

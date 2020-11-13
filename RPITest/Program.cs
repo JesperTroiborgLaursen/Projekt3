@@ -30,9 +30,8 @@ namespace RPITest
 
         static void Main(string[] args)
         {
-            //Setting DB context
+            //Setting Dependency Injection for DB context
             services = new ServiceCollection();
-            SamplePackDBContext context = new SamplePackDBContext();
             services.AddDbContext<SamplePackDBContext>();
 
             //Creating dataQues
