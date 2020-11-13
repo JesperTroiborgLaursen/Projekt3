@@ -12,7 +12,7 @@ namespace DomaineCore.Data
 
         public SamplePackDBContext()
         {
-            Database.EnsureDeleted();
+            //Database.EnsureDeleted();
             Database.EnsureCreated();
         }
 
@@ -30,6 +30,7 @@ namespace DomaineCore.Data
         {
 
             builder.Entity<SamplePack>().HasData(GetAllSamplePacks());
+            builder.Entity<Sample>().HasData(GetSampleList());
 
             //builder.Entity<Sample>().HasNoKey();
             base.OnModelCreating(builder);
@@ -52,11 +53,7 @@ namespace DomaineCore.Data
         {
             return new List<SamplePack>()
             {
-                new SamplePack() {Date = DateTime.Today, ID = 1, SampleList = new List<Sample>()
-                {
-                    new Sample(){SamplePackID = 1,Value = 2},
-                    new Sample(){Value = 2,SamplePackID = 1}
-                }},
+                new SamplePack() {ID =1, Date = DateTime.Today}
                 //new SamplePack() {Date = DateTime.Today, ID = 2, SampleList = new List<Sample>(){new Sample(){SamplePackID = 2, Value = 3}}},
                 //new SamplePack() {Date = DateTime.Today, ID = 3, SampleList = new List<Sample>(){new Sample(){SamplePackID = 3, Value = 4}}},
                 //new SamplePack() {Date = DateTime.Today, ID = 4, SampleList = new List<Sample>(){new Sample(){SamplePackID = 4,Value = 5}}}
@@ -72,6 +69,14 @@ namespace DomaineCore.Data
             //return resultingSamplePacks;
         }
 
+        public List<Sample> GetSampleList()
+        {
+            return new List<Sample>()
+            {
+                new Sample() {SamplePackID = 1, Value = 2, ID = 1},
+                new Sample() {SamplePackID = 1, Value = 2, ID = 2}
+            };
+        }
 
     }
 }
