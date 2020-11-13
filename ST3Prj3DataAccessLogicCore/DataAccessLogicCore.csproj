@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <Compile Remove="Boundaries\Broadcast.cs" />
+    <Compile Remove="Boundaries\BroadcastLogic.cs" />
+    <Compile Remove="Boundaries\CtrlDataAccessLogic.cs" />
     <Compile Remove="Boundaries\Measure.cs" />
   </ItemGroup>
 
@@ -23,6 +25,10 @@
   <ItemGroup>
     <ProjectReference Include="..\ST3Prj3DomaineCore\DomaineCore.csproj" />
     <ProjectReference Include="..\ST3Prj3InterfacesCore\InterfacesCore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Boundaries\" />
   </ItemGroup>
 
 </Project>

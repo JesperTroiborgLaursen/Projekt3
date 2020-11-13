@@ -1,18 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading;
+﻿using System.Collections.Concurrent;
 using BussinessLogic.Controller;
 using DataAccesLogic.Boundaries;
+using Domain.Context;
 using Domain.DTOModels;
-using Domain.Models;
+using Microsoft.Extensions.DependencyInjection;
 using Presentation;
-using RaspberryPiCore.ADC;
-using RaspberryPiCore.TWIST;
-using RaspberryPiCore.LCD;
 using Thread = System.Threading.Thread;
 
 
@@ -34,24 +26,34 @@ namespace RPITest
         private static BlockingCollection<Broadcast_DTO> dataQueueBroadcast;
         private static BlockingCollection<LCD_DTO> dataQueueLCD;
         private static BlockingCollection<Measure_DTO> dataQueueMeasure;
+        private static ServiceCollection services;
 
         static void Main(string[] args)
         {
+            //Setting DB context
+            services = new ServiceCollection();
+            SamplePackDBContext context = new SamplePackDBContext();
+            services.AddDbContext<SamplePackDBContext>();
+
+            //Creating dataQues
             dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
             dataQueueLCD = new BlockingCollection<LCD_DTO>();
             dataQueueMeasure = new BlockingCollection<Measure_DTO>();
 
+            //Creating producers and consumers
             m = new Measure(dataQueueBroadcast, dataQueueMeasure);
             b = new Broadcast(dataQueueBroadcast);
 
             lcdProducer = new LCDProducer(dataQueueLCD, dataQueueMeasure);
             writeToLcd = new WriteToLCD(dataQueueLCD);
 
+            //Creating threads for producers and consumers
             mThread = new Thread(m.Run);
             bThread = new Thread(b.Run);
             lcdProducerThread = new Thread(lcdProducer.Run);
             writeToLcdThread = new Thread(writeToLcd.Run);
 
+            //Starting threads
             mThread.Start();
             bThread.Start();
             lcdProducerThread.Start();

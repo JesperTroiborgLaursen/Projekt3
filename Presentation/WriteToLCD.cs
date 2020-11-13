@@ -29,7 +29,6 @@ namespace Presentation
             {
                 try
                 {
-                    
                     var container = _dataQueueLCD.Take();
                     string message= container.Message;
                     
@@ -37,9 +36,6 @@ namespace Presentation
                     lcd.lcdPrint(message);
 
                     Thread.Sleep(500);
-                    
-                    
-
                 }
                 catch (InvalidOperationException)
                 {

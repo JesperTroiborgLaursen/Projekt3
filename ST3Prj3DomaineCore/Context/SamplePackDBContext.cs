@@ -4,7 +4,7 @@ using System.Linq;
 using Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace DomaineCore.Data
+namespace Domain.Context
 {
     public class SamplePackDBContext : DbContext
     {
@@ -27,7 +27,6 @@ namespace DomaineCore.Data
             builder.Entity<Sample>().HasData(GetSampleList());
 
             base.OnModelCreating(builder);
-            
         }
 
         public List<SamplePack> GetAllSamplePacks()
