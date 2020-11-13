@@ -11,7 +11,7 @@ namespace Domain.Context
 
         public SamplePackDBContext()
         {
-            //Database.EnsureDeleted();
+            Database.EnsureDeleted();
             Database.EnsureCreated();
         }
         

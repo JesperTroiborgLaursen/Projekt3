@@ -3,9 +3,9 @@
     public class Sample
     {
 
-        private short _value;
+        private ushort _value;
 
-        public short Value
+        public ushort Value
         {
             get => _value;
             set => _value = value;
