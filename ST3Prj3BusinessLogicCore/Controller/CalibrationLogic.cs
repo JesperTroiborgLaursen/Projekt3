@@ -1,4 +1,5 @@
-﻿using DataAccesLogic.Boundaries;
+﻿using System;
+using DataAccesLogic.Boundaries;
 using DataAccesLogic.Drivers;
 using Interfaces;
 
@@ -6,7 +7,7 @@ namespace BusinessLogic.Controller
 {
     public class CalibrationLogic
     {
-        private static ButtonObserver _button1;
+        private static ButtonObserver _button1Observer;
         private static ButtonObserver _button2;
         private static ButtonObserver _button3;
         private static ButtonObserver _button4;
@@ -14,7 +15,7 @@ namespace BusinessLogic.Controller
 
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2, ButtonObserver buttonObserver3, ButtonObserver buttonObserver4)
         {
-            _button1 = buttonObserver1;
+            _button1Observer = buttonObserver1;
             _button2 = buttonObserver2;
             _button3 = buttonObserver3;
             _button4 = buttonObserver4;
@@ -22,7 +23,15 @@ namespace BusinessLogic.Controller
 
         public void Calibrate()
         {
-            _button1.Update();
+            while (true)
+            {
+                if (_button1Observer.IsPressed)
+                {
+                    Console.WriteLine("bla");
+                }
+            }
+
+
         }
     }
 }

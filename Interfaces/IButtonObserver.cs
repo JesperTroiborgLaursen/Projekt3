@@ -2,6 +2,6 @@
 {
     public interface IButtonObserver
     {
-        public bool Update();
+        public void Update();
     }
 }

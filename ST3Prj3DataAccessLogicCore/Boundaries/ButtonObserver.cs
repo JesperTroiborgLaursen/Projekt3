@@ -5,13 +5,28 @@ namespace DataAccesLogic.Boundaries
 {
     public class ButtonObserver : IButtonObserver
     {
+        private bool isPressed = false;
+
+        public bool IsPressed
+        {
+            get { return isPressed; }
+            set { isPressed = value; }
+        }
+
         public ButtonObserver(Button button)
         {
             button.Attach(this);
         }
-        public bool Update()
+        public void Update()
         {
-            return true;
+            if (IsPressed)
+            {
+                IsPressed = false;
+            }
+            else
+            {
+                IsPressed = true;
+            }
         }
     }
 }

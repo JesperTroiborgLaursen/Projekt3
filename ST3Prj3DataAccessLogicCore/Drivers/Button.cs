@@ -10,32 +10,46 @@ namespace DataAccesLogic.Drivers
         public int buttonNumber { get; private set; }
         public Button(int buttonNumber)
         {
-            this.buttonNumber = 20 + buttonNumber;
             switch (buttonNumber)
             {
                 case 1:
                     Controller = new GpioController();
-                    Controller.OpenPin(21, PinMode.Input);
+                    Controller.OpenPin(9, PinMode.Input);
+                    this.buttonNumber = 9;
                 break;
                 case 2:
                     Controller = new GpioController();
-                    Controller.OpenPin(22, PinMode.Input);
+                    Controller.OpenPin(25, PinMode.Input);
+                    this.buttonNumber = 25;
                     break;
                 case 3:
                     Controller = new GpioController();
-                    Controller.OpenPin(23, PinMode.Input);
+                    Controller.OpenPin(11, PinMode.Input);
+                    this.buttonNumber = 11;
                     break;
                 case 4:
                     Controller = new GpioController();
-                    Controller.OpenPin(24, PinMode.Input);
+                    Controller.OpenPin(8, PinMode.Input);
+                    this.buttonNumber = 8;
                     break;
             }
         }
 
         public bool IsPressed()
         {
-            return (bool)Controller.Read(buttonNumber);
+            bool result = false;
+            if (Controller.Read(buttonNumber) == PinValue.High)
+            {
+                result = false;
+            }
+            else if(Controller.Read(buttonNumber) == PinValue.Low)
+            {
+                result = true;
+            }
+
+            return result;
         }
+
 
     }
 }

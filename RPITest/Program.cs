@@ -29,6 +29,8 @@ namespace RPITest
         private static Thread lcdProducerThread;
         private static Thread writeToLcdThread;
         private static Thread saveToLocalDb;
+        private static Thread uiThread;
+        private static Thread calibrationThread;
         private static BlockingCollection<Broadcast_DTO> dataQueueBroadcast;
         private static BlockingCollection<LCD_DTO> dataQueueLCD;
         private static BlockingCollection<Measure_DTO> dataQueueMeasure;
@@ -80,6 +82,8 @@ namespace RPITest
             lcdProducerThread = new Thread(lcdProducer.Run);
             writeToLcdThread = new Thread(writeToLcd.Run);
             saveToLocalDb = new Thread(localDb.Run);
+            uiThread = new Thread(ui.Run);
+            calibrationThread = new Thread(calibrationLogic.Calibrate);
 
             //Starting threads
             mThread.Start();
@@ -87,6 +91,8 @@ namespace RPITest
             lcdProducerThread.Start();
             writeToLcdThread.Start();
             saveToLocalDb.Start();
+            uiThread.Start();
+            calibrationThread.Start();
             
             saveToLocalDb.Join();
 

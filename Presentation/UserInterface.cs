@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using DataAccesLogic.Drivers;
 using Interfaces;
 
@@ -30,13 +31,20 @@ namespace Presentation
         {
             while (true)
             {
-                if (button1.IsPressed())
+                if(button1.IsPressed())
                 {
-                    //Notify observers
                     button1.Notify();
+                    while (button1.IsPressed())
+                    {
+                        Thread.Sleep(1);
+                    }
+                    button1.Notify();
+                    //Notify observers
+                    
                     //Apply observer pattern.............
-                    throw new NotImplementedException();
+
                 }
+                
             }
         }
     }
