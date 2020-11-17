@@ -1,7 +1,11 @@
 ﻿using System.Collections.Concurrent;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
+using BusinessLogic.Controller;
 using BussinessLogic.Controller;
 using DataAccesLogic.Boundaries;
+using DataAccesLogic.Drivers;
 using Domain.Context;
 using Domain.DTOModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -30,12 +34,30 @@ namespace RPITest
         private static BlockingCollection<Measure_DTO> dataQueueMeasure;
         private static BlockingCollection<LocalDB_DTO> dataQueueLocalDb;
         private static ServiceCollection services;
+        private static UserInterface ui;
+        private static ButtonObserver buttonObserver1;
+        private static ButtonObserver buttonObserver2;
+        private static ButtonObserver buttonObserver3;
+        private static ButtonObserver buttonObserver4;
+        private static CalibrationLogic calibrationLogic;
 
         static void Main(string[] args)
         {
             //Setting Dependency Injection for DB context
             services = new ServiceCollection();
             services.AddDbContext<SamplePackDBContext>();
+
+            //Creating UserInterface
+            ui = new UserInterface();
+
+            //Create Observers
+            buttonObserver1 = new ButtonObserver(ui.button1);
+            buttonObserver2 = new ButtonObserver(ui.button2);
+            buttonObserver3 = new ButtonObserver(ui.button3);
+            buttonObserver4 = new ButtonObserver(ui.button4);
+
+            //Create Calibration
+            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2, buttonObserver3, buttonObserver4);
 
             //Creating dataQues
             dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
@@ -65,6 +87,8 @@ namespace RPITest
             lcdProducerThread.Start();
             writeToLcdThread.Start();
             saveToLocalDb.Start();
+            
+            saveToLocalDb.Join();
 
         }
 

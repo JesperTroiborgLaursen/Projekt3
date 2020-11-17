@@ -22,18 +22,6 @@ namespace Domain.Models
             SampleList = new List<Sample>();
         }
 
-        public override string ToString()
-        {
-            string result = $"{ID} \r\n {Date}";
-
-            foreach (var VARIABLE in SampleList)
-            {
-                result = $"{result} \r\n{VARIABLE.ToString()}";
-            }
-
-            result += "END";
-            return result;
-        }
     }
 
 

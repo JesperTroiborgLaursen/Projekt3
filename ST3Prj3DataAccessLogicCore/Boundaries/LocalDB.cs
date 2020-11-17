@@ -12,6 +12,7 @@ namespace DataAccesLogic.Boundaries
     public class LocalDB : IDatabase
     {
         private BlockingCollection<LocalDB_DTO> _dataQueueLocalDb;
+        //public SamplePackDBContext Context { get; set; }
 
         public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
         {
@@ -53,23 +54,27 @@ namespace DataAccesLogic.Boundaries
 
         public void Run()
         {
-            while (!_dataQueueLocalDb.IsCompleted)
+            var db = new SamplePackDBContext();
+            using (db)
             {
-                try
+                while (!_dataQueueLocalDb.IsCompleted)
                 {
-                    var container = _dataQueueLocalDb.Take();
-                    SamplePack samplePack = container.SamplePack;
-                    
-                    using (var db = new SamplePackDBContext())
+                    try
                     {
-                        db.Add(samplePack);
+                        var container = _dataQueueLocalDb.Take();
+                        SamplePack samplePack = container.SamplePack;
+
+                        //using (var db = new SamplePackDBContext())
+                        //{
+                        db.Add<SamplePack>(samplePack);
                         db.SaveChanges();
+                        //}
+
                     }
-                    
-                }
-                catch (InvalidOperationException)
-                {
-                    continue;
+                    catch (InvalidOperationException)
+                    {
+                        continue;
+                    }
                 }
             }
         }

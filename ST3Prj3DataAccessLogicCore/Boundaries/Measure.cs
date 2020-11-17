@@ -12,9 +12,9 @@ namespace DataAccesLogic.Boundaries
     {
         private static ADC1015 adc;
 
-        private static SamplePack samplePack;
-        private static List<Sample> ls;
-        private static short[] shortbuffer;
+        //private static SamplePack samplePack;
+        //private static List<Sample> ls;
+        //private static short[] shortbuffer;
         public int id { get; set; }
         private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
         private BlockingCollection<Measure_DTO> _dataQueueMeasure = new BlockingCollection<Measure_DTO>();
@@ -40,20 +40,20 @@ namespace DataAccesLogic.Boundaries
         public void Run()
         {
             adc = new ADC1015();
-            ls = new List<Sample>();
+            
             while (!stop)
             {
-                samplePack = new SamplePack();
-                
-                for (int i = 0; i < 50; i++)
+                var samplePack = new SamplePack();
+                var ls = new List<Sample>();
+                for (int i = 0; i < 51; i++)
                 {
                     ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(0))});
                 }
 
                 samplePack.SampleList = ls;
                 samplePack.Date = DateTime.Now;
-                samplePack.ID = id;
-                id++;
+                //samplePack.ID = id;
+                //id++;
 
                 //Her vil vi gemme i lokal DB
                 Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
@@ -62,6 +62,7 @@ namespace DataAccesLogic.Boundaries
                 _dataQueueBroadcast.Add(broadcastDto);
                 _dataQueueMeasure.Add(measureDto);
                 _dataQueueLocalDB.Add(localDbDto);
+                //Sleep
             }
 
             _dataQueueBroadcast.CompleteAdding();
