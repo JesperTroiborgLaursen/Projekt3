@@ -42,17 +42,57 @@ namespace Presentation
                 if (button1.IsPressed())
                 {
                     button1.Notify();
-                    while (button1.IsPressed())
+                    int i = 0;
+                    bool startcal = false;
+                    while (button1.IsPressed() && !startcal)
                     {
-                        Thread.Sleep(1);
+                        i = 0;
+                        while (button1.IsPressed() && button2.IsPressed())
+                        {
+                            if (button1.IsPressed() && button2.IsPressed())
+                            {
+                                i++;
+                            }
 
+                            Thread.Sleep(1);
+
+                            if (i > 500)
+                            {
+                                button1.NotifyCalibration();
+                                startcal = true;
+                            }
+                        }
                     }
                     button1.Notify();
-                    //Notify observers
-
-                    //Apply observer pattern.............
-
                 }
+
+                if (button2.IsPressed())
+                {
+                    button2.Notify();
+                    int i = 0;
+                    bool startcal = false;
+                    while (button2.IsPressed() && !startcal)
+                    {
+                        i = 0;
+                        while (button1.IsPressed() && button2.IsPressed())
+                        {
+                            if (button1.IsPressed() && button2.IsPressed())
+                            {
+                                i++;
+                            }
+
+                            Thread.Sleep(1);
+
+                            if (i > 500)
+                            {
+                                button1.NotifyCalibration();
+                                startcal = true;
+                            }
+                        }
+                    }
+                    button2.Notify();
+                }
+                
 
                 Thread.Sleep(0);
             }

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Security.AccessControl;
+using System.Threading;
 using DataAccesLogic.Drivers;
 using Interfaces;
 
@@ -8,7 +9,9 @@ namespace DataAccesLogic.Boundaries
     {
         private bool isPressed = false;
 
-        public AutoResetEvent ready { get; private set; }
+        public bool startCal { get; set; }
+
+        //public AutoResetEvent ready { get; private set; }
 
         public bool IsPressed
         {
@@ -19,20 +22,25 @@ namespace DataAccesLogic.Boundaries
         public ButtonObserver(Button button)
         {
             button.Attach(this);
-            ready = new AutoResetEvent(false);
+            //ready = new AutoResetEvent(false);
         }
         public void Update()
         {
             if (IsPressed)
             {
                 IsPressed = false;
-                ready.Set();
+                //ready.Set();
             }
             else
             {
                 IsPressed = true;
-                ready.Set();
+                //ready.Set();
             }
+        }
+
+        public void UpdateCalibration()
+        {
+            startCal = true;
         }
     }
 }

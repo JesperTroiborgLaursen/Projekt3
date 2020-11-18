@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Security.AccessControl;
 using System.Threading;
 using Domain.DTOModels;
 using Domain.Models;
@@ -19,55 +20,61 @@ namespace DataAccesLogic.Boundaries
         private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
         private BlockingCollection<Measure_DTO> _dataQueueMeasure = new BlockingCollection<Measure_DTO>();
         private BlockingCollection<LocalDB_DTO> _dataQueueLocalDB = new BlockingCollection<LocalDB_DTO>();
-
-
+        public ManualResetEvent _calibrationEvent { get; set; }
+        
         //Stop til at stoppe måling. Når den skal stoppes, sættes denne til true.
         private bool stop = false;
+
         public bool Stop
         {
             get { return stop = false; }
             set { stop = value; }
         }
 
-        public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast, BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
+        public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast,
+            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<LocalDB_DTO> dataQueueLocalDb,
+            ManualResetEvent autoResetEvent)
         {
             _dataQueueBroadcast = dataQueueBroadcast;
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueLocalDB = dataQueueLocalDb;
+            _calibrationEvent = autoResetEvent;
         }
 
 
         public void Run()
         {
             adc = new ADC1015();
-            
-            while (!stop)
+            while(_calibrationEvent.WaitOne()) 
             {
-                var samplePack = new SamplePack();
-                var ls = new List<Sample>();
-                for (int i = 0; i < 51; i++)
+                while (!stop && _calibrationEvent.WaitOne())
                 {
-                    ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(0))});
-                    Thread.Sleep(20);
+                    var samplePack = new SamplePack();
+                    var ls = new List<Sample>();
+                    for (int i = 0; i < 51; i++)
+                    {
+                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(0))});
+                        Thread.Sleep(20);
+                    }
+
+                    samplePack.SampleList = ls;
+                    samplePack.Date = DateTime.Now;
+                    //samplePack.ID = id;
+                    //id++;
+
+                    //Her vil vi gemme i lokal DB
+                    Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
+                    Measure_DTO measureDto = new Measure_DTO() {SamplePack = samplePack};
+                    LocalDB_DTO localDbDto = new LocalDB_DTO() {SamplePack = samplePack};
+                    _dataQueueBroadcast.Add(broadcastDto);
+                    _dataQueueMeasure.Add(measureDto);
+                    _dataQueueLocalDB.Add(localDbDto);
+                    //Sleep
+
                 }
+        }
 
-                samplePack.SampleList = ls;
-                samplePack.Date = DateTime.Now;
-                //samplePack.ID = id;
-                //id++;
-
-                //Her vil vi gemme i lokal DB
-                Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
-                Measure_DTO measureDto = new Measure_DTO() { SamplePack = samplePack };
-                LocalDB_DTO localDbDto = new LocalDB_DTO() { SamplePack = samplePack };
-                _dataQueueBroadcast.Add(broadcastDto);
-                _dataQueueMeasure.Add(measureDto);
-                _dataQueueLocalDB.Add(localDbDto);
-                //Sleep
-                
-            }
-
-            _dataQueueBroadcast.CompleteAdding();
+        _dataQueueBroadcast.CompleteAdding();
         }
     }
 }

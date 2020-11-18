@@ -11,11 +11,12 @@ namespace Presentation
     {
         private BlockingCollection<LCD_DTO> _dataQueueLCD;
         private DisplayDriver lcd;
+        public ManualResetEvent _calibrationEvent { get; set; }
 
-        public WriteToLCD(BlockingCollection<LCD_DTO> dataQueueLCD)
+        public WriteToLCD(BlockingCollection<LCD_DTO> dataQueueLCD, ManualResetEvent autoResetEvent)
         {
             _dataQueueLCD = dataQueueLCD;
-
+            _calibrationEvent = autoResetEvent;
             lcd = new DisplayDriver();
         }
 
@@ -23,25 +24,28 @@ namespace Presentation
 
         public void Run()
         {
-            while (!_dataQueueLCD.IsCompleted)
+            while(_calibrationEvent.WaitOne()) 
             {
-                try
+                while (!_dataQueueLCD.IsCompleted && _calibrationEvent.WaitOne())
                 {
-                    var container = _dataQueueLCD.Take();
-                    string message= container.Message;
-                    
-                    lcd.lcdClear();
-                    lcd.lcdPrint(message);
+                    try
+                    {
+                        var container = _dataQueueLCD.Take();
+                        string message = container.Message;
 
-                    
+                        lcd.lcdClear();
+                        lcd.lcdPrint(message);
+
+
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        continue;
+                    }
+
+                    Thread.Sleep(500);
                 }
-                catch (InvalidOperationException)
-                {
-                    continue;
-                }
-                
-                Thread.Sleep(500);
-            
+
             }
         }
     }

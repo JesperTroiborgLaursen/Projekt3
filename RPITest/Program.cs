@@ -24,8 +24,8 @@ namespace RPITest
         private static LCDProducer lcdProducer;
         private static WriteToLCD writeToLcd;
         private static LocalDB localDb;
-        private static Thread mThread;
-        private static Thread bThread;
+        private static Thread measureThread;
+        private static Thread broadcastThread;
         private static Thread lcdProducerThread;
         private static Thread writeToLcdThread;
         private static Thread saveToLocalDb;
@@ -42,15 +42,19 @@ namespace RPITest
         private static ButtonObserver buttonObserver3;
         private static ButtonObserver buttonObserver4;
         private static CalibrationLogic calibrationLogic;
-
+        public static ManualResetEvent calibrationEvent { get; set; }
         static void Main(string[] args)
         {
+
             //Setting Dependency Injection for DB context
             services = new ServiceCollection();
             services.AddDbContext<SamplePackDBContext>();
 
             //Creating UserInterface
             ui = new UserInterface();
+
+            //Creating calibrationevent
+            calibrationEvent = new ManualResetEvent(true);
 
             //Create Observers
             buttonObserver1 = new ButtonObserver(ui.button1);
@@ -65,33 +69,32 @@ namespace RPITest
             dataQueueLocalDb = new BlockingCollection<LocalDB_DTO>();
 
             //Create Calibration
-            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2, buttonObserver3, buttonObserver4, dataQueueLCD);
+            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2, buttonObserver3, buttonObserver4, dataQueueLCD, calibrationEvent);
 
             //Creating producers and consumers
-            measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb);
+            measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, calibrationEvent);
             broadcast = new Broadcast(dataQueueBroadcast);
 
             lcdProducer = new LCDProducer(dataQueueLCD, dataQueueMeasure);
-            writeToLcd = new WriteToLCD(dataQueueLCD);
+            writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEvent);
 
-            localDb = new LocalDB(dataQueueLocalDb);
+            localDb = new LocalDB(dataQueueLocalDb, calibrationEvent);
 
             //Creating threads for producers and consumers
-            mThread = new Thread(measure.Run);
-            bThread = new Thread(broadcast.Run);
+            measureThread = new Thread(measure.Run);
+            broadcastThread = new Thread(broadcast.Run);
             lcdProducerThread = new Thread(lcdProducer.Run);
             writeToLcdThread = new Thread(writeToLcd.Run);
             saveToLocalDb = new Thread(localDb.Run);
             uiThread = new Thread(ui.Run);
-            //uiThread.IsBackground = true;
             calibrationThread = new Thread(calibrationLogic.Calibrate);
 
             //Starting threads
-            mThread.Start();
-            bThread.Start();
+            measureThread.Start();
+            //broadcastThread.Start();
             lcdProducerThread.Start();
             writeToLcdThread.Start();
-            saveToLocalDb.Start();
+            //saveToLocalDb.Start();
             uiThread.Start();
             calibrationThread.Start();
 

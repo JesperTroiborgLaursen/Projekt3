@@ -23,6 +23,12 @@ namespace Interfaces
                 observer.Update();
             }
         }
-        
+        public void NotifyCalibration()
+        {
+            foreach (var observer in _observers)
+            {
+                observer.UpdateCalibration();
+            }
+        }
     }
 }
