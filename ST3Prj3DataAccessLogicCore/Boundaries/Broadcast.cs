@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using Domain.DTOModels;
 using Domain.Models;
 
@@ -41,6 +42,7 @@ namespace DataAccesLogic.Boundaries
                 {
                     continue;
                 }
+                Thread.Sleep(20);
 
                 
             }

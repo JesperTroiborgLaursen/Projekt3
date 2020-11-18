@@ -58,14 +58,14 @@ namespace RPITest
             buttonObserver3 = new ButtonObserver(ui.button3);
             buttonObserver4 = new ButtonObserver(ui.button4);
 
-            //Create Calibration
-            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2, buttonObserver3, buttonObserver4);
-
             //Creating dataQues
             dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
             dataQueueLCD = new BlockingCollection<LCD_DTO>();
             dataQueueMeasure = new BlockingCollection<Measure_DTO>();
             dataQueueLocalDb = new BlockingCollection<LocalDB_DTO>();
+
+            //Create Calibration
+            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2, buttonObserver3, buttonObserver4, dataQueueLCD);
 
             //Creating producers and consumers
             measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb);
@@ -83,6 +83,7 @@ namespace RPITest
             writeToLcdThread = new Thread(writeToLcd.Run);
             saveToLocalDb = new Thread(localDb.Run);
             uiThread = new Thread(ui.Run);
+            //uiThread.IsBackground = true;
             calibrationThread = new Thread(calibrationLogic.Calibrate);
 
             //Starting threads
@@ -93,9 +94,8 @@ namespace RPITest
             saveToLocalDb.Start();
             uiThread.Start();
             calibrationThread.Start();
-            
-            saveToLocalDb.Join();
 
+            //uiThread.Join();
         }
 
     }

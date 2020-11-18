@@ -7,6 +7,14 @@ namespace Presentation
 {
     public class UserInterface
     {
+        private bool stop = true;
+
+        public bool Stop
+        {
+            get { return stop; }
+            set { stop = value; }
+        }
+
 
         public Button button1 { get; set; }
         public Button button2 { get; set; }
@@ -29,23 +37,27 @@ namespace Presentation
 
         public void Run()
         {
-            while (true)
+            while (Stop)
             {
-                if(button1.IsPressed())
+                if (button1.IsPressed())
                 {
                     button1.Notify();
                     while (button1.IsPressed())
                     {
                         Thread.Sleep(1);
+
                     }
                     button1.Notify();
                     //Notify observers
-                    
+
                     //Apply observer pattern.............
 
                 }
-                
+
+                Thread.Sleep(0);
             }
         }
+
+        
     }
 }

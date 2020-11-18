@@ -48,6 +48,7 @@ namespace DataAccesLogic.Boundaries
                 for (int i = 0; i < 51; i++)
                 {
                     ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(0))});
+                    Thread.Sleep(20);
                 }
 
                 samplePack.SampleList = ls;
@@ -63,6 +64,7 @@ namespace DataAccesLogic.Boundaries
                 _dataQueueMeasure.Add(measureDto);
                 _dataQueueLocalDB.Add(localDbDto);
                 //Sleep
+                
             }
 
             _dataQueueBroadcast.CompleteAdding();

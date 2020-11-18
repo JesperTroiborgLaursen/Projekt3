@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Threading;
+using DataAccesLogic.Drivers;
 using Domain.DTOModels;
 using RaspberryPiCore.LCD;
 
@@ -9,16 +10,13 @@ namespace Presentation
     public class WriteToLCD
     {
         private BlockingCollection<LCD_DTO> _dataQueueLCD;
-        private SerLCD lcd;
+        private DisplayDriver lcd;
 
         public WriteToLCD(BlockingCollection<LCD_DTO> dataQueueLCD)
         {
             _dataQueueLCD = dataQueueLCD;
 
-            lcd = new SerLCD();
-            lcd.lcdDisplay();
-            lcd.lcdSetBackLight(238, 29, 203); //Makes color pink
-            lcd.lcdSetContrast(0); //0 gives best contrast
+            lcd = new DisplayDriver();
         }
 
 
@@ -35,14 +33,15 @@ namespace Presentation
                     lcd.lcdClear();
                     lcd.lcdPrint(message);
 
-                    Thread.Sleep(500);
+                    
                 }
                 catch (InvalidOperationException)
                 {
                     continue;
                 }
-
-
+                
+                Thread.Sleep(500);
+            
             }
         }
     }

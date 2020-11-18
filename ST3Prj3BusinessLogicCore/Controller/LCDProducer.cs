@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using BusinessLogic.Operations;
 using Domain.DTOModels;
 using Domain.Models;
@@ -44,6 +45,7 @@ namespace BussinessLogic.Controller
                 {
                     continue;
                 }
+                Thread.Sleep(20);
 
 
             }

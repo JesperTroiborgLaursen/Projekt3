@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Domain.Context;
 using Domain.DTOModels;
 using Domain.Models;
@@ -75,6 +76,8 @@ namespace DataAccesLogic.Boundaries
                     {
                         continue;
                     }
+
+                    Thread.Sleep(20);
                 }
             }
         }
