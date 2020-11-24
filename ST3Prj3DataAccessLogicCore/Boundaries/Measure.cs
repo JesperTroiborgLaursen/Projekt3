@@ -9,6 +9,7 @@ using RaspberryPiCore.ADC;
 
 namespace DataAccesLogic.Boundaries
 {
+
     public class Measure
     {
         private static ADC1015 adc;
@@ -21,7 +22,15 @@ namespace DataAccesLogic.Boundaries
         private BlockingCollection<Measure_DTO> _dataQueueMeasure = new BlockingCollection<Measure_DTO>();
         private BlockingCollection<LocalDB_DTO> _dataQueueLocalDB = new BlockingCollection<LocalDB_DTO>();
         public ManualResetEvent _calibrationEvent { get; set; }
-        
+        private double convertingFactor = 0.25965; //Beregnet a værdi = 3.7801
+
+        public double ConvertingFactor
+        {
+            get { return convertingFactor; }
+            set { convertingFactor = value; }
+        }
+
+
         //Stop til at stoppe måling. Når den skal stoppes, sættes denne til true.
         private bool stop = false;
 
@@ -33,12 +42,12 @@ namespace DataAccesLogic.Boundaries
 
         public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast,
             BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<LocalDB_DTO> dataQueueLocalDb,
-            ManualResetEvent autoResetEvent)
+            ManualResetEvent manualResetEvent)
         {
             _dataQueueBroadcast = dataQueueBroadcast;
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueLocalDB = dataQueueLocalDb;
-            _calibrationEvent = autoResetEvent;
+            _calibrationEvent = manualResetEvent;
         }
 
 
@@ -53,7 +62,7 @@ namespace DataAccesLogic.Boundaries
                     var ls = new List<Sample>();
                     for (int i = 0; i < 51; i++)
                     {
-                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(0))});
+                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(3)*ConvertingFactor)});
                         Thread.Sleep(20);
                     }
 
@@ -72,9 +81,11 @@ namespace DataAccesLogic.Boundaries
                     //Sleep
 
                 }
+            }
+
+            _dataQueueBroadcast.CompleteAdding();
         }
 
-        _dataQueueBroadcast.CompleteAdding();
-        }
+        
     }
 }

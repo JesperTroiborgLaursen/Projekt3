@@ -42,7 +42,9 @@ namespace RPITest
         private static ButtonObserver buttonObserver3;
         private static ButtonObserver buttonObserver4;
         private static CalibrationLogic calibrationLogic;
-        public static ManualResetEvent calibrationEvent { get; set; }
+        public static ManualResetEvent calibrationEventLcd { get; set; }
+        public static ManualResetEvent calibrationEventMeasure { get; set; }
+        public static ManualResetEvent calibrationEventLocalDb { get; set; }
         static void Main(string[] args)
         {
 
@@ -54,7 +56,9 @@ namespace RPITest
             ui = new UserInterface();
 
             //Creating calibrationevent
-            calibrationEvent = new ManualResetEvent(true);
+            calibrationEventLcd = new ManualResetEvent(true);
+            calibrationEventMeasure = new ManualResetEvent(true);
+            calibrationEventLocalDb = new ManualResetEvent(true);
 
             //Create Observers
             buttonObserver1 = new ButtonObserver(ui.button1);
@@ -69,16 +73,17 @@ namespace RPITest
             dataQueueLocalDb = new BlockingCollection<LocalDB_DTO>();
 
             //Create Calibration
-            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2, buttonObserver3, buttonObserver4, dataQueueLCD, calibrationEvent);
+            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
+                dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb, dataQueueMeasure);
 
             //Creating producers and consumers
-            measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, calibrationEvent);
+            measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, calibrationEventMeasure);
             broadcast = new Broadcast(dataQueueBroadcast);
 
             lcdProducer = new LCDProducer(dataQueueLCD, dataQueueMeasure);
-            writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEvent);
+            writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEventLcd);
 
-            localDb = new LocalDB(dataQueueLocalDb, calibrationEvent);
+            localDb = new LocalDB(dataQueueLocalDb, calibrationEventLocalDb);
 
             //Creating threads for producers and consumers
             measureThread = new Thread(measure.Run);
@@ -87,7 +92,7 @@ namespace RPITest
             writeToLcdThread = new Thread(writeToLcd.Run);
             saveToLocalDb = new Thread(localDb.Run);
             uiThread = new Thread(ui.Run);
-            calibrationThread = new Thread(calibrationLogic.Calibrate);
+            calibrationThread = new Thread(calibrationLogic.Run);
 
             //Starting threads
             measureThread.Start();
@@ -95,8 +100,8 @@ namespace RPITest
             lcdProducerThread.Start();
             writeToLcdThread.Start();
             //saveToLocalDb.Start();
-            uiThread.Start();
-            calibrationThread.Start();
+            //uiThread.Start();
+            //calibrationThread.Start();
 
             //uiThread.Join();
         }

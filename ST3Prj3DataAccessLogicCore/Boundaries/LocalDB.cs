@@ -16,10 +16,10 @@ namespace DataAccesLogic.Boundaries
         public ManualResetEvent _calibrationEvent { get; set; }
         //public SamplePackDBContext Context { get; set; }
 
-        public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb, ManualResetEvent autoResetEvent)
+        public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb, ManualResetEvent manualResetEvent)
         {
             _dataQueueLocalDb = dataQueueLocalDb;
-            _calibrationEvent = autoResetEvent;
+            _calibrationEvent = manualResetEvent;
         }
 
         public void SaveSamplePack(SamplePack samplePack)

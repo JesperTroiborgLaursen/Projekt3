@@ -39,17 +39,54 @@ namespace Presentation
         {
             while (Stop)
             {
-                if (button1.IsPressed())
+                button1.Notify();
+                while (button1.IsPressed())
                 {
-                    button1.Notify();
+                    Thread.Sleep(0);
+                }
+                button1.Notify();
+            }
+
+            if (button2.IsPressed())
+            {
+                button2.Notify();
+                int i = 0;
+                bool startcal = false;
+                while (button2.IsPressed() && !startcal)
+                {
+                    i = 0;
+                    while (button3.IsPressed() && button2.IsPressed())
+                    {
+                        if (button3.IsPressed() && button2.IsPressed())
+                        {
+                            i++;
+                        }
+
+                        Thread.Sleep(1);
+
+                        if (i > 500)
+                        {
+                            button3.NotifyCalibration();
+                            startcal = true;
+                        }
+                    }
+                }
+                button2.Notify();
+            }
+
+            if (button3.IsPressed())
+            {
+                if (button3.IsPressed())
+                {
+                    button3.Notify();
                     int i = 0;
                     bool startcal = false;
-                    while (button1.IsPressed() && !startcal)
+                    while (button3.IsPressed() && !startcal)
                     {
                         i = 0;
-                        while (button1.IsPressed() && button2.IsPressed())
+                        while (button3.IsPressed() && button2.IsPressed())
                         {
-                            if (button1.IsPressed() && button2.IsPressed())
+                            if (button3.IsPressed() && button2.IsPressed())
                             {
                                 i++;
                             }
@@ -58,41 +95,23 @@ namespace Presentation
 
                             if (i > 500)
                             {
-                                button1.NotifyCalibration();
+                                button3.NotifyCalibration();
                                 startcal = true;
                             }
                         }
                     }
-                    button1.Notify();
+                    button3.Notify();
                 }
 
-                if (button2.IsPressed())
+                if (button4.IsPressed())
                 {
-                    button2.Notify();
-                    int i = 0;
-                    bool startcal = false;
-                    while (button2.IsPressed() && !startcal)
+                    button4.Notify();
+                    while (button4.IsPressed())
                     {
-                        i = 0;
-                        while (button1.IsPressed() && button2.IsPressed())
-                        {
-                            if (button1.IsPressed() && button2.IsPressed())
-                            {
-                                i++;
-                            }
-
-                            Thread.Sleep(1);
-
-                            if (i > 500)
-                            {
-                                button1.NotifyCalibration();
-                                startcal = true;
-                            }
-                        }
+                        Thread.Sleep(0);
                     }
-                    button2.Notify();
+                    button4.Notify();
                 }
-                
 
                 Thread.Sleep(0);
             }
