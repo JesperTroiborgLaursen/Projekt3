@@ -8,6 +8,7 @@ using DataAccesLogic.Drivers;
 using Domain.DTOModels;
 using Domain.Models;
 using Interfaces;
+using MathNet.Numerics; //lineær regressions pakke
 
 namespace BusinessLogic.Controller
 {
@@ -36,6 +37,7 @@ namespace BusinessLogic.Controller
             _button3Observer = buttonObserver3;
             _button4Observer = buttonObserver4;
             lcd = new DisplayDriver();
+            TestPressureList.AddRange(new List<int>{10,50,100,150,200,250,300});
 
             _dataQueueLCD = dataQueue;
             _dataQueueMeasure = dataQueueMeasure;
@@ -85,6 +87,17 @@ namespace BusinessLogic.Controller
                         if (_button2Observer.IsPressed)
                         {
                             lcd.lcdPrint("Measuring. Please wait ...");
+                            
+                            //var container = _dataQueueMeasure.Take();
+                            ////mmHg testtryk lægges ind i double x-akse data array fra _dataQueueMeasure
+                            ////systemets svar på testtryk lægge ind på y-akse data array.
+                            //double[] ydata = new double[] { 0, 2, 4, 6, 8, 800 };
+                            //double[] xdata = new double[] { 0, 1, 2, 3, 4, 32 };
+
+                            //Tuple<double, double> p = Fit.Line(xdata, ydata);
+                            //double b = p.Item1;
+                            //double a = p.Item2;
+                            //Console.WriteLine($"På formen Y=ax+b: y={a}*x+{b}");
 
                         }
                     }
