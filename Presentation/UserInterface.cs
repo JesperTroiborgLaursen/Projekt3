@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
-using DataAccesLogic.Drivers;
 using Interfaces;
+using RPI;
+using Button = DataAccesLogic.Drivers.Button;
 
 namespace Presentation
 {
@@ -20,16 +21,24 @@ namespace Presentation
         public Button button2 { get; set; }
         public Button button3 { get; set; }
         public Button button4 { get; set; }
-
+        public Led BatteryLED { get; set; }
+        public Led AlarmLED { get; set; }
+        public Led SystemLED { get; set; }
 
         public UserInterface()
         {
+            //Create RPI
+            RPi _rpi = new RPi();
             //Creating buttons
             button1 = new Button(1);
             button2 = new Button(2);
             button3 = new Button(3);
             button4 = new Button(4);
 
+            //Creating LED's
+            SystemLED = new Led(_rpi,Led.ID.LD1); //Hvad fanden er det? Hvilken er hvilken LED??
+            AlarmLED = new Led(_rpi,Led.ID.LD2);
+            BatteryLED = new Led(_rpi,Led.ID.LD3);
 
             //Should set up WriteToLCD also
         }

@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO.Ports;
 using System.Threading;
+using Interfaces;
 
 namespace DataAccesLogic.Drivers
 {
-
-
-
-    public class SOMO
+    public class SOMO : AlarmAbstract
     {
         public SerialPort serialPort;
         private readonly byte[] volume;

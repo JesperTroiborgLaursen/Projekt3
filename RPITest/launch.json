@@ -12,5 +12,5 @@
     }
   ]
 
-  //DebugAdapterHost.Launch /LaunchJson:"C:\Users\JesperTroiborg\source\repos\Projekt3\RPITest\launch.json" /EngineGuid:541B8A8A-6081-4506-9F0A-1CE771DEBC04
-}
+  //Jesper's placering: DebugAdapterHost.Launch /LaunchJson:"C:\Users\JesperTroiborg\source\repos\Projekt3\RPITest\launch.json" /EngineGuid:541B8A8A-6081-4506-9F0A-1CE771DEBC04
+}//Marc's placering: DebugAdapterHost.Launch /LaunchJson:"C:\Users\karul\source\repos\Projekt3\RPITest\launch.json" /EngineGuid:541B8A8A-6081-4506-9F0A-1CE771DEBC04
