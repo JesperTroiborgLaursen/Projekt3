@@ -72,10 +72,7 @@ namespace RPITest
             dataQueueMeasure = new BlockingCollection<Measure_DTO>();
             dataQueueLocalDb = new BlockingCollection<LocalDB_DTO>();
 
-            //Create Calibration
-            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
-                dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb, dataQueueMeasure);
-
+            
             //Creating producers and consumers
             measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, calibrationEventMeasure);
             broadcast = new Broadcast(dataQueueBroadcast);
@@ -84,6 +81,11 @@ namespace RPITest
             writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEventLcd);
 
             localDb = new LocalDB(dataQueueLocalDb, calibrationEventLocalDb);
+            
+            //Create Calibration
+            calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
+                dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb, dataQueueMeasure,measure);
+
 
             //Creating threads for producers and consumers
             measureThread = new Thread(measure.Run);
