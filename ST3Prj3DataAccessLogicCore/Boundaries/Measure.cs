@@ -48,12 +48,12 @@ namespace DataAccesLogic.Boundaries
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueLocalDB = dataQueueLocalDb;
             _calibrationEvent = manualResetEvent;
+            adc = new ADC1015();
         }
 
 
         public void Run()
         {
-            adc = new ADC1015();
             while(_calibrationEvent.WaitOne()) 
             {
                 while (!stop && _calibrationEvent.WaitOne())

@@ -18,35 +18,39 @@ namespace Presentation
             _dataQueueLCD = dataQueueLCD;
             _calibrationEvent = manualResetEvent;
             lcd = new DisplayDriver();
+            lcd.lcdClear();
         }
 
 
 
         public void Run()
         {
-            while(_calibrationEvent.WaitOne()) 
-            {
-                while (!_dataQueueLCD.IsCompleted && _calibrationEvent.WaitOne())
+            
+                while(_calibrationEvent.WaitOne())
                 {
-                    try
+                    while(!_dataQueueLCD.IsCompleted && _calibrationEvent.WaitOne())
                     {
-                        var container = _dataQueueLCD.Take();
-                        string message = container.Message;
+                        try
+                        {
+                            var container = _dataQueueLCD.Take();
+                            string message = container.Message;
 
-                        lcd.lcdClear();
-                        lcd.lcdPrint(message);
+                            lcd.lcdClear();
+                            lcd.lcdPrint(message);
 
 
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            continue;
+                        }
+
+                        Thread.Sleep(500);
                     }
-                    catch (InvalidOperationException)
-                    {
-                        continue;
-                    }
 
-                    Thread.Sleep(500);
+                    Thread.Sleep(0);
                 }
-
-            }
+            
         }
     }
 }

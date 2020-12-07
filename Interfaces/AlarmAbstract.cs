@@ -18,12 +18,15 @@ namespace Interfaces
             _alarmObservers.Remove(observer);
         }
 
-        public void Notify()
+        public void NotifyBattery()
         {
             foreach (var observer in _alarmObservers)
             {
                 observer.Update();
             }
         }
+
+        //NotifyBP();
+        //NotifyPulse();
     }
 }

@@ -14,23 +14,24 @@ namespace DataAccesLogic.Drivers
             {
                 case 1:
                     Controller = new GpioController();
-                    Controller.OpenPin(9, PinMode.Input);
-                    this.buttonNumber = 9;
+                    Controller.OpenPin(17, PinMode.Input);
+                    this.buttonNumber = 17;
+                    //Tested 23,24,25
                 break;
                 case 2:
                     Controller = new GpioController();
-                    Controller.OpenPin(25, PinMode.Input);
-                    this.buttonNumber = 25;
+                    Controller.OpenPin(22, PinMode.Input);
+                    this.buttonNumber = 22;
                     break;
                 case 3:
                     Controller = new GpioController();
-                    Controller.OpenPin(11, PinMode.Input);
-                    this.buttonNumber = 11;
+                    Controller.OpenPin(27, PinMode.Input);
+                    this.buttonNumber = 27;
                     break;
                 case 4:
                     Controller = new GpioController();
-                    Controller.OpenPin(8, PinMode.Input);
-                    this.buttonNumber = 8;
+                    Controller.OpenPin(4, PinMode.Input);
+                    this.buttonNumber = 4;
                     break;
             }
         }

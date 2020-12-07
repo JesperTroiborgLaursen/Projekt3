@@ -15,41 +15,48 @@ namespace BussinessLogic.Controller
     {
         private BlockingCollection<LCD_DTO> _dataQueueLCD;
         private BlockingCollection<Measure_DTO> _dataQueueMeasure;
+        private ManualResetEvent _calibrationEventLcd;
         private LCD_DTO dto;
         private BPAvg _bpAvg;
         public double blodtryk { get; set; }
 
-        public LCDProducer(BlockingCollection<LCD_DTO> dataQueueLCD, BlockingCollection<Measure_DTO> dataQueueMeasure)
+        public LCDProducer(BlockingCollection<LCD_DTO> dataQueueLCD, BlockingCollection<Measure_DTO> dataQueueMeasure,
+            ManualResetEvent calibrationEventLcd)
         {
             _dataQueueLCD = dataQueueLCD;
             _dataQueueMeasure = dataQueueMeasure;
             _bpAvg = new BPAvg();
             blodtryk = 50;
+            _calibrationEventLcd = calibrationEventLcd;
         }
 
         public void Run()
         {
-            while (!_dataQueueMeasure.IsCompleted)
+            while (_calibrationEventLcd.WaitOne())
             {
-                try
+                while (!_dataQueueMeasure.IsCompleted && _calibrationEventLcd.WaitOne())
                 {
-                    var container = _dataQueueMeasure.Take();
-                    SamplePack samplePack = container.SamplePack;
-                    blodtryk = _bpAvg.Avg(samplePack);
+                    try
+                    {
+                        var container = _dataQueueMeasure.Take();
+                        SamplePack samplePack = container.SamplePack;
+                        blodtryk = _bpAvg.Avg(samplePack);
 
-                    dto = new LCD_DTO() { Message = $"Blodtryk = {blodtryk.ToString("n2")}" };
+                        dto = new LCD_DTO() {Message = $"Blodtryk = {blodtryk.ToString("n2")}"};
 
-                    _dataQueueLCD.Add(dto);
+                        _dataQueueLCD.Add(dto);
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        continue;
+                    }
+
+                    Thread.Sleep(20);
+
+
                 }
-                catch (InvalidOperationException)
-                {
-                    continue;
-                }
-                Thread.Sleep(20);
-
 
             }
-
         }
     }
 }

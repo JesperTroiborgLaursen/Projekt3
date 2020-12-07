@@ -41,6 +41,7 @@ namespace BusinessLogic.Controller
             _button3Observer = buttonObserver3;
             _button4Observer = buttonObserver4;
             lcd = new DisplayDriver();
+            TestPressureList = new List<int>();
             TestPressureList.AddRange(new List<int>{10,50,100,150,200,250,300});
             xdata = new double[] { 10, 50, 100, 150, 200, 250, 300 };
             ydata = new double[xdata.Length];
@@ -68,6 +69,7 @@ namespace BusinessLogic.Controller
                     _calibrationEventLocalDb.Set();
                     _calibrationEventLcd.Set();
                     _button3Observer.startCal = false;
+                    lcd.lcdClear();
                     lcd.lcdPrint("Getting ready for calibration...");
                     Calibrate();
                     _calibrationEventMeasure.Reset();
@@ -86,14 +88,19 @@ namespace BusinessLogic.Controller
             ClearQueueDisplay(_dataQueueLCD);
             while (!_button4Observer.IsPressed)
             {
-                lcd.lcdPrint("Calibration initialized\nPlease press \"START\" to continue\n or press \"Mute\" to stop calibration");
+                lcd.lcdClear();
+                lcd.lcdDisplay();
+                Thread.Sleep(0);
+                lcd.lcdPrint("123456789 123456789 123456789");
+                //lcd.lcdPrint("Calibration initialized\nPlease press \"START\" to continue\n or press"); // \"Mute\" to stop calibration
+
                 if (_button2Observer.IsPressed)
                 {
                     int j = 0;
                     foreach (var pressure in TestPressureList)
                     {
 
-                        lcd.lcdPrint($"Calibration started.\nPlease apply a test pressure of {pressure} and press \"Start\"");
+                        lcd.lcdPrint($"Calibration started."); //\nPlease apply a test pressure of {pressure} and press \"Start\""
                         if (_button2Observer.IsPressed)
                         {
                             lcd.lcdPrint("Measuring. Please wait ...");

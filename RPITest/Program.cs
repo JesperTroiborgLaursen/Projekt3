@@ -24,6 +24,9 @@ namespace RPITest
         private static LCDProducer lcdProducer;
         private static WriteToLCD writeToLcd;
         private static LocalDB localDb;
+        private static UserInterface ui;
+        private static CalibrationLogic calibrationLogic;
+
         private static Thread measureThread;
         private static Thread broadcastThread;
         private static Thread lcdProducerThread;
@@ -36,12 +39,12 @@ namespace RPITest
         private static BlockingCollection<Measure_DTO> dataQueueMeasure;
         private static BlockingCollection<LocalDB_DTO> dataQueueLocalDb;
         private static ServiceCollection services;
-        private static UserInterface ui;
+        
         private static ButtonObserver buttonObserver1;
         private static ButtonObserver buttonObserver2;
         private static ButtonObserver buttonObserver3;
         private static ButtonObserver buttonObserver4;
-        private static CalibrationLogic calibrationLogic;
+        
         public static ManualResetEvent calibrationEventLcd { get; set; }
         public static ManualResetEvent calibrationEventMeasure { get; set; }
         public static ManualResetEvent calibrationEventLocalDb { get; set; }
@@ -77,7 +80,7 @@ namespace RPITest
             measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, calibrationEventMeasure);
             broadcast = new Broadcast(dataQueueBroadcast);
 
-            lcdProducer = new LCDProducer(dataQueueLCD, dataQueueMeasure);
+            lcdProducer = new LCDProducer(dataQueueLCD, dataQueueMeasure, calibrationEventLcd);
             writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEventLcd);
 
             localDb = new LocalDB(dataQueueLocalDb, calibrationEventLocalDb);
@@ -97,13 +100,13 @@ namespace RPITest
             calibrationThread = new Thread(calibrationLogic.Run);
 
             //Starting threads
+            uiThread.Start();
+            calibrationThread.Start();
             measureThread.Start();
             //broadcastThread.Start();
-            lcdProducerThread.Start();
-            writeToLcdThread.Start();
-            //saveToLocalDb.Start();
-            //uiThread.Start();
-            //calibrationThread.Start();
+            //lcdProducerThread.Start();
+            //writeToLcdThread.Start();
+            saveToLocalDb.Start();
 
             //uiThread.Join();
         }
