@@ -13,11 +13,12 @@ namespace Presentation
         private DisplayDriver lcd;
         public ManualResetEvent _calibrationEvent { get; set; }
 
-        public WriteToLCD(BlockingCollection<LCD_DTO> dataQueueLCD, ManualResetEvent manualResetEvent)
+        public WriteToLCD(BlockingCollection<LCD_DTO> dataQueueLCD, ManualResetEvent manualResetEvent,
+            DisplayDriver displayDriver)
         {
             _dataQueueLCD = dataQueueLCD;
             _calibrationEvent = manualResetEvent;
-            lcd = new DisplayDriver();
+            lcd = displayDriver;
             lcd.lcdClear();
         }
 

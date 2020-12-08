@@ -44,6 +44,9 @@ namespace RPITest
         private static ButtonObserver buttonObserver2;
         private static ButtonObserver buttonObserver3;
         private static ButtonObserver buttonObserver4;
+
+
+        private static DisplayDriver lcd;
         
         public static ManualResetEvent calibrationEventLcd { get; set; }
         public static ManualResetEvent calibrationEventMeasure { get; set; }
@@ -55,6 +58,9 @@ namespace RPITest
             services = new ServiceCollection();
             services.AddDbContext<SamplePackDBContext>();
 
+
+            //Creating display
+            lcd = new DisplayDriver();
             //Creating UserInterface
             ui = new UserInterface();
 
@@ -81,13 +87,13 @@ namespace RPITest
             broadcast = new Broadcast(dataQueueBroadcast);
 
             lcdProducer = new LCDProducer(dataQueueLCD, dataQueueMeasure, calibrationEventLcd);
-            writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEventLcd);
+            writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEventLcd, lcd);
 
             localDb = new LocalDB(dataQueueLocalDb, calibrationEventLocalDb);
             
             //Create Calibration
             calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
-                dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb, dataQueueMeasure,measure);
+                dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb, dataQueueMeasure,measure, lcd);
 
 
             //Creating threads for producers and consumers
@@ -106,7 +112,7 @@ namespace RPITest
             //broadcastThread.Start();
             //lcdProducerThread.Start();
             //writeToLcdThread.Start();
-            saveToLocalDb.Start();
+            //saveToLocalDb.Start();
 
             //uiThread.Join();
         }

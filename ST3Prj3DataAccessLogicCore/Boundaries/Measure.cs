@@ -60,9 +60,9 @@ namespace DataAccesLogic.Boundaries
                 {
                     var samplePack = new SamplePack();
                     var ls = new List<Sample>();
-                    for (int i = 0; i < 51; i++)
+                    for (int i = 0; i < 50; i++)
                     {
-                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(3)*ConvertingFactor)});
+                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(3)*Math.Sqrt(ConvertingFactor*ConvertingFactor))});//Tager numerisk værdi for at sikre der ikke er minus værdier under test
                         Thread.Sleep(20);
                     }
 
@@ -79,6 +79,7 @@ namespace DataAccesLogic.Boundaries
                     _dataQueueMeasure.Add(measureDto);
                     _dataQueueLocalDB.Add(localDbDto);
                     //Sleep
+                    Thread.Sleep(0);
 
                 }
             }
