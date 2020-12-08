@@ -42,12 +42,12 @@ namespace DataAccesLogic.Boundaries
 
         public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast,
             BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<LocalDB_DTO> dataQueueLocalDb,
-            ManualResetEvent manualResetEvent)
+            ManualResetEvent calibrationResetEvent)
         {
             _dataQueueBroadcast = dataQueueBroadcast;
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueLocalDB = dataQueueLocalDb;
-            _calibrationEvent = manualResetEvent;
+            _calibrationEvent = calibrationResetEvent;
             adc = new ADC1015();
         }
 
@@ -56,7 +56,7 @@ namespace DataAccesLogic.Boundaries
         {
             while(_calibrationEvent.WaitOne()) 
             {
-                while (!stop && _calibrationEvent.WaitOne())
+                while (!Stop && _calibrationEvent.WaitOne())
                 {
                     var samplePack = new SamplePack();
                     var ls = new List<Sample>();
@@ -75,13 +75,24 @@ namespace DataAccesLogic.Boundaries
                     Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
                     Measure_DTO measureDto = new Measure_DTO() {SamplePack = samplePack};
                     LocalDB_DTO localDbDto = new LocalDB_DTO() {SamplePack = samplePack};
-                    _dataQueueBroadcast.Add(broadcastDto);
-                    _dataQueueMeasure.Add(measureDto);
-                    _dataQueueLocalDB.Add(localDbDto);
+
+                    //Checking if queues have been closed
+                    if (!_dataQueueMeasure.IsCompleted && !_dataQueueBroadcast.IsCompleted && !_dataQueueLocalDB.IsCompleted)
+                    {
+                        _dataQueueBroadcast.Add(broadcastDto);
+                        _dataQueueMeasure.Add(measureDto);
+                        _dataQueueLocalDB.Add(localDbDto);
+                    }
+                    else
+                    {
+                        break;
+                    }
+
                     //Sleep
                     Thread.Sleep(0);
 
                 }
+                Thread.Sleep(0);
             }
 
             _dataQueueBroadcast.CompleteAdding();

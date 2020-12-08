@@ -51,10 +51,11 @@ namespace BussinessLogic.Controller
                         continue;
                     }
 
-                    Thread.Sleep(20);
+                    Thread.Sleep(1000);
 
 
                 }
+                Thread.Sleep(0);
 
             }
         }

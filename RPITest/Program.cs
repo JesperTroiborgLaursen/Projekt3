@@ -105,14 +105,72 @@ namespace RPITest
             uiThread = new Thread(ui.Run);
             calibrationThread = new Thread(calibrationLogic.Run);
 
-            //Starting threads
+            //Starting UI
             uiThread.Start();
             calibrationThread.Start();
+            //Wait until start button is pressed and then measurement threads are started
+            while (!buttonObserver1.IsPressed)
+            {
+                Thread.Sleep(0);
+            }
+
+            
             measureThread.Start();
-            //broadcastThread.Start();
-            //lcdProducerThread.Start();
-            //writeToLcdThread.Start();
-            //saveToLocalDb.Start();
+            broadcastThread.Start();
+            lcdProducerThread.Start();
+            writeToLcdThread.Start();
+            saveToLocalDb.Start();
+
+            //As long as stop button hasnt been pressed, threads are kept going
+            while (!buttonObserver4.IsPressed)
+            {
+                Thread.Sleep(0);
+            }
+
+            //Shutting down threads by completing queues
+            dataQueueLocalDb.CompleteAdding();
+            dataQueueLCD.CompleteAdding();
+            dataQueueBroadcast.CompleteAdding();
+            dataQueueMeasure.CompleteAdding();
+            measure.Stop = true;
+
+
+            ////Start again after stopped measure
+            //while (true)
+            //{
+            //    while (!buttonObserver1.IsPressed)
+            //    {
+            //        Thread.Sleep(0);
+            //    }
+
+            //    dataQueueLocalDb.;
+            //    dataQueueLCD.CompleteAdding();
+            //    dataQueueBroadcast.CompleteAdding();
+            //    dataQueueMeasure.CompleteAdding();
+
+            //    calibrationThread.Start();
+            //    measureThread.Start();
+            //    broadcastThread.Start();
+            //    lcdProducerThread.Start();
+            //    writeToLcdThread.Start();
+            //    saveToLocalDb.Start();
+
+            //    //As long as stop button hasnt been pressed, threads are kept going
+            //    while (!buttonObserver4.IsPressed)
+            //    {
+            //        Thread.Sleep(0);
+            //    }
+
+            //    //Shutting down threads by completing queues
+            //    dataQueueLocalDb.CompleteAdding();
+            //    dataQueueLCD.CompleteAdding();
+            //    dataQueueBroadcast.CompleteAdding();
+            //    dataQueueMeasure.CompleteAdding();
+            //    measure.Stop = true;
+
+
+
+            //}
 
             //uiThread.Join();
         }

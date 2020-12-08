@@ -63,7 +63,7 @@ namespace Presentation
                                 i++;
                             }
 
-                            Thread.Sleep(1);
+                            Thread.Sleep(0);
 
                             if (i > 500)
                             {
@@ -93,7 +93,7 @@ namespace Presentation
                                     i++;
                                 }
 
-                                Thread.Sleep(1);
+                                Thread.Sleep(0);
 
                                 if (i > 500)
                                 {
