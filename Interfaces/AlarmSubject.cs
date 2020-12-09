@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Interfaces
 {
-    public abstract class AlarmAbstract
+    public abstract class AlarmSubject
     {
         private List<IAlarmObserver> _alarmObservers = new List<IAlarmObserver>();
 
@@ -18,15 +18,28 @@ namespace Interfaces
             _alarmObservers.Remove(observer);
         }
 
-        public void NotifyBattery()
+        public void NotifyBattery(int priority)
         {
             foreach (var observer in _alarmObservers)
             {
-                observer.Update();
+                observer.UpdateBattery(priority);
+            }
+        }
+        public void NotifyBP(int priority)
+        {
+            foreach (var observer in _alarmObservers)
+            {
+                observer.UpdateBP(priority);
             }
         }
 
-        //NotifyBP();
-        //NotifyPulse();
+        public void NotifyPulse(int priority)
+        {
+            foreach (var observer in _alarmObservers)
+            {
+                observer.UpdatePulse(priority);
+            }
+        }
+
     }
 }

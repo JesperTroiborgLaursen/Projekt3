@@ -18,75 +18,74 @@ namespace BusinessLogic.Operations
 
         #region Properties
 
-        public int highestSample4 { get; set; }
+        public int highestSample4 { get; private  set; }
 
-        public int highestSampleIndex4 { get; set; }
+        public int highestSampleIndex4 { get;private  set; }
 
-        public bool Thresholdreached4 { get; set; }
+        public bool Thresholdreached4 { get;private  set; }
 
-        public bool ThresholdDone3 { get; set; }
+        public bool ThresholdDone3 { get;private  set; }
 
-        public int highestSample3 { get; set; }
+        public int highestSample3 { get;private  set; }
 
-        public int highestSampleIndex3 { get; set; }
+        public int highestSampleIndex3 { get;private  set; }
 
-        public bool ThresholdDone2 { get; set; }
+        public bool ThresholdDone2 { get;private  set; }
 
-        public int highestSample2 { get; set; }
+        public int highestSample2 { get;private  set; }
 
-        public int highestSampleIndex2 { get; set; }
+        public int highestSampleIndex2 { get;private  set; }
 
-        public bool ThresholdDone1 { get; set; }
+        public bool ThresholdDone1 { get;private  set; }
 
-        public int highestSample6 { get; set; }
+        public int highestSample6 { get;private  set; }
 
-        public int highestSampleIndex9 { get; set; }
+        public int highestSampleIndex9 { get;private  set; }
 
-        public int highestSample9 { get; set; }
+        public int highestSample9 { get;private  set; }
 
-        public bool Thresholdreached9 { get; set; }
+        public bool Thresholdreached9 { get;private  set; }
 
-        public bool ThresholdDone8 { get; set; }
+        public bool ThresholdDone8 { get;private  set; }
 
-        public int highestSampleIndex8 { get; set; }
+        public int highestSampleIndex8 { get;private  set; }
 
-        public int highestSample8 { get; set; }
+        public int highestSample8 { get;private  set; }
 
-        public bool Thresholdreached8 { get; set; }
+        public bool Thresholdreached8 { get;private  set; }
 
-        public bool ThresholdDone7 { get; set; }
+        public bool ThresholdDone7 { get;private  set; }
 
-        public int highestSampleIndex7 { get; set; }
+        public int highestSampleIndex7 { get;private  set; }
 
-        public int highestSample7 { get; set; }
+        public int highestSample7 { get;private  set; }
 
-        public bool Thresholdreached7 { get; set; }
+        public bool Thresholdreached7 { get;private  set; }
 
-        public bool ThresholdDone6 { get; set; }
+        public bool ThresholdDone6 { get;private  set; }
 
-        public bool Thresholdreached6 { get; set; }
+        public bool Thresholdreached6 { get;private  set; }
 
-        public bool ThresholdDone5 { get; set; }
+        public bool ThresholdDone5 { get;private  set; }
 
-        public int highestSampleIndex6 { get; set; }
+        public int highestSampleIndex6 { get;private  set; }
 
-        public int highestSampleIndex5 { get; set; }
+        public int highestSampleIndex5 { get;private  set; }
 
-        public int highestSample5 { get; set; }
+        public int highestSample5 { get;private  set; }
 
-        public bool Thresholdreached5 { get; set; }
+        public bool Thresholdreached5 { get;private  set; }
 
-        public bool ThresholdDone4 { get; set; }
+        public bool ThresholdDone4 { get;private  set; }
 
         #endregion
 
         private List<int> HeartBeatIndexList;
-        public BlockingCollection<Measure_DTO> _dataQueueMeasure { get; set; }
+
 
         public CalculatePulse(BlockingCollection<Measure_DTO> dataQueueMeasure)
         {
-            _dataQueueMeasure = dataQueueMeasure;
-            HeartBeatIndexList = new List<int>();
+           HeartBeatIndexList = new List<int>();
 
             //10, 50, 80, 100, 140
             //var 40
@@ -95,23 +94,10 @@ namespace BusinessLogic.Operations
             //var 40
         }
 
-        public List<int> FindPulseBeat()
+        public List<int> FindPulseBeat(List<int> threeSecData)
         {
-            lsSamples = new List<int>();
-            //Opsamler 3 sekunders data i lsSamples
-            for (int i = 0; i < 3; i++)
-            {
-                Thread.Sleep(1000);
-                if (!_dataQueueMeasure.IsCompleted)
-                {
-                    var container = _dataQueueMeasure.Take();
-                    foreach (var sample in container.SamplePack.SampleList)
-                    {
-                        lsSamples.Add((int) sample.Value);
-                    }
-                    i++;
-                }
-            }
+            lsSamples = threeSecData;
+            
             //Sammenligner med Threshold, alle værdier derover, kan potentielt være pulsslag.
             int j = 0;
             int highestSampleIndex1 = 0;
@@ -265,9 +251,9 @@ namespace BusinessLogic.Operations
         }
 
 
-        public int CalcPulse()
+        public int CalcPulse(List<int> threeSecData)
         {
-            var indexLs = FindPulseBeat();
+            var indexLs = FindPulseBeat(threeSecData);
             var diffLs = new List<int>();
             int j = 0;
             foreach (var index in indexLs)

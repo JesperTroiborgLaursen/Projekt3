@@ -116,10 +116,10 @@ namespace RPITest
 
             
             measureThread.Start();
-            broadcastThread.Start();
-            lcdProducerThread.Start();
-            writeToLcdThread.Start();
-            saveToLocalDb.Start();
+            //broadcastThread.Start();
+            //lcdProducerThread.Start();
+            //writeToLcdThread.Start();
+            //saveToLocalDb.Start();
 
             //As long as stop button hasnt been pressed, threads are kept going
             while (!buttonObserver4.IsPressed)

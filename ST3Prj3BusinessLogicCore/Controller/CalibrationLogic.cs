@@ -53,7 +53,7 @@ namespace BusinessLogic.Controller
             _calibrationEventLcd = calibrationEventLcd;
             _calibrationEventLocalDb = calibrationEventLocalDb;
             _measure = measure;
-            lcd = displayDriver;
+            //lcd = displayDriver;
 
 
         }
@@ -62,6 +62,7 @@ namespace BusinessLogic.Controller
 
         public void Run()
         {
+
             while (true)
             {
                 if (_button3Observer.startCal)
@@ -69,8 +70,11 @@ namespace BusinessLogic.Controller
                     _calibrationEventMeasure.Set();
                     _calibrationEventLocalDb.Set();
                     _calibrationEventLcd.Set();
-                    lcd.lcdClear();
-                    lcd.lcdPrint("Getting ready for   calibration...");
+                    while (_dataQueueLCD.Count != 0)
+                    {
+                        Thread.Sleep(1);
+                    }
+                    
                     Calibrate();
                     _button3Observer.startCal = false;
                     _calibrationEventMeasure.Reset();
@@ -88,10 +92,16 @@ namespace BusinessLogic.Controller
             ClearQueueMeasure(_dataQueueMeasure);
             ClearQueueDisplay(_dataQueueLCD);
             bool breakFlag = false;
+
+            DisplayDriver lcd = new DisplayDriver();
+            lcd.lcdClear();
+            lcd.lcdGotoXY(0,0);
+            lcd.lcdPrint("Getting ready for   calibration...");
+
                 while (!_button4Observer.IsPressed || !breakFlag)
                 {
                     lcd.lcdClear();
-                    lcd.lcdPrint("123456789 123456789 123456789");
+                    lcd.lcdPrint("123456789 123456789 123456789 123456789");
                     //lcd.lcdPrint("Calibration initialized\nPlease press \"START\" to continue\n or press"); // \"Mute\" to stop calibration
 
                     while (!_button2Observer.IsPressed)

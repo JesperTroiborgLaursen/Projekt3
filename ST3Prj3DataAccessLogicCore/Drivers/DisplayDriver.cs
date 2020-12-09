@@ -4,7 +4,8 @@ namespace DataAccesLogic.Drivers
 {
     public class DisplayDriver : SerLCD
     {
-        private SerLCD lcd;
+        //public SerLCD lcd;
+        public SerLCD lcd { get; private set; }
         public DisplayDriver()
         {
             lcd = new SerLCD();

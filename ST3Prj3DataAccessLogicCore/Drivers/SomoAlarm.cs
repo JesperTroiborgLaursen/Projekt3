@@ -7,7 +7,7 @@ using Interfaces;
 
 namespace DataAccesLogic.Drivers
 {
-    public class SOMO : AlarmAbstract
+    public class SomoAlarm : IAlarmObserver
     {
         public SerialPort serialPort;
         private readonly byte[] volume;
@@ -27,7 +27,7 @@ namespace DataAccesLogic.Drivers
         private readonly int checksum1 = 5;
         private readonly int checksum2 = 6;
         private readonly int end = 7;
-        public SOMO()
+        public SomoAlarm()
         {
             volume = new byte[] { 126, 6, 0, 0, 30, 255, 220, 239 };
             sdCard = new byte[] { 126, 9, 0, 0, 2, 255, 245, 239 };
@@ -167,6 +167,21 @@ namespace DataAccesLogic.Drivers
         public void ShutDown()
         {
             StopAlarmSound();
+        }
+
+        public void UpdateBattery(int priority)
+        {
+            PlayAlarmSound(priority);
+        }
+
+        public void UpdateBP(int priority)
+        {
+            PlayAlarmSound(priority);
+        }
+
+        public void UpdatePulse(int priority)
+        {
+            PlayAlarmSound(priority);
         }
     }
 }

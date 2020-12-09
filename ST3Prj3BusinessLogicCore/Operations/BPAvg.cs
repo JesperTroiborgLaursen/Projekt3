@@ -1,19 +1,20 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Domain.Models;
 
 namespace BusinessLogic.Operations
 {
     public class BPAvg
     {
-        public double Avg(SamplePack samplePack)
+        public double Avg(List<int> threeSecData)
         {
             double result = 0;
-            foreach (var sample in samplePack.SampleList)
+            foreach (var sample in threeSecData)
             {
-                result += sample.Value;
+                result += sample;
             }
 
-            double resultAvg = result / samplePack.SampleList.Count();
+            double resultAvg = result / threeSecData.Count();
 
             return resultAvg;
         }

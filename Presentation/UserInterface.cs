@@ -123,7 +123,6 @@ namespace Presentation
 
                 Thread.Sleep(0);
             }
-
         }
 
     }
