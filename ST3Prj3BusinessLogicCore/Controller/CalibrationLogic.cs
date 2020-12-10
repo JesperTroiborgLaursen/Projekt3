@@ -29,12 +29,14 @@ namespace BusinessLogic.Controller
         public List<int> TestPressureList { get; private set; }
         private double[] ydata;
         private double[] xdata;
+        private ManualResetEvent _calibrationJoinEvent;
 
 
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
             ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, BlockingCollection<LCD_DTO> dataQueue,
             ManualResetEvent calibrationEventLcd, ManualResetEvent calibrationEventMeasure,
-            ManualResetEvent calibrationEventLocalDb, BlockingCollection<Measure_DTO> dataQueueMeasure, Measure measure,
+            ManualResetEvent calibrationEventLocalDb, ManualResetEvent calibrationJoinEvent,
+            BlockingCollection<Measure_DTO> dataQueueMeasure, Measure measure,
             DisplayDriver displayDriver)
         {
             _button1Observer = buttonObserver1;
@@ -42,8 +44,8 @@ namespace BusinessLogic.Controller
             _button3Observer = buttonObserver3;
             _button4Observer = buttonObserver4;
             TestPressureList = new List<int>();
-            TestPressureList.AddRange(new List<int>{10, 50}); //,100,150,200,250,300
-            xdata = new double[] { 10, 50}; //, 100, 150, 200, 250, 300 
+            TestPressureList.AddRange(new List<int>{10, 50,100,150,200,250,300}); //,100,150,200,250,300
+            xdata = new double[] { 10, 50, 100, 150, 200, 250, 300}; //, 100, 150, 200, 250, 300 
             ydata = new double[xdata.Length];
 
             _dataQueueLCD = dataQueue;
@@ -52,6 +54,7 @@ namespace BusinessLogic.Controller
             _calibrationEventMeasure = calibrationEventMeasure;
             _calibrationEventLcd = calibrationEventLcd;
             _calibrationEventLocalDb = calibrationEventLocalDb;
+            _calibrationJoinEvent = calibrationJoinEvent;
             _measure = measure;
             //lcd = displayDriver;
 
@@ -67,6 +70,7 @@ namespace BusinessLogic.Controller
             {
                 if (_button3Observer.startCal)
                 {
+                    _calibrationJoinEvent.Set();
                     _calibrationEventMeasure.Set();
                     _calibrationEventLocalDb.Set();
                     _calibrationEventLcd.Set();
@@ -80,6 +84,7 @@ namespace BusinessLogic.Controller
                     _calibrationEventMeasure.Reset();
                     _calibrationEventLcd.Reset();
                     _calibrationEventLocalDb.Reset();
+                    _calibrationJoinEvent.Reset();
                 }
 
                 Thread.Sleep(0);
@@ -153,22 +158,27 @@ namespace BusinessLogic.Controller
                         lcd.lcdClear();
                         lcd.lcdPrint("Measuring. Please wait ...");
 
-                        _calibrationEventMeasure.Reset();
-                        List<int> lsTestPressure = new List<int>();
+                        
+                        List<double> lsTestPressure = new List<double>();
                         for (int i = 0; i < 3;)
                         {
                             _calibrationEventMeasure.Reset();
-                            Thread.Sleep(1000);
+
+                            while (_dataQueueMeasure.Count == 0)
+                            {
+                                Thread.Sleep(0);
+                            }
                             _calibrationEventMeasure.Set();
-                            if (_dataQueueMeasure.Count == 1)
+
+                            if (_dataQueueMeasure.Count >= 1)
                             {
                                 var container = _dataQueueMeasure.Take();
                                 //Gemme de tre containers for første testtryk i liste
                                 foreach (var sample in container.SamplePack.SampleList)
                                 {
-                                    lsTestPressure.Add((int) sample.Value);
+                                    lsTestPressure.Add((int) sample.Value/_measure.ConvertingFactor);
                                 }
-
+                                ClearQueueMeasure(_dataQueueMeasure);
                                 i++;
                             }
                             else
@@ -197,6 +207,8 @@ namespace BusinessLogic.Controller
                     Tuple<double, double> p = Fit.Line(xdata, ydata);
                     double b = p.Item1;
                     double a = p.Item2;
+                    //a = a * _measure.ConvertingFactor;
+                    //b = b * _measure.ConvertingFactor;
                     lcd.lcdClear();
                     lcd.lcdPrint($"Original converting factor is: {_measure.ConvertingFactor}" +
                                  $"\nAdjustment suggestion: {_measure.ConvertingFactor - a}" +

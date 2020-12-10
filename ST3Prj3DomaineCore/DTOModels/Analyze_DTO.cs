@@ -6,5 +6,6 @@
         public int Dia { get; set; }
         public int Sys { get; set; }
         public double AvgBP { get; set; }
+        public double BatteryVoltageInPercent { get; set; }
     }
 }

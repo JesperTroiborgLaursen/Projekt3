@@ -83,7 +83,7 @@ namespace BusinessLogic.Operations
         private List<int> HeartBeatIndexList;
 
 
-        public CalculatePulse(BlockingCollection<Measure_DTO> dataQueueMeasure)
+        public CalculatePulse()
         {
            HeartBeatIndexList = new List<int>();
 
@@ -101,13 +101,14 @@ namespace BusinessLogic.Operations
             //Sammenligner med Threshold, alle værdier derover, kan potentielt være pulsslag.
             int j = 0;
             int highestSampleIndex1 = 0;
+            int highestSample1 = 0;
+
             foreach (var value in lsSamples)
             {
-                int highestSample1 = 0;
                 if (value >= threshold)
                 {
                     Thresholdreached1 = true;
-                    if (value > lsSamples[j])
+                    if (value >= lsSamples[j])
                     {
                         highestSample1 = value;
                         highestSampleIndex1 = lsSamples.IndexOf(value);
@@ -255,13 +256,19 @@ namespace BusinessLogic.Operations
         {
             var indexLs = FindPulseBeat(threeSecData);
             var diffLs = new List<int>();
-            int j = 0;
-            foreach (var index in indexLs)
+            
+            for (int i = 0; i < indexLs.Count-1; i++)
             {
-                   diffLs.Add(indexLs[j+1] - index);
-                   j++;
+                diffLs.Add(indexLs[i+1] - indexLs[i]);
             }
-            return (int)diffLs.Average();
+
+            if (indexLs.Count != 0)
+            {
+                return (int)diffLs.Average();
+            }
+
+            return new int();
+
         }
 
         

@@ -71,19 +71,20 @@ namespace DataAccesLogic.Drivers
             {
                 serialPort.Open();
                 Thread.Sleep(50);
-                serialPort.Write(track1, start, numberOfBytes);
-                serialPort.Write(track1, cmd, numberOfBytes);
-                serialPort.Write(track1, feedback, numberOfBytes);
-                serialPort.Write(track1, para1, numberOfBytes);
-                serialPort.Write(track1, para2, numberOfBytes);
-                serialPort.Write(track1, checksum1, numberOfBytes);
-                serialPort.Write(track1, checksum2, numberOfBytes);
-                serialPort.Write(track1, end, numberOfBytes);
+                serialPort.Write(track3, start, numberOfBytes);
+                serialPort.Write(track3, cmd, numberOfBytes);
+                serialPort.Write(track3, feedback, numberOfBytes);
+                serialPort.Write(track3, para1, numberOfBytes);
+                serialPort.Write(track3, para2, numberOfBytes);
+                serialPort.Write(track3, checksum1, numberOfBytes);
+                serialPort.Write(track3, checksum2, numberOfBytes);
+                serialPort.Write(track3, end, numberOfBytes);
                 Thread.Sleep(50);
                 Repeat();
                 Thread.Sleep(50);
                 serialPort.Close();
             }
+            
             else if (priority == 2)
             {
                 serialPort.Open();
@@ -101,23 +102,25 @@ namespace DataAccesLogic.Drivers
                 Thread.Sleep(50);
                 serialPort.Close();
             }
+
             else if (priority == 3)
             {
                 serialPort.Open();
                 Thread.Sleep(50);
-                serialPort.Write(track3, start, numberOfBytes);
-                serialPort.Write(track3, cmd, numberOfBytes);
-                serialPort.Write(track3, feedback, numberOfBytes);
-                serialPort.Write(track3, para1, numberOfBytes);
-                serialPort.Write(track3, para2, numberOfBytes);
-                serialPort.Write(track3, checksum1, numberOfBytes);
-                serialPort.Write(track3, checksum2, numberOfBytes);
-                serialPort.Write(track3, end, numberOfBytes);
+                serialPort.Write(track1, start, numberOfBytes);
+                serialPort.Write(track1, cmd, numberOfBytes);
+                serialPort.Write(track1, feedback, numberOfBytes);
+                serialPort.Write(track1, para1, numberOfBytes);
+                serialPort.Write(track1, para2, numberOfBytes);
+                serialPort.Write(track1, checksum1, numberOfBytes);
+                serialPort.Write(track1, checksum2, numberOfBytes);
+                serialPort.Write(track1, end, numberOfBytes);
                 Thread.Sleep(50);
                 Repeat();
                 Thread.Sleep(50);
                 serialPort.Close();
             }
+
             else if (priority == 4)
             {
                 serialPort.Open();
@@ -172,6 +175,9 @@ namespace DataAccesLogic.Drivers
         public void UpdateBattery(int priority)
         {
             PlayAlarmSound(priority);
+            //Skriv på display at batteriet har alarm
+            //Vis på LED at batteri har alarm
+            //Sæt alarmFlag ved broadcast(queue -> DTO)
         }
 
         public void UpdateBP(int priority)

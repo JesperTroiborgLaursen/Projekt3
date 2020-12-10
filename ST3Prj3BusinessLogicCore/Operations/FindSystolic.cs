@@ -4,7 +4,7 @@ namespace BusinessLogic.Operations
 {
     public class FindSystolic
     {
-        int Find(List<int> threeSecData)
+        public int Find(List<int> threeSecData)
         {
             //Algorithm for finding systolic bp
             return new int();

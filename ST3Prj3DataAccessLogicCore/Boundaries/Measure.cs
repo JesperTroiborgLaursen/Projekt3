@@ -21,8 +21,9 @@ namespace DataAccesLogic.Boundaries
         private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
         private BlockingCollection<Measure_DTO> _dataQueueMeasure = new BlockingCollection<Measure_DTO>();
         private BlockingCollection<LocalDB_DTO> _dataQueueLocalDB = new BlockingCollection<LocalDB_DTO>();
+        private BlockingCollection<ADC_DTO> _dataQueueADC = new BlockingCollection<ADC_DTO>();
         public ManualResetEvent _calibrationEvent { get; set; }
-        private double convertingFactor = 0.25965; //Beregnet a værdi = 3.7801
+        private double convertingFactor =0.25965; //Beregnet a værdi = 3.7801
 
         public double ConvertingFactor
         {
@@ -41,14 +42,16 @@ namespace DataAccesLogic.Boundaries
         }
 
         public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast,
-            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<LocalDB_DTO> dataQueueLocalDb,
+            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<LocalDB_DTO> dataQueueLocalDb, BlockingCollection<ADC_DTO> dataQueueAdc,
             ManualResetEvent calibrationResetEvent)
         {
             _dataQueueBroadcast = dataQueueBroadcast;
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueLocalDB = dataQueueLocalDb;
+            _dataQueueADC = dataQueueAdc;
             _calibrationEvent = calibrationResetEvent;
             adc = new ADC1015();
+
         }
 
 
@@ -58,11 +61,14 @@ namespace DataAccesLogic.Boundaries
             {
                 while (!Stop && _calibrationEvent.WaitOne())
                 {
+                    //Update battery
+                    MeasureBattery();
+
                     var samplePack = new SamplePack();
                     var ls = new List<Sample>();
                     for (int i = 0; i < 50; i++)
                     {
-                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(3)*Math.Sqrt(ConvertingFactor*ConvertingFactor))});//Tager numerisk værdi for at sikre der ikke er minus værdier under test
+                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(2)*Math.Sqrt(ConvertingFactor*ConvertingFactor))});//Tager numerisk værdi for at sikre der ikke er minus værdier under test
                         Thread.Sleep(20);
                     }
 
@@ -98,6 +104,13 @@ namespace DataAccesLogic.Boundaries
             _dataQueueBroadcast.CompleteAdding();
         }
 
-        
+        void MeasureBattery()
+        {
+            var adcDto = new ADC_DTO();
+            adcDto.voltage = adc.readADC_SingleEnded(0);
+            adcDto.voltageOverResistor = adc.readADC_SingleEnded(1);
+
+            _dataQueueADC.Add(adcDto);
+        }
     }
 }
