@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Threading;
+using DataAccesLogic.Drivers;
 using Interfaces;
-using Button = DataAccesLogic.Drivers.Button;
+
 
 namespace Presentation
 {
@@ -28,7 +29,6 @@ namespace Presentation
             button2 = new Button(2);
             button3 = new Button(3);
             button4 = new Button(4);
-            //Should set up WriteToLCD also
         }
 
 

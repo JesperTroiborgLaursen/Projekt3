@@ -10,6 +10,7 @@ using Domain.Context;
 using Domain.DTOModels;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation;
+using RaspberryPiCore.LCD;
 
 
 namespace RPITest
@@ -27,7 +28,7 @@ namespace RPITest
         private static UserInterface ui;
         private static CalibrationLogic calibrationLogic;
         private static BatteryMeasureLogic batteryMeasureLogic;
-        private static AnalyseLogic analyseLogic;
+        private static AnalyzeLogic analyzeLogic;
         private static AlarmLogic alarmLogic;
         private static StartUp startUp;
 
@@ -49,8 +50,10 @@ namespace RPITest
         private static BlockingCollection<LocalDB_DTO> dataQueueLocalDb;
         private static BlockingCollection<ADC_DTO> dataQueueAdc;
         private static BlockingCollection<Battery_DTO> dataQueueBattery;
-        private static BlockingCollection<Analyze_DTO> dataQueueAnalyze;
+        private static BlockingCollection<Analyze_DTO> dataQueueAlarm;
         private static BlockingCollection<Analyze_DTO> dataQueueAnalyzeLCD;
+        private static BlockingCollection<LCD_DTO> dataQueueStartUpLCD;
+        private static BlockingCollection<LCD_DTO> dataQueueCalibrationLCD;
         private static BlockingCollection<Adjustments_DTO> dataQueueAdjustments;
 
         private static ServiceCollection services;
@@ -60,14 +63,14 @@ namespace RPITest
         private static ButtonObserver buttonObserver3;
         private static ButtonObserver buttonObserver4;
 
-
-        private static DisplayDriver lcd;
        
 
         public static ManualResetEvent calibrationEventLcd { get; set; }
         public static ManualResetEvent calibrationEventMeasure { get; set; }
         public static ManualResetEvent calibrationEventLocalDb { get; set; }
         public static ManualResetEvent calibrationJoinEvent;
+
+
 
         static void Main(string[] args)
         {
@@ -77,8 +80,6 @@ namespace RPITest
             services.AddDbContext<SamplePackDBContext>();
 
 
-            //Creating display
-            lcd = new DisplayDriver();
             //Creating UserInterface
             ui = new UserInterface();
 
@@ -101,7 +102,7 @@ namespace RPITest
             dataQueueLocalDb = new BlockingCollection<LocalDB_DTO>();
             dataQueueAdc = new BlockingCollection<ADC_DTO>();
             dataQueueBattery = new BlockingCollection<Battery_DTO>();
-            dataQueueAnalyze = new BlockingCollection<Analyze_DTO>();
+            dataQueueAlarm = new BlockingCollection<Analyze_DTO>();
             dataQueueAnalyzeLCD = new BlockingCollection<Analyze_DTO>();
             dataQueueAdjustments = new BlockingCollection<Adjustments_DTO>();
 
@@ -113,24 +114,24 @@ namespace RPITest
 
             broadcast = new Broadcast(dataQueueBroadcast);
 
-            lcdProducer = new LCDProducer(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
+            //lcdProducer = new LCDProducer(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
 
-            writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEventLcd, lcd);
+            writeToLcd = new WriteToLCD(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
 
             localDb = new LocalDB(dataQueueLocalDb, calibrationEventLocalDb);
 
             batteryMeasureLogic = new BatteryMeasureLogic(dataQueueAdc,dataQueueBattery);
 
-            alarmLogic = new AlarmLogic(dataQueueAnalyze);
+            alarmLogic = new AlarmLogic(dataQueueAlarm);
 
-            analyseLogic = new AnalyseLogic(dataQueueAnalyze,dataQueueMeasure, dataQueueBattery,dataQueueAnalyzeLCD);
+            analyzeLogic = new AnalyzeLogic(dataQueueAlarm,dataQueueMeasure, dataQueueBattery,dataQueueAnalyzeLCD);
 
-            startUp = new StartUp(lcd, dataQueueMeasure, dataQueueAdjustments, 
-                buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4, calibrationEventMeasure);
+            startUp = new StartUp(dataQueueMeasure, dataQueueAdjustments, 
+                buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4, calibrationEventMeasure, dataQueueLCD);
 
             calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
                 dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb,
-                calibrationJoinEvent, dataQueueMeasure, lcd, dataQueueAdjustments, measure.ConvertingFactor);
+                calibrationJoinEvent, dataQueueMeasure, dataQueueAdjustments, measure.ConvertingFactor);
 
       
 
@@ -138,30 +139,47 @@ namespace RPITest
             //Creating threads for producers and consumers
             measureThread = new Thread(measure.Run);
             broadcastThread = new Thread(broadcast.Run);
-            lcdProducerThread = new Thread(lcdProducer.Run);
+            //lcdProducerThread = new Thread(lcdProducer.Run);
             writeToLcdThread = new Thread(writeToLcd.Run);
             saveToLocalDb = new Thread(localDb.Run);
             uiThread = new Thread(ui.Run);
             calibrationThread = new Thread(calibrationLogic.Run);
             batteryMeasureThread = new Thread(batteryMeasureLogic.Run);
             alarmThread = new Thread(alarmLogic.Run);
-            analyzeLogicThread = new Thread(analyseLogic.Run);
+            analyzeLogicThread = new Thread(analyzeLogic.Run);
             startUpThread = new Thread(startUp.Run);
-
 
 
             //Setting background Threads
             uiThread.IsBackground = true;
-            calibrationThread.IsBackground = true;
+            batteryMeasureThread.IsBackground = true;
+            writeToLcdThread.IsBackground = true;
             
 
-            //Starting UI and battery measure threads
-            uiThread.Start();
-            batteryMeasureThread.Start();
+            //SerLCD lcd = new SerLCD();
+            //lcd.lcdDisplay();
+            //lcd.lcdSetBackLight(238, 29, 203); //Makes color pink
+            //lcd.lcdSetContrast(0);
 
-            //Starting startup thread, and waiting for it to be done
+            //while (true)
+            //{
+            //    lcd.lcdClear();
+            //    lcd.lcdPrint("test");
+            //    Thread.Sleep(500);
+            //}
+
+
+
+            ////Starting UI and battery measure threads
+            //uiThread.Start();
+            //batteryMeasureThread.Start();
+            writeToLcdThread.Start();
             startUpThread.Start();
-            startUpThread.Join();
+            writeToLcdThread.Join();
+            ////Starting startup thread, and waiting for it to be done
+
+            //measureThread.Start();
+            //startUpThread.Join();
 
             //Starting calibration
             calibrationThread.Start();
@@ -173,15 +191,15 @@ namespace RPITest
             }
 
 
-            measureThread.Start();
-            broadcastThread.Start();
-            lcdProducerThread.Start();
-            writeToLcdThread.Start();
-            saveToLocalDb.Start();
+            
+            //broadcastThread.Start();
+            //lcdProducerThread.Start();
+            
+            //saveToLocalDb.Start();
             //analyzeLogicThread.Start();
             //alarmThread.Start();
-            
-            
+
+
             //As long as stop button hasnt been pressed, threads are kept going
             while (!buttonObserver4.IsPressed)
             {
@@ -197,7 +215,7 @@ namespace RPITest
             dataQueueLCD.CompleteAdding();
             dataQueueBroadcast.CompleteAdding();
             dataQueueMeasure.CompleteAdding();
-            analyseLogic.Stop = true;
+            analyzeLogic.Stop = true;
             alarmLogic.Stop = true;
             measure.Stop = true;
 

@@ -9,10 +9,10 @@ using Domain.DTOModels;
 namespace BusinessLogic.Controller
 {
 
-    public class AnalyseLogic
+    public class AnalyzeLogic
     {
         
-        public BlockingCollection<Analyze_DTO> _dataQueueAnalyze { get; set; }
+        public BlockingCollection<Analyze_DTO> _dataQueueAlarm { get; set; }
         public BlockingCollection<Measure_DTO> _dataQueueMeasure { get; set; }
         public BlockingCollection<Battery_DTO> _dataQueueBattery { get; set; }
         public BlockingCollection<Analyze_DTO> _dataQueueLCD;
@@ -29,11 +29,12 @@ namespace BusinessLogic.Controller
             set { stop = value; }
         }
 
-        public AnalyseLogic(BlockingCollection<Analyze_DTO> dataqueueAnalyze,
-            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Battery_DTO> dataQueueBattery, BlockingCollection<Analyze_DTO> dataQueueLcd)
+        public AnalyzeLogic(BlockingCollection<Analyze_DTO> dataQueueAlarm,
+            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Battery_DTO> dataQueueBattery,
+            BlockingCollection<Analyze_DTO> dataQueueLcd)
         {
             _dataQueueMeasure = dataQueueMeasure;
-            _dataQueueAnalyze = dataqueueAnalyze;
+            _dataQueueAlarm = dataQueueAlarm;
             _dataQueueBattery = dataQueueBattery;
             _dataQueueLCD = dataQueueLcd;
             calculatePulse = new CalculatePulse(); 
@@ -62,11 +63,11 @@ namespace BusinessLogic.Controller
                 DTO.BatteryVoltageInPercent = batteryMeasure.VoltageLeftInPercent;
 
                 //Add to queue
-                _dataQueueAnalyze.Add(DTO);
+                _dataQueueAlarm.Add(DTO);
                 _dataQueueLCD.Add(DTO);
                 Thread.Sleep(0);
             }
-            _dataQueueAnalyze.CompleteAdding();
+            _dataQueueAlarm.CompleteAdding();
         }
 
         List<int> CollectData()

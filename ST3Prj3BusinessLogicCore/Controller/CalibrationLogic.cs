@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading;
 using DataAccesLogic.Boundaries;
 using DataAccesLogic.Drivers;
@@ -19,9 +20,9 @@ namespace BusinessLogic.Controller
         private static ButtonObserver _button2Observer;
         private static ButtonObserver _button3Observer;
         private static ButtonObserver _button4Observer;
-        private static DisplayDriver lcd;
-        
+
         private BlockingCollection<LCD_DTO> _dataQueueLCD;
+        private BlockingCollection<LCD_DTO> _dataQueueCalibrationLCD;
         public BlockingCollection<Measure_DTO> _dataQueueMeasure;
         private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
         
@@ -34,23 +35,22 @@ namespace BusinessLogic.Controller
         private double[] ydata;
         private double[] xdata;
         private double _convertingFactor;
-        
 
 
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
             ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, BlockingCollection<LCD_DTO> dataQueue,
             ManualResetEvent calibrationEventLcd, ManualResetEvent calibrationEventMeasure,
             ManualResetEvent calibrationEventLocalDb, ManualResetEvent calibrationJoinEvent,
-            BlockingCollection<Measure_DTO> dataQueueMeasure,
-            DisplayDriver displayDriver, BlockingCollection<Adjustments_DTO> dataQueueAdjustments, double convertingFactor)
+            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Adjustments_DTO> dataQueueAdjustments,
+            double convertingFactor)
         {
             _button1Observer = buttonObserver1;
             _button2Observer = buttonObserver2;
             _button3Observer = buttonObserver3;
             _button4Observer = buttonObserver4;
             TestPressureList = new List<int>();
-            TestPressureList.AddRange(new List<int>{10, 50,100,150,200,250,300}); //,100,150,200,250,300
-            xdata = new double[] { 10, 50, 100, 150, 200, 250, 300}; //, 100, 150, 200, 250, 300 
+            TestPressureList.AddRange(new List<int>{10, 50,100,150,200,250,300}); 
+            xdata = new double[] { 10, 50, 100, 150, 200, 250, 300}; 
             ydata = new double[xdata.Length];
             _convertingFactor = convertingFactor;
 
@@ -62,7 +62,8 @@ namespace BusinessLogic.Controller
             _calibrationEventLcd = calibrationEventLcd;
             _calibrationEventLocalDb = calibrationEventLocalDb;
             _calibrationJoinEvent = calibrationJoinEvent;
-            //lcd = displayDriver;
+            
+           
 
 
         }
@@ -104,17 +105,62 @@ namespace BusinessLogic.Controller
             ClearQueueDisplay(_dataQueueLCD);
             bool breakFlag = false;
 
-            DisplayDriver lcd = new DisplayDriver();
-            lcd.lcdClear();
-            lcd.lcdGotoXY(0,0);
-            lcd.lcdPrint("Getting ready for   calibration...");
+         
+                _dataQueueLCD.Add(new LCD_DTO() { Message = "Getting ready for   calibration..."});
+            
+            
 
-                while (!_button4Observer.IsPressed || !breakFlag)
+            while (!_button4Observer.IsPressed || !breakFlag)
+            {
+                _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =
+                            "Calibration initialized\nPlease press \"START\" to continue\n or press \"Mute\" to stop calibration"
+                    });
+                
+                while (!_button2Observer.IsPressed)
                 {
-                    lcd.lcdClear();
-                    lcd.lcdPrint("123456789 123456789 123456789 123456789");
-                    //lcd.lcdPrint("Calibration initialized\nPlease press \"START\" to continue\n or press"); // \"Mute\" to stop calibration
+                    Thread.Sleep(0);
+                    if (_button4Observer.IsPressed)
+                    {
+                        breakFlag = true;
+                        break;
+                        //buttonObserver sættes til true igen når den slippes, så den hopper ikke ud af den org. løkke, der bruges et flag
+                            
+                    }
+                }
 
+                if (breakFlag)
+                {
+                    
+                        _dataQueueLCD.Add(new LCD_DTO()
+                        {
+                            Message =
+                                "Calibration have been stopped. Nothing applied."
+                        });
+                    
+
+                        
+                    break;
+                }
+
+          
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =
+                            "Calibration started."
+                    });
+                
+
+                int j = 0;
+                foreach (var pressure in TestPressureList)
+                {
+                        _dataQueueLCD.Add(new LCD_DTO()
+                        {
+                            Message =
+                                $"Please apply a test pressure of {pressure} and press \"Start\""
+                        });
+                    //Så længe der ikke er trykket på knap 2, skal den vente.
                     while (!_button2Observer.IsPressed)
                     {
                         Thread.Sleep(0);
@@ -122,135 +168,128 @@ namespace BusinessLogic.Controller
                         {
                             breakFlag = true;
                             break;
-                            //buttonObserver sættes til true igen når den slippes, så den hopper ikke ud af den org. løkke, der bruges et flag
-                            
+                                
                         }
                     }
 
                     if (breakFlag)
                     {
-                        lcd.lcdClear();
-                        lcd.lcdPrint("Calibration have been stopped. Nothing applied.");
+                       
+                            _dataQueueLCD.Add(new LCD_DTO()
+                            {
+                                Message =
+                                    "Calibration have been stopped. Nothing applied."
+                            });
+                        
                         break;
                     }
-
-                    lcd.lcdClear();
-                    lcd.lcdPrint($"Calibration started.");
-
-                    int j = 0;
-                    foreach (var pressure in TestPressureList)
-                    {
-                        lcd.lcdClear();
-                        lcd.lcdPrint($"Please apply a test pressure of {pressure} and press \"Start\"");
-                        //Så længe der ikke er trykket på knap 2, skal den vente.
-                        while (!_button2Observer.IsPressed)
+                    _dataQueueLCD.Add(new LCD_DTO()
                         {
-                            Thread.Sleep(0);
-                            if (_button4Observer.IsPressed)
-                            {
-                                breakFlag = true;
-                                break;
-                                
-                            }
-                        }
-
-                        if (breakFlag)
-                        {
-                            lcd.lcdClear();
-                            lcd.lcdPrint("Calibration have been stopped. Nothing applied.");
-                            break;
-                        }
-
-                        lcd.lcdClear();
-                        lcd.lcdPrint("Measuring. Please wait ...");
+                            Message =
+                                "Measuring. Please wait ..."
+                        });
+                    
 
                         
-                        List<double> lsTestPressure = new List<double>();
-                        for (int i = 0; i < 3;)
+                    List<double> lsTestPressure = new List<double>();
+                    for (int i = 0; i < 3;)
+                    {
+                        ClearQueueMeasure(_dataQueueMeasure);
+                        _calibrationEventMeasure.Reset();
+
+                        while (_dataQueueMeasure.Count == 0)
+                        {
+                            Thread.Sleep(0);
+                        }
+                        _calibrationEventMeasure.Set();
+
+                        if (_dataQueueMeasure.Count >= 1)
+                        {
+                            var container = _dataQueueMeasure.Take();
+                            //Gemme de tre containers for første testtryk i liste
+                            foreach (var sample in container.SamplePack.SampleList)
+                            {
+                                lsTestPressure.Add((int) sample.Value/_convertingFactor);
+                            }
+                            ClearQueueMeasure(_dataQueueMeasure);
+                            i++;
+                        }
+                        else
                         {
                             ClearQueueMeasure(_dataQueueMeasure);
-                            _calibrationEventMeasure.Reset();
-
-                            while (_dataQueueMeasure.Count == 0)
-                            {
-                                Thread.Sleep(0);
-                            }
-                            _calibrationEventMeasure.Set();
-
-                            if (_dataQueueMeasure.Count >= 1)
-                            {
-                                var container = _dataQueueMeasure.Take();
-                                //Gemme de tre containers for første testtryk i liste
-                                foreach (var sample in container.SamplePack.SampleList)
-                                {
-                                    lsTestPressure.Add((int) sample.Value/_convertingFactor);
-                                }
-                                ClearQueueMeasure(_dataQueueMeasure);
-                                i++;
-                            }
-                            else
-                            {
-                                ClearQueueMeasure(_dataQueueMeasure);
-                            }
                         }
+                    }
 
-                        //Der tages et gnms. af værdierne i listen med testtryk
+                    //Der tages et gnms. af værdierne i listen med testtryk
 
-                        if (lsTestPressure.Count != 0)
-                        {
-                            var result = lsTestPressure.Average();
-                            ydata[j] = result;
-                            j++;
-                        }
+                    if (lsTestPressure.Count != 0)
+                    {
+                        var result = lsTestPressure.Average();
+                        ydata[j] = result;
+                        j++;
+                    }
                             
                         
 
-                        //Gnms. gemmes på i's plads i ydata-arrayet
+                    //Gnms. gemmes på i's plads i ydata-arrayet
 
 
-                    }
+                }
 
 
-                    Tuple<double, double> p = Fit.Line(xdata, ydata);
-                    double b = p.Item1;
-                    double a = p.Item2;
-                    //a = a * _measure.ConvertingFactor;
-                    //b = b * _measure.ConvertingFactor;
-                    lcd.lcdClear();
-                    lcd.lcdPrint($"Original converting factor is: {_convertingFactor}" +
-                                 $"\nAdjustment suggestion: {_convertingFactor - a}" +
-                                 $"\nPress \"START\" to apply or \"MUTE\" to discard");
-                    bool discardLock = false;
-                    _calibrationEventMeasure.Reset();
-                    while (!discardLock)
+                Tuple<double, double> p = Fit.Line(xdata, ydata);
+                double b = p.Item1;
+                double a = p.Item2;
+                //a = a * _measure.ConvertingFactor;
+                //b = b * _measure.ConvertingFactor;
+               
+
+                    _dataQueueLCD.Add(new LCD_DTO()
                     {
-                        if (_button2Observer.IsPressed)
-                        {
-                            Adjustments_DTO DTO = new Adjustments_DTO();
-                            DTO.Calibration = a;
-                            _dataQueueAdjustments.Add(DTO);
-                            lcd.lcdClear();
-                            lcd.lcdPrint("Calibration applied. ");
-                            discardLock = true;
-                            break;
-                        }
-                        else if (_button4Observer.IsPressed)
-                        {
-                            lcd.lcdClear();
-                            lcd.lcdPrint("Calibration discarded.");
-                            discardLock = true;
-                            break;
-                        }
-
-                    }
-                    //Close the while loop
-                    if (discardLock)
+                        Message =
+                            $"Original converting factor is: {_convertingFactor}" +
+                            $"\nAdjustment suggestion: {_convertingFactor - a}" +
+                            $"\nPress \"START\" to apply or \"MUTE\" to discard"
+                    });
+                
+                bool discardLock = false;
+                _calibrationEventMeasure.Reset();
+                while (!discardLock)
+                {
+                    if (_button2Observer.IsPressed)
                     {
+                        Adjustments_DTO DTO = new Adjustments_DTO();
+                        DTO.Calibration = a;
+                        _dataQueueAdjustments.Add(DTO);
+                       
+                        _dataQueueLCD.Add(new LCD_DTO()
+                        {
+                            Message =
+                                "Calibration applied. "
+                        });
+                        discardLock = true;
+                        break;
+                    }
+                    else if (_button4Observer.IsPressed)
+                    {
+                        _dataQueueLCD.Add(new LCD_DTO()
+                        {
+                            Message =
+                                "Calibration discarded."
+                        });
+                        discardLock = true;
                         break;
                     }
 
-                    //_dataQueueMeasure.Take();
                 }
+                //Close the while loop
+                if (discardLock)
+                {
+                    break;
+                }
+
+                //_dataQueueMeasure.Take();
+            }
             
 
         }

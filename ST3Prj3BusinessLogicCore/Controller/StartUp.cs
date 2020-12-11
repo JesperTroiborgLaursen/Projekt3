@@ -11,13 +11,14 @@ namespace BusinessLogic.Controller
 {
     public class StartUp
     {
-        private DisplayDriver _lcd;
-        private BlockingCollection<Measure_DTO> _dataQueueMeasure;
+       private BlockingCollection<Measure_DTO> _dataQueueMeasure;
         private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
-        private static ButtonObserver _button1Observer;
-        private static ButtonObserver _button2Observer;
-        private static ButtonObserver _button3Observer;
-        private static ButtonObserver _button4Observer;
+        private BlockingCollection<LCD_DTO> _dataQueueLCD;
+        private ButtonObserver _button1Observer;
+        private ButtonObserver _button2Observer;
+        private ButtonObserver _button3Observer;
+        private ButtonObserver _button4Observer;
+
 
         private ManualResetEvent _calibrationEventMeasure;
         //private bool stop=false;
@@ -28,11 +29,13 @@ namespace BusinessLogic.Controller
         //    set { stop = value; }
         //}
 
-        public StartUp(DisplayDriver lcd, BlockingCollection<Measure_DTO> dataQueueMeasure, 
-            BlockingCollection<Adjustments_DTO> dataQueueAdjustments, ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
-            ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, ManualResetEvent calibrationEventMeasure)
+        public StartUp(BlockingCollection<Measure_DTO> dataQueueMeasure,
+            BlockingCollection<Adjustments_DTO> dataQueueAdjustments, ButtonObserver buttonObserver1,
+            ButtonObserver buttonObserver2,
+            ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, ManualResetEvent calibrationEventMeasure,
+            BlockingCollection<LCD_DTO> dataQueueLcd)
         {
-            _lcd = lcd;
+            
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueAdjustments = dataQueueAdjustments;
             _button1Observer = buttonObserver1;
@@ -40,32 +43,57 @@ namespace BusinessLogic.Controller
             _button3Observer = buttonObserver3;
             _button4Observer = buttonObserver4;
             _calibrationEventMeasure = calibrationEventMeasure;
+            _dataQueueLCD = dataQueueLcd;
+
         }
         public void Run()
         {
             Start:
-            _lcd.lcdClear();
-            _lcd.lcdPrint("Welcome.            Please press Prepare to proceed");
+            
+                _dataQueueLCD.Add(new LCD_DTO()
+                {
+                    Message =
+                        "WelcomePlease1212345123456712345"
+                            //\r\nPrepare to proce
+                    //"Test"
+                });
+            
 
             while (!_button1Observer.IsPressed)
             {
                 Thread.Sleep(0);
             }
 
-            _lcd.lcdClear();
-            _lcd.lcdPrint("Please position the PVC tap as shown in the manual and press Prepare to initialize the device");
+       
+               
+                _dataQueueLCD.Add(new LCD_DTO()
+                {
+                    Message =
+                        "Please position the PVC tap as shown in the manual and press Prepare to initialize the device"
+                });
+            
             while (!_button1Observer.IsPressed)
             {
                 Thread.Sleep(0);
             }
-            _lcd.lcdClear();
-            _lcd.lcdPrint("Measuring...        Please don't move PVC tap..");
-
-            if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
+     
+                
+                _dataQueueLCD.Add(new LCD_DTO()
+                {
+                    Message =
+                        "Measuring...        Please don't move PVC tap.."
+                });
+                if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
                                                                    //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
             {
-                _lcd.lcdClear();
-                _lcd.lcdPrint("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
+                
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =
+                            "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
+                    });
+
+                
                 goto Start;
             }
             else
@@ -73,9 +101,14 @@ namespace BusinessLogic.Controller
                 Adjustments_DTO DTO = new Adjustments_DTO();
                 DTO.ZeroPoint = MeasureZeroPoint();
                 _dataQueueAdjustments.Add(DTO);
-
-                _lcd.lcdClear();
-                _lcd.lcdPrint("The device have been initialized. Press Start to start measuring");
+        
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =
+                            "The device have been initialized. Press Start to start measuring"
+                    });
+                
+               
             }
 
 
@@ -111,11 +144,7 @@ namespace BusinessLogic.Controller
                     ClearQueueMeasure(_dataQueueMeasure);
                 }
             }
-
-
-
             
-
             return zeroPointMeasures.Average();
         }
 
