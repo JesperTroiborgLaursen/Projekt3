@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.Security.AccessControl;
 using System.Threading;
 using Domain.DTOModels;
@@ -22,8 +23,10 @@ namespace DataAccesLogic.Boundaries
         private BlockingCollection<Measure_DTO> _dataQueueMeasure = new BlockingCollection<Measure_DTO>();
         private BlockingCollection<LocalDB_DTO> _dataQueueLocalDB = new BlockingCollection<LocalDB_DTO>();
         private BlockingCollection<ADC_DTO> _dataQueueADC = new BlockingCollection<ADC_DTO>();
+        private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments = new BlockingCollection<Adjustments_DTO>();
         public ManualResetEvent _calibrationEvent { get; set; }
         private double convertingFactor =0.25965; //Beregnet a værdi = 3.7801
+        private double zeroPoint;
 
         public double ConvertingFactor
         {
@@ -42,14 +45,16 @@ namespace DataAccesLogic.Boundaries
         }
 
         public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast,
-            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<LocalDB_DTO> dataQueueLocalDb, BlockingCollection<ADC_DTO> dataQueueAdc,
-            ManualResetEvent calibrationResetEvent)
+            BlockingCollection<Measure_DTO> dataQueueMeasure,
+            BlockingCollection<LocalDB_DTO> dataQueueLocalDb, BlockingCollection<ADC_DTO> dataQueueAdc, 
+            BlockingCollection<Adjustments_DTO> dataQueueAdjustments, ManualResetEvent calibrationResetEvent)
         {
             _dataQueueBroadcast = dataQueueBroadcast;
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueLocalDB = dataQueueLocalDb;
             _dataQueueADC = dataQueueAdc;
             _calibrationEvent = calibrationResetEvent;
+            _dataQueueAdjustments = dataQueueAdjustments;
             adc = new ADC1015();
 
         }
@@ -63,12 +68,28 @@ namespace DataAccesLogic.Boundaries
                 {
                     //Update battery
                     MeasureBattery();
+                    if (_dataQueueAdjustments.Count != 0)
+                    {
+                        var DTO = _dataQueueAdjustments.Take();
+                        if (DTO.Calibration != 0)
+                        {
+                            ConvertingFactor = DTO.Calibration;
+                        }
+                        else if (DTO.ZeroPoint != 0)
+                        {
+                            zeroPoint = DTO.ZeroPoint;
+                        }
+                    }
 
                     var samplePack = new SamplePack();
                     var ls = new List<Sample>();
                     for (int i = 0; i < 50; i++)
                     {
-                        ls.Add(new Sample() {Value = Convert.ToUInt16(adc.readADC_SingleEnded(2)*Math.Sqrt(ConvertingFactor*ConvertingFactor))});//Tager numerisk værdi for at sikre der ikke er minus værdier under test
+                        ls.Add(new Sample()
+                        {
+                            Value = Convert.ToUInt16((adc.readADC_SingleEnded(2)*
+                                                      Math.Sqrt(ConvertingFactor * ConvertingFactor))-zeroPoint)
+                        });//Tager numerisk værdi for at sikre der ikke er minus værdier under test
                         Thread.Sleep(20);
                     }
 
@@ -99,6 +120,7 @@ namespace DataAccesLogic.Boundaries
 
                 }
                 Thread.Sleep(0);
+                
             }
 
             _dataQueueBroadcast.CompleteAdding();

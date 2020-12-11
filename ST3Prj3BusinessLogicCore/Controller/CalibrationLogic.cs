@@ -20,24 +20,29 @@ namespace BusinessLogic.Controller
         private static ButtonObserver _button3Observer;
         private static ButtonObserver _button4Observer;
         private static DisplayDriver lcd;
+        
         private BlockingCollection<LCD_DTO> _dataQueueLCD;
-        public Measure _measure { get; private set; }
+        public BlockingCollection<Measure_DTO> _dataQueueMeasure;
+        private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
+        
         public ManualResetEvent _calibrationEventMeasure { get; set; }
         public ManualResetEvent _calibrationEventLcd { get; set; }
         public ManualResetEvent _calibrationEventLocalDb { get; set; }
-        public BlockingCollection<Measure_DTO> _dataQueueMeasure { get; set; }
+        private ManualResetEvent _calibrationJoinEvent;
+       
         public List<int> TestPressureList { get; private set; }
         private double[] ydata;
         private double[] xdata;
-        private ManualResetEvent _calibrationJoinEvent;
+        private double _convertingFactor;
+        
 
 
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
             ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, BlockingCollection<LCD_DTO> dataQueue,
             ManualResetEvent calibrationEventLcd, ManualResetEvent calibrationEventMeasure,
             ManualResetEvent calibrationEventLocalDb, ManualResetEvent calibrationJoinEvent,
-            BlockingCollection<Measure_DTO> dataQueueMeasure, Measure measure,
-            DisplayDriver displayDriver)
+            BlockingCollection<Measure_DTO> dataQueueMeasure,
+            DisplayDriver displayDriver, BlockingCollection<Adjustments_DTO> dataQueueAdjustments, double convertingFactor)
         {
             _button1Observer = buttonObserver1;
             _button2Observer = buttonObserver2;
@@ -47,15 +52,16 @@ namespace BusinessLogic.Controller
             TestPressureList.AddRange(new List<int>{10, 50,100,150,200,250,300}); //,100,150,200,250,300
             xdata = new double[] { 10, 50, 100, 150, 200, 250, 300}; //, 100, 150, 200, 250, 300 
             ydata = new double[xdata.Length];
+            _convertingFactor = convertingFactor;
 
             _dataQueueLCD = dataQueue;
             _dataQueueMeasure = dataQueueMeasure;
+            _dataQueueAdjustments = dataQueueAdjustments;
 
             _calibrationEventMeasure = calibrationEventMeasure;
             _calibrationEventLcd = calibrationEventLcd;
             _calibrationEventLocalDb = calibrationEventLocalDb;
             _calibrationJoinEvent = calibrationJoinEvent;
-            _measure = measure;
             //lcd = displayDriver;
 
 
@@ -162,6 +168,7 @@ namespace BusinessLogic.Controller
                         List<double> lsTestPressure = new List<double>();
                         for (int i = 0; i < 3;)
                         {
+                            ClearQueueMeasure(_dataQueueMeasure);
                             _calibrationEventMeasure.Reset();
 
                             while (_dataQueueMeasure.Count == 0)
@@ -176,7 +183,7 @@ namespace BusinessLogic.Controller
                                 //Gemme de tre containers for første testtryk i liste
                                 foreach (var sample in container.SamplePack.SampleList)
                                 {
-                                    lsTestPressure.Add((int) sample.Value/_measure.ConvertingFactor);
+                                    lsTestPressure.Add((int) sample.Value/_convertingFactor);
                                 }
                                 ClearQueueMeasure(_dataQueueMeasure);
                                 i++;
@@ -210,8 +217,8 @@ namespace BusinessLogic.Controller
                     //a = a * _measure.ConvertingFactor;
                     //b = b * _measure.ConvertingFactor;
                     lcd.lcdClear();
-                    lcd.lcdPrint($"Original converting factor is: {_measure.ConvertingFactor}" +
-                                 $"\nAdjustment suggestion: {_measure.ConvertingFactor - a}" +
+                    lcd.lcdPrint($"Original converting factor is: {_convertingFactor}" +
+                                 $"\nAdjustment suggestion: {_convertingFactor - a}" +
                                  $"\nPress \"START\" to apply or \"MUTE\" to discard");
                     bool discardLock = false;
                     _calibrationEventMeasure.Reset();
@@ -219,7 +226,9 @@ namespace BusinessLogic.Controller
                     {
                         if (_button2Observer.IsPressed)
                         {
-                            _measure.ConvertingFactor = a;
+                            Adjustments_DTO DTO = new Adjustments_DTO();
+                            DTO.Calibration = a;
+                            _dataQueueAdjustments.Add(DTO);
                             lcd.lcdClear();
                             lcd.lcdPrint("Calibration applied. ");
                             discardLock = true;

@@ -29,6 +29,7 @@ namespace RPITest
         private static BatteryMeasureLogic batteryMeasureLogic;
         private static AnalyseLogic analyseLogic;
         private static AlarmLogic alarmLogic;
+        private static StartUp startUp;
 
         private static Thread measureThread;
         private static Thread broadcastThread;
@@ -40,6 +41,7 @@ namespace RPITest
         private static Thread batteryMeasureThread;
         private static Thread analyzeLogicThread;
         private static Thread alarmThread;
+        private static Thread startUpThread;
 
         private static BlockingCollection<Broadcast_DTO> dataQueueBroadcast;
         private static BlockingCollection<LCD_DTO> dataQueueLCD;
@@ -49,6 +51,7 @@ namespace RPITest
         private static BlockingCollection<Battery_DTO> dataQueueBattery;
         private static BlockingCollection<Analyze_DTO> dataQueueAnalyze;
         private static BlockingCollection<Analyze_DTO> dataQueueAnalyzeLCD;
+        private static BlockingCollection<Adjustments_DTO> dataQueueAdjustments;
 
         private static ServiceCollection services;
         
@@ -100,24 +103,36 @@ namespace RPITest
             dataQueueBattery = new BlockingCollection<Battery_DTO>();
             dataQueueAnalyze = new BlockingCollection<Analyze_DTO>();
             dataQueueAnalyzeLCD = new BlockingCollection<Analyze_DTO>();
+            dataQueueAdjustments = new BlockingCollection<Adjustments_DTO>();
 
 
             
-            //Creating producers and consumers
-            measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, dataQueueAdc, calibrationEventMeasure);
+            //Creating objects
+            measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, dataQueueAdc,
+                dataQueueAdjustments, calibrationEventMeasure);
+
             broadcast = new Broadcast(dataQueueBroadcast);
+
             lcdProducer = new LCDProducer(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
+
             writeToLcd = new WriteToLCD(dataQueueLCD, calibrationEventLcd, lcd);
+
             localDb = new LocalDB(dataQueueLocalDb, calibrationEventLocalDb);
+
             batteryMeasureLogic = new BatteryMeasureLogic(dataQueueAdc,dataQueueBattery);
+
             alarmLogic = new AlarmLogic(dataQueueAnalyze);
+
             analyseLogic = new AnalyseLogic(dataQueueAnalyze,dataQueueMeasure, dataQueueBattery,dataQueueAnalyzeLCD);
-            
-            
-            //Create Calibration
+
+            startUp = new StartUp(lcd, dataQueueMeasure, dataQueueAdjustments, 
+                buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4, calibrationEventMeasure);
+
             calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
                 dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb,
-                calibrationJoinEvent, dataQueueMeasure, measure, lcd);
+                calibrationJoinEvent, dataQueueMeasure, lcd, dataQueueAdjustments, measure.ConvertingFactor);
+
+      
 
 
             //Creating threads for producers and consumers
@@ -131,6 +146,7 @@ namespace RPITest
             batteryMeasureThread = new Thread(batteryMeasureLogic.Run);
             alarmThread = new Thread(alarmLogic.Run);
             analyzeLogicThread = new Thread(analyseLogic.Run);
+            startUpThread = new Thread(startUp.Run);
 
 
 
@@ -139,17 +155,24 @@ namespace RPITest
             calibrationThread.IsBackground = true;
             
 
-            //Starting UI
+            //Starting UI and battery measure threads
             uiThread.Start();
-            calibrationThread.Start();
             batteryMeasureThread.Start();
-            ////Wait until start button is pressed and then measurement threads are started
-            //while (!buttonObserver2.IsPressed)
-            //{
-            //    Thread.Sleep(0);
-            //}
 
-            
+            //Starting startup thread, and waiting for it to be done
+            startUpThread.Start();
+            startUpThread.Join();
+
+            //Starting calibration
+            calibrationThread.Start();
+
+            //Wait until start button is pressed and then measurement threads are started
+            while (!buttonObserver2.IsPressed)
+            {
+                Thread.Sleep(0);
+            }
+
+
             measureThread.Start();
             broadcastThread.Start();
             lcdProducerThread.Start();
