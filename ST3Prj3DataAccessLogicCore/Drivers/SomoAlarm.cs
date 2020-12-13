@@ -175,9 +175,6 @@ namespace DataAccesLogic.Drivers
         public void UpdateBattery(int priority)
         {
             PlayAlarmSound(priority);
-            //Skriv på display at batteriet har alarm
-            //Vis på LED at batteri har alarm
-            //Sæt alarmFlag ved broadcast(queue -> DTO)
         }
 
         public void UpdateBP(int priority)

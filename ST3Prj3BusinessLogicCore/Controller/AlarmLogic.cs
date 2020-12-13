@@ -10,10 +10,14 @@ namespace BusinessLogic.Controller
     {
         public BlockingCollection<Analyze_DTO> _dataQueueAnalyze { get; set; }
         public BlockingCollection<ADC_DTO> _dataQueueBattery { get; set; }
+        private BlockingCollection<Alarm_DTO> _dataQueueAlarmToBroadcast;
+
         public Analyze_DTO OldAnalyzeDto { get; set; }
         public AlarmConcreteSubject alarm { get; set; }
+        private Alarm_DTO dtoToBroadcast;
 
         private bool stop=false;
+        
 
         public bool Stop
         {
@@ -21,25 +25,37 @@ namespace BusinessLogic.Controller
             set { stop = value; }
         }
 
-        public AlarmLogic(BlockingCollection<Analyze_DTO> dataQueueAnalyze)
+        public AlarmLogic(BlockingCollection<Analyze_DTO> dataQueueAnalyze,
+            BlockingCollection<Alarm_DTO> dataQueueAlarmToBroadcast)
         {
             //AnalyzeLogicqueue
             _dataQueueAnalyze = dataQueueAnalyze;
+            _dataQueueAlarmToBroadcast = dataQueueAlarmToBroadcast;
             OldAnalyzeDto = new Analyze_DTO();
             alarm = new AlarmConcreteSubject();
+            dtoToBroadcast = new Alarm_DTO(){BpAlarm = 0, PulseAlarm = 0, BatteryAlarm = 0};
+            
         }
 
         public void Run()
         {
             while (!Stop)
             {
+
+                while (_dataQueueAnalyze.Count == 0)
+                {
+                    Thread.Sleep(0);
+                }
                 try
                 {
-                    var DTO = _dataQueueAnalyze.Take();
+                    var dtoFromAnalyze = _dataQueueAnalyze.Take();
+                    
 
-                    CheckBP(DTO);
-                    CheckBattery(DTO);
-                    CheckPulse(DTO);
+                    CheckBP(dtoFromAnalyze);
+                    CheckBattery(dtoFromAnalyze);
+                    CheckPulse(dtoFromAnalyze);
+
+                    _dataQueueAlarmToBroadcast.Add(dtoToBroadcast);
                     Thread.Sleep(0);
                 }
                 catch (InvalidOperationException)
@@ -60,17 +76,24 @@ namespace BusinessLogic.Controller
             if (DTO.AvgBP > OldAnalyzeDto.AvgBP*1.30 || DTO.AvgBP < OldAnalyzeDto.AvgBP*1.30)
             {
                 alarm.NotifyBP(1);
+                dtoToBroadcast.BpAlarm = 1;
             }
                     
             //Hvis den er mellem for høj/lav ConcreteSubject.NotifyBP(2)
-            if (DTO.AvgBP > OldAnalyzeDto.AvgBP*1.20 || DTO.AvgBP < OldAnalyzeDto.AvgBP*1.20)
+            else if (DTO.AvgBP > OldAnalyzeDto.AvgBP*1.20 || DTO.AvgBP < OldAnalyzeDto.AvgBP*1.20)
             {
                 alarm.NotifyBP(2);
+                dtoToBroadcast.BpAlarm = 2;
             }
             //Hvis den er lidt for høj/lav ConcreteSubject.NotifyBP(3)
-            if (DTO.AvgBP > OldAnalyzeDto.AvgBP*1.10 || DTO.AvgBP < OldAnalyzeDto.AvgBP*1.10)
+            else if (DTO.AvgBP > OldAnalyzeDto.AvgBP*1.10 || DTO.AvgBP < OldAnalyzeDto.AvgBP*1.10)
             {
                 alarm.NotifyBP(3);
+                dtoToBroadcast.BpAlarm = 3;
+            }
+            else
+            {
+                dtoToBroadcast.BpAlarm = 0;   
             }
         }
 
@@ -84,16 +107,23 @@ namespace BusinessLogic.Controller
             if (DTO.BatteryVoltageInPercent < 15)
             {
                 alarm.NotifyBattery(1);
+                dtoToBroadcast.BatteryAlarm = 1;
             }
 
-            if (DTO.BatteryVoltageInPercent < 30)
+            else if (DTO.BatteryVoltageInPercent < 30)
             {
-                alarm.NotifyBattery(1);
+                alarm.NotifyBattery(2);
+                dtoToBroadcast.BatteryAlarm = 2;
             }
 
-            if (DTO.BatteryVoltageInPercent < 50)
+            else if (DTO.BatteryVoltageInPercent < 50)
             {
                 alarm.NotifyBattery(1);
+                dtoToBroadcast.BatteryAlarm = 3;
+            }
+            else
+            {
+                dtoToBroadcast.BatteryAlarm = 0;   
             }
         }
 
@@ -111,17 +141,24 @@ namespace BusinessLogic.Controller
             if (DTO.Pulse > OldAnalyzeDto.Pulse*1.30 || DTO.Pulse < OldAnalyzeDto.Pulse*1.30)
             {
                 alarm.NotifyPulse(1);
+                dtoToBroadcast.PulseAlarm = 1;
             }
                     
             //Hvis den er mellem for høj/lav ConcreteSubject.NotifyPulse(2)
-            if (DTO.Pulse > OldAnalyzeDto.Pulse*1.20 || DTO.Pulse< OldAnalyzeDto.Pulse*1.20)
+            else if (DTO.Pulse > OldAnalyzeDto.Pulse*1.20 || DTO.Pulse< OldAnalyzeDto.Pulse*1.20)
             {
                 alarm.NotifyPulse(2);
+                dtoToBroadcast.PulseAlarm = 2;
             }
             //Hvis den er lidt for høj/lav ConcreteSubject.NotifyPulse(3)
-            if (DTO.Pulse > OldAnalyzeDto.Pulse*1.10 || DTO.Pulse< OldAnalyzeDto.Pulse*1.10)
+            else if (DTO.Pulse > OldAnalyzeDto.Pulse*1.10 || DTO.Pulse< OldAnalyzeDto.Pulse*1.10)
             {
                 alarm.NotifyPulse(3);
+                dtoToBroadcast.PulseAlarm = 3;
+            }
+            else
+            {
+                dtoToBroadcast.PulseAlarm = 0;   
             }
         }
     }

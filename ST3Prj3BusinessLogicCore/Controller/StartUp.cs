@@ -16,15 +16,19 @@ namespace BusinessLogic.Controller
        private BlockingCollection<Measure_DTO> _dataQueueMeasure;
         private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
         private BlockingCollection<LCD_DTO> _dataQueueLCD;
+        private BlockingCollection<MetaData_DTO> _dataQueueMetadata;
         private ButtonObserver _button1Observer;
         private ButtonObserver _button2Observer;
         private ButtonObserver _button3Observer;
         private ButtonObserver _button4Observer;
         private List<int> ageLs;
         private List<string> genderLs;
+        private MetaData_DTO dto;
 
 
         private ManualResetEvent _calibrationEventMeasure;
+
+        
         //private bool stop=false;
 
         //public bool Stop
@@ -33,21 +37,23 @@ namespace BusinessLogic.Controller
         //    set { stop = value; }
         //}
 
-        public StartUp(BlockingCollection<Measure_DTO> dataQueueMeasure,
-            BlockingCollection<Adjustments_DTO> dataQueueAdjustments, ButtonObserver buttonObserver1,
-            ButtonObserver buttonObserver2,
+        public StartUp(BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Adjustments_DTO> dataQueueAdjustments,
+            BlockingCollection<MetaData_DTO> dataQueueMetaData, ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
             ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, ManualResetEvent calibrationEventMeasure,
             BlockingCollection<LCD_DTO> dataQueueLcd)
         {
             
             _dataQueueMeasure = dataQueueMeasure;
             _dataQueueAdjustments = dataQueueAdjustments;
+            _dataQueueMetadata = dataQueueMetaData;
             _button1Observer = buttonObserver1;
             _button2Observer = buttonObserver2;
             _button3Observer = buttonObserver3;
             _button4Observer = buttonObserver4;
             _calibrationEventMeasure = calibrationEventMeasure;
             _dataQueueLCD = dataQueueLcd;
+
+            dto = new MetaData_DTO();
 
             ageLs = new List<int>();
 
@@ -77,7 +83,9 @@ namespace BusinessLogic.Controller
 
             PerformMetadata();
             PerformZeroPointAdj();
-            
+
+            _dataQueueMetadata.Add(dto);
+
         }
 
         void PerformMetadata()
@@ -132,7 +140,7 @@ namespace BusinessLogic.Controller
 
                 while (_dataQueueMeasure.Count == 0)
                 {
-                    Thread.Sleep(0);
+                    Thread.Sleep(10);
                 }
                 _calibrationEventMeasure.Set();
 
@@ -217,7 +225,7 @@ namespace BusinessLogic.Controller
             Thread.Sleep(1000);
         }
 
-        int ChooseAge()
+        void ChooseAge()
         {
             int i = 0;
             _dataQueueLCD.Add(new LCD_DTO()
@@ -265,11 +273,11 @@ namespace BusinessLogic.Controller
                 }
             }
 
-            return i;
+            dto.Age = i;
         }
 
 
-        string ChooseGender()
+        void ChooseGender()
         {
             int i = 0;
             _dataQueueLCD.Add(new LCD_DTO()
@@ -321,7 +329,9 @@ namespace BusinessLogic.Controller
 
             }
 
-            return genderLs[i];
+            
+            dto.Gender = i;
+
         }
 
     }

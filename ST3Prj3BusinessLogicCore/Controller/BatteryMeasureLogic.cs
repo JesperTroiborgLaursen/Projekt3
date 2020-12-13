@@ -29,6 +29,10 @@ namespace BusinessLogic.Controller
             while (!Stop)
             {
 
+                while (_dataQueueAdc.Count == 0)
+                {
+                    Thread.Sleep(1);
+                }
                 try
                 {
                     var adcDTO = _dataQueueAdc.Take();

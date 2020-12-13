@@ -38,9 +38,7 @@ namespace Presentation
             {
                 while (_dataQueueAnalyzeLCD.Count != 0 || _dataQueueLCD.Count != 0)
                 {
-                    while (_calibrationEvent.WaitOne())
-                    {
-                        while (!_dataQueueAnalyzeLCD.IsCompleted && _calibrationEvent.WaitOne())
+                   while (!_calibrationEvent.WaitOne() && _dataQueueAnalyzeLCD.Count == 0)
                         {
                             try
                             {
@@ -63,9 +61,9 @@ namespace Presentation
                         }
 
                         Thread.Sleep(0);
-                    }
+                    
 
-                    while (!_calibrationEvent.WaitOne())
+                    while (_dataQueueAnalyzeLCD.Count != 0)
                     {
                         try
                         {
@@ -74,10 +72,10 @@ namespace Presentation
 
                             lcd.lcdClear();
                             lcd.lcdPrint(
-                                $"{DateTime.Now.Hour}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
+                                $"{DateTime.Now}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
                                 $"   DIA:{container.Dia}   SYS:{container.Sys}   PULSE: {container.Pulse}"
                             );
-                            Debug.WriteLine($"{DateTime.Now.Hour}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
+                            Debug.WriteLine($"{DateTime.Now}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
                                             $"   DIA:{container.Dia}   SYS:{container.Sys}   PULSE: {container.Pulse}");
 
                         }
@@ -91,6 +89,7 @@ namespace Presentation
 
                     Thread.Sleep(0);
                 }
+                Thread.Sleep(0);
             }
             
         }

@@ -51,6 +51,9 @@ namespace RPITest
         //private static BlockingCollection<LCD_DTO> dataQueueStartUpLCD;
         //private static BlockingCollection<LCD_DTO> dataQueueCalibrationLCD;
         private static BlockingCollection<Adjustments_DTO> dataQueueAdjustments;
+        private static BlockingCollection<MetaData_DTO> dataQueueMetaData;
+        private static BlockingCollection<Alarm_DTO> dataQueueAlarmToBroadcast;
+        private static BlockingCollection<Analyze_DTO> dataQueueAnalyzeToBroadcast;
 
         private static ServiceCollection services;
         
@@ -65,7 +68,7 @@ namespace RPITest
         public static ManualResetEvent calibrationEventMeasure { get; set; }
         public static ManualResetEvent calibrationEventLocalDb { get; set; }
         public static ManualResetEvent calibrationJoinEvent;
-
+        
 
 
         static void Main(string[] args)
@@ -102,14 +105,18 @@ namespace RPITest
             dataQueueAnalyze = new BlockingCollection<Measure_DTO>();
             dataQueueAnalyzeLCD = new BlockingCollection<Analyze_DTO>();
             dataQueueAdjustments = new BlockingCollection<Adjustments_DTO>();
+            dataQueueMetaData = new BlockingCollection<MetaData_DTO>();
+            dataQueueAnalyzeToBroadcast = new BlockingCollection<Analyze_DTO>();
+            dataQueueAlarmToBroadcast = new BlockingCollection<Alarm_DTO>();
 
 
-            
+
+
             //Creating objects
             measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, dataQueueAdc,
                 dataQueueAdjustments, dataQueueAnalyze, calibrationEventMeasure);
 
-            broadcast = new Broadcast(dataQueueBroadcast);
+            broadcast = new Broadcast(dataQueueBroadcast, dataQueueMetaData, dataQueueAlarmToBroadcast, dataQueueAnalyzeToBroadcast);
 
             //lcdProducer = new LCDProducer(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
 
@@ -119,11 +126,11 @@ namespace RPITest
 
             batteryMeasureLogic = new BatteryMeasureLogic(dataQueueAdc,dataQueueBattery);
 
-            alarmLogic = new AlarmLogic(dataQueueAlarm);
+            alarmLogic = new AlarmLogic(dataQueueAlarm, dataQueueAlarmToBroadcast);
 
-            analyzeLogic = new AnalyzeLogic(dataQueueAlarm,dataQueueAnalyze, dataQueueBattery,dataQueueAnalyzeLCD);
+            analyzeLogic = new AnalyzeLogic(dataQueueAlarm,dataQueueAnalyze, dataQueueBattery,dataQueueAnalyzeLCD, dataQueueAnalyzeToBroadcast);
 
-            startUp = new StartUp(dataQueueMeasure, dataQueueAdjustments, 
+            startUp = new StartUp(dataQueueMeasure, dataQueueAdjustments, dataQueueMetaData,
                 buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4, calibrationEventMeasure, dataQueueLCD);
 
             calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
@@ -169,10 +176,10 @@ namespace RPITest
 
             ////Starting UI and battery measure threads
             uiThread.Start();
-            //batteryMeasureThread.Start();
+            batteryMeasureThread.Start();
             writeToLcdThread.Start();
-            
-            
+
+
 
             ////Starting startup and measure thread, and waiting for startUp to be done
             startUpThread.Start();
@@ -182,12 +189,17 @@ namespace RPITest
             //Starting calibration thread which listens for button comb.
             //calibrationThread.Start();
 
+
             //Wait until start button is pressed and then measurement threads are started
-            while (!buttonObserver2.IsPressed)
+            while (!buttonObserver2.IsPressed ) //&& calibrationJoinEvent.WaitOne() == true
             {
                 Thread.Sleep(0);
             }
 
+            //while (calibrationJoinEvent.WaitOne() == false)
+            //{
+            //    Thread.Sleep(0);
+            //}
 
 
             broadcastThread.Start();
@@ -196,16 +208,17 @@ namespace RPITest
             saveToLocalDb.Start();
             analyzeLogicThread.Start();
             alarmThread.Start();
+            //writeToLcdThread.Join();
 
 
             //As long as stop button hasnt been pressed, threads are kept going
             while (!buttonObserver4.IsPressed)
             {
                 Thread.Sleep(0);
-                while (calibrationJoinEvent.WaitOne())
-                {
-                    calibrationThread.Join();
-                }
+                //while ()
+                //{
+                //    calibrationThread.Join();
+                //}
             }
 
             //Shutting down threads by completing queues and setting stop props

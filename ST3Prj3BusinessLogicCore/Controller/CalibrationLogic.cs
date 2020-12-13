@@ -78,7 +78,7 @@ namespace BusinessLogic.Controller
             {
                 if (_button3Observer.startCal)
                 {
-                    _calibrationJoinEvent.Set();
+                    _calibrationJoinEvent.Reset();
                     _calibrationEventMeasure.Set();
                     _calibrationEventLocalDb.Set();
                     _calibrationEventLcd.Set();
@@ -92,7 +92,7 @@ namespace BusinessLogic.Controller
                     _calibrationEventMeasure.Reset();
                     _calibrationEventLcd.Reset();
                     _calibrationEventLocalDb.Reset();
-                    _calibrationJoinEvent.Reset();
+                    _calibrationJoinEvent.Set();
                 }
 
                 Thread.Sleep(0);
@@ -109,6 +109,8 @@ namespace BusinessLogic.Controller
          
                 _dataQueueLCD.Add(new LCD_DTO() { Message = "Getting ready for   calibration..."});
                 Debug.WriteLine("Getting ready for   calibration...");
+
+                Thread.Sleep(1000);
             
             
 
@@ -202,11 +204,12 @@ namespace BusinessLogic.Controller
                     for (int i = 0; i < 3;)
                     {
                         ClearQueueMeasure(_dataQueueMeasure);
+                        
                         _calibrationEventMeasure.Reset();
 
                         while (_dataQueueMeasure.Count == 0)
                         {
-                            Thread.Sleep(0);
+                            Thread.Sleep(10);
                         }
                         _calibrationEventMeasure.Set();
 
@@ -275,9 +278,9 @@ namespace BusinessLogic.Controller
                         _dataQueueLCD.Add(new LCD_DTO()
                         {
                             Message =
-                                "Calibration applied. "
+                                "Calibration applied. Press Start to Continue or power off"
                         });
-                        Debug.WriteLine("Calibration applied. ");
+                        Debug.WriteLine("Calibration applied. Press Start to Continue or power off");
                         discardLock = true;
                         break;
                     }
@@ -286,9 +289,9 @@ namespace BusinessLogic.Controller
                         _dataQueueLCD.Add(new LCD_DTO()
                         {
                             Message =
-                                "Calibration discarded."
+                                "Calibration discarded. Press Start to Continue or power off"
                         });
-                        Debug.WriteLine("Calibration discarded.");
+                        Debug.WriteLine("Calibration discarded. Press Start to Continue or power off");
                         discardLock = true;
                         break;
                     }
