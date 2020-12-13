@@ -15,18 +15,20 @@ namespace DataAccesLogic.Boundaries
     {
         private static ADC1015 adc;
 
-        //private static SamplePack samplePack;
-        //private static List<Sample> ls;
-        //private static short[] shortbuffer;
         public int id { get; set; }
-        private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast = new BlockingCollection<Broadcast_DTO>();
-        private BlockingCollection<Measure_DTO> _dataQueueMeasure = new BlockingCollection<Measure_DTO>();
-        private BlockingCollection<LocalDB_DTO> _dataQueueLocalDB = new BlockingCollection<LocalDB_DTO>();
-        private BlockingCollection<ADC_DTO> _dataQueueADC = new BlockingCollection<ADC_DTO>();
-        private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments = new BlockingCollection<Adjustments_DTO>();
+       
+
+        private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast;
+        private BlockingCollection<Measure_DTO> _dataQueueMeasure;
+        private BlockingCollection<LocalDB_DTO> _dataQueueLocalDB;
+        private BlockingCollection<ADC_DTO> _dataQueueADC;
+        private BlockingCollection<Measure_DTO> _dataQueueAnalyze;
+        private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
         public ManualResetEvent _calibrationEvent { get; set; }
+
         private double convertingFactor =0.25965; //Beregnet a værdi = 3.7801
         private double zeroPoint;
+
 
         public double ConvertingFactor
         {
@@ -34,9 +36,12 @@ namespace DataAccesLogic.Boundaries
             set { convertingFactor = value; }
         }
 
+        
 
         //Stop til at stoppe måling. Når den skal stoppes, sættes denne til true.
         private bool stop = false;
+        
+
 
         public bool Stop
         {
@@ -46,8 +51,9 @@ namespace DataAccesLogic.Boundaries
 
         public Measure(BlockingCollection<Broadcast_DTO> dataQueueBroadcast,
             BlockingCollection<Measure_DTO> dataQueueMeasure,
-            BlockingCollection<LocalDB_DTO> dataQueueLocalDb, BlockingCollection<ADC_DTO> dataQueueAdc, 
-            BlockingCollection<Adjustments_DTO> dataQueueAdjustments, ManualResetEvent calibrationResetEvent)
+            BlockingCollection<LocalDB_DTO> dataQueueLocalDb, BlockingCollection<ADC_DTO> dataQueueAdc,
+            BlockingCollection<Adjustments_DTO> dataQueueAdjustments, BlockingCollection<Measure_DTO> dataQueueAnalyze,
+            ManualResetEvent calibrationResetEvent)
         {
             _dataQueueBroadcast = dataQueueBroadcast;
             _dataQueueMeasure = dataQueueMeasure;
@@ -55,6 +61,7 @@ namespace DataAccesLogic.Boundaries
             _dataQueueADC = dataQueueAdc;
             _calibrationEvent = calibrationResetEvent;
             _dataQueueAdjustments = dataQueueAdjustments;
+            _dataQueueAnalyze = dataQueueAnalyze;
             adc = new ADC1015();
 
         }
@@ -103,12 +110,14 @@ namespace DataAccesLogic.Boundaries
                     Measure_DTO measureDto = new Measure_DTO() {SamplePack = samplePack};
                     LocalDB_DTO localDbDto = new LocalDB_DTO() {SamplePack = samplePack};
 
+
                     //Checking if queues have been closed
                     if (!_dataQueueMeasure.IsCompleted && !_dataQueueBroadcast.IsCompleted && !_dataQueueLocalDB.IsCompleted)
                     {
                         _dataQueueBroadcast.Add(broadcastDto);
                         _dataQueueMeasure.Add(measureDto);
                         _dataQueueLocalDB.Add(localDbDto);
+                        _dataQueueAnalyze.Add((measureDto));
                     }
                     else
                     {

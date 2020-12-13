@@ -52,6 +52,7 @@ namespace RPITest
         private static BlockingCollection<Battery_DTO> dataQueueBattery;
         private static BlockingCollection<Analyze_DTO> dataQueueAlarm;
         private static BlockingCollection<Analyze_DTO> dataQueueAnalyzeLCD;
+        private static BlockingCollection<Measure_DTO> dataQueueAnalyze;
         private static BlockingCollection<LCD_DTO> dataQueueStartUpLCD;
         private static BlockingCollection<LCD_DTO> dataQueueCalibrationLCD;
         private static BlockingCollection<Adjustments_DTO> dataQueueAdjustments;
@@ -103,6 +104,7 @@ namespace RPITest
             dataQueueAdc = new BlockingCollection<ADC_DTO>();
             dataQueueBattery = new BlockingCollection<Battery_DTO>();
             dataQueueAlarm = new BlockingCollection<Analyze_DTO>();
+            dataQueueAnalyze = new BlockingCollection<Measure_DTO>();
             dataQueueAnalyzeLCD = new BlockingCollection<Analyze_DTO>();
             dataQueueAdjustments = new BlockingCollection<Adjustments_DTO>();
 
@@ -110,7 +112,7 @@ namespace RPITest
             
             //Creating objects
             measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, dataQueueAdc,
-                dataQueueAdjustments, calibrationEventMeasure);
+                dataQueueAdjustments, dataQueueAnalyze, calibrationEventMeasure);
 
             broadcast = new Broadcast(dataQueueBroadcast);
 
@@ -124,7 +126,7 @@ namespace RPITest
 
             alarmLogic = new AlarmLogic(dataQueueAlarm);
 
-            analyzeLogic = new AnalyzeLogic(dataQueueAlarm,dataQueueMeasure, dataQueueBattery,dataQueueAnalyzeLCD);
+            analyzeLogic = new AnalyzeLogic(dataQueueAlarm,dataQueueAnalyze, dataQueueBattery,dataQueueAnalyzeLCD);
 
             startUp = new StartUp(dataQueueMeasure, dataQueueAdjustments, 
                 buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4, calibrationEventMeasure, dataQueueLCD);
