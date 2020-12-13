@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading;
 using DataAccesLogic.Drivers;
 using Domain.DTOModels;
@@ -37,57 +38,59 @@ namespace Presentation
             {
                 while (_dataQueueAnalyzeLCD.Count != 0 || _dataQueueLCD.Count != 0)
                 {
-                    //    while (_calibrationEvent.WaitOne())
-                    //    {
-                    //        while (!_dataQueueAnalyzeLCD.IsCompleted && _calibrationEvent.WaitOne())
-                    //        {
-                    try
+                    while (_calibrationEvent.WaitOne())
                     {
-                        var container = _dataQueueLCD.Take();
-                        string message = container.Message;
-                        //message = "Test";
+                        while (!_dataQueueAnalyzeLCD.IsCompleted && _calibrationEvent.WaitOne())
+                        {
+                            try
+                            {
+                                var container = _dataQueueLCD.Take();
+                                string message = container.Message;
+                                //message = "Test";
 
 
-                        lcd.lcdClear();
-                        lcd.lcdPrint(message);
+                                lcd.lcdClear();
+                                lcd.lcdPrint(message);
                                     
+                            }
+                            catch (InvalidOperationException)
+                            {
+                                continue;
+                            }
+
+                            Thread.Sleep(500);
+
+                        }
+
+                        Thread.Sleep(0);
                     }
-                    catch (InvalidOperationException)
+
+                    while (!_calibrationEvent.WaitOne())
                     {
-                        continue;
+                        try
+                        {
+                            var container = _dataQueueAnalyzeLCD.Take();
+
+
+                            lcd.lcdClear();
+                            lcd.lcdPrint(
+                                $"{DateTime.Now.Hour}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
+                                $"   DIA:{container.Dia}   SYS:{container.Sys}   PULSE: {container.Pulse}"
+                            );
+                            Debug.WriteLine($"{DateTime.Now.Hour}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
+                                            $"   DIA:{container.Dia}   SYS:{container.Sys}   PULSE: {container.Pulse}");
+
+                        }
+                        catch (InvalidOperationException)
+                        {
+                            continue;
+                        }
+
+                        Thread.Sleep(500);
                     }
 
-                    Thread.Sleep(500);
-
-                    //    }
-
-                    //    Thread.Sleep(0);
+                    Thread.Sleep(0);
                 }
-
-                //while (!_calibrationEvent.WaitOne())
-                //{
-                //    try
-                //    {
-                //        var container = _dataQueueAnalyzeLCD.Take();
-
-
-                //        lcd.lcdClear();
-                //        lcd.lcdPrint(
-                //            $"{DateTime.Now.Hour}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
-                //            $"   DIA:{container.Dia}   SYS:{container.Sys}   PULSE: {container.Pulse}"
-                //        );
-
-                //    }
-                //    catch (InvalidOperationException)
-                //    {
-                //        continue;
-                //    }
-
-                //    Thread.Sleep(500);
-                //}
-
-                //Thread.Sleep(0);
-                //}
             }
             
         }

@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net.Http;
 using System.Threading;
@@ -107,6 +108,7 @@ namespace BusinessLogic.Controller
 
          
                 _dataQueueLCD.Add(new LCD_DTO() { Message = "Getting ready for   calibration..."});
+                Debug.WriteLine("Getting ready for   calibration...");
             
             
 
@@ -117,7 +119,8 @@ namespace BusinessLogic.Controller
                         Message =
                             "Calibration initialized\nPlease press \"START\" to continue\n or press \"Mute\" to stop calibration"
                     });
-                
+                Debug.WriteLine("Calibration initialized\nPlease press \"START\" to continue\n or press \"Mute\" to stop calibration");
+
                 while (!_button2Observer.IsPressed)
                 {
                     Thread.Sleep(0);
@@ -138,7 +141,7 @@ namespace BusinessLogic.Controller
                             Message =
                                 "Calibration have been stopped. Nothing applied."
                         });
-                    
+                    Debug.WriteLine("Calibration have been stopped. Nothing applied.");
 
                         
                     break;
@@ -150,6 +153,7 @@ namespace BusinessLogic.Controller
                         Message =
                             "Calibration started."
                     });
+                    Debug.WriteLine("Calibration started.");
                 
 
                 int j = 0;
@@ -160,6 +164,7 @@ namespace BusinessLogic.Controller
                             Message =
                                 $"Please apply a test pressure of {pressure} and press \"Start\""
                         });
+                        Debug.WriteLine($"Please apply a test pressure of {pressure} and press \"Start\"");
                     //Så længe der ikke er trykket på knap 2, skal den vente.
                     while (!_button2Observer.IsPressed)
                     {
@@ -180,6 +185,7 @@ namespace BusinessLogic.Controller
                                 Message =
                                     "Calibration have been stopped. Nothing applied."
                             });
+                            Debug.WriteLine("Calibration have been stopped. Nothing applied.");
                         
                         break;
                     }
@@ -188,6 +194,7 @@ namespace BusinessLogic.Controller
                             Message =
                                 "Measuring. Please wait ..."
                         });
+                    Debug.WriteLine("Measuring. Please wait ...");
                     
 
                         
@@ -252,6 +259,9 @@ namespace BusinessLogic.Controller
                             $"\nPress \"START\" to apply or \"MUTE\" to discard"
                     });
                 
+                    Debug.WriteLine($"Original converting factor is: {_convertingFactor}" +
+                                    $"\nAdjustment suggestion: {_convertingFactor - a}" +
+                                    $"\nPress \"START\" to apply or \"MUTE\" to discard");
                 bool discardLock = false;
                 _calibrationEventMeasure.Reset();
                 while (!discardLock)
@@ -267,6 +277,7 @@ namespace BusinessLogic.Controller
                             Message =
                                 "Calibration applied. "
                         });
+                        Debug.WriteLine("Calibration applied. ");
                         discardLock = true;
                         break;
                     }
@@ -277,6 +288,7 @@ namespace BusinessLogic.Controller
                             Message =
                                 "Calibration discarded."
                         });
+                        Debug.WriteLine("Calibration discarded.");
                         discardLock = true;
                         break;
                     }

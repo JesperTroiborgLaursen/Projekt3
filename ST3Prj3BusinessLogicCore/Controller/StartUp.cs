@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using DataAccesLogic.Boundaries;
@@ -53,10 +54,9 @@ namespace BusinessLogic.Controller
                 _dataQueueLCD.Add(new LCD_DTO()
                 {
                     Message =
-                        "WelcomePlease1212345123456712345"
-                            //\r\nPrepare to proce
-                    //"Test"
+                        "Welcome. Please press Prepare til proceed."
                 });
+                Debug.WriteLine("Welcome. Please press Prepare til proceed.");
             
 
             while (!_button1Observer.IsPressed)
@@ -71,6 +71,7 @@ namespace BusinessLogic.Controller
                     Message =
                         "Please position the PVC tap as shown in the manual and press Prepare to initialize the device"
                 });
+                Debug.WriteLine("Please position the PVC tap as shown in the manual and press Prepare to initialize the device");
             
             while (!_button1Observer.IsPressed)
             {
@@ -83,6 +84,7 @@ namespace BusinessLogic.Controller
                     Message =
                         "Measuring...        Please don't move PVC tap.."
                 });
+                Debug.WriteLine("Measuring...        Please don't move PVC tap..");
                 if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
                                                                    //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
             {
@@ -93,6 +95,7 @@ namespace BusinessLogic.Controller
                             "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
                     });
 
+                    Debug.WriteLine("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
                 
                 goto Start;
             }
@@ -107,7 +110,7 @@ namespace BusinessLogic.Controller
                         Message =
                             "The device have been initialized. Press Start to start measuring"
                     });
-                
+                    Debug.WriteLine("The device have been initialized. Press Start to start measuring");
                
             }
 
