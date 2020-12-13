@@ -49,13 +49,14 @@ namespace BusinessLogic.Controller
             _calibrationEventMeasure = calibrationEventMeasure;
             _dataQueueLCD = dataQueueLcd;
 
-            for (int i = 0; i < 110; i++)
-            {
-                ageLs[i] = i;
-            }
+            ageLs = new List<int>();
 
-            genderLs[0] = "Male";
-            genderLs[1] = "Female";
+            genderLs = new List<string>() {"Male", "Female"};
+
+            for (int i = 0; i < 111; i++)
+            {
+                ageLs.Add(i);
+            }
 
         }
         public void Run()
@@ -63,13 +64,16 @@ namespace BusinessLogic.Controller
             _dataQueueLCD.Add(new LCD_DTO()
             {
                 Message =
-                    "Welcome. Please press Prepare til proceed."
+                    "Welcome. Please press Prepare t0 proceed."
             });
-            Debug.WriteLine("Welcome. Please press Prepare til proceed.");
+            Debug.WriteLine("Welcome. Please press Prepare to proceed.");
+            
             while (!_button1Observer.IsPressed)
             {
-                Thread.Sleep(0);
+                Thread.Sleep(1);
             }
+
+            Thread.Sleep(50);
 
             PerformMetadata();
             PerformZeroPointAdj();
@@ -84,20 +88,19 @@ namespace BusinessLogic.Controller
                     "Please select gender and press Prepare to continue"
             });
             Debug.WriteLine("Please select gender and press Prepare to continue");
-            
-            while (!_button1Observer.IsPressed)
-            {
-                Thread.Sleep(0);
-            }
 
+            Thread.Sleep(1000);
+
+            ChooseGender();
+            
             _dataQueueLCD.Add(new LCD_DTO()
             {
                 Message =
-                    "You choice have been saved"
+                    "Your choice have been saved"
             });
-            Debug.WriteLine("You choice have been saved");
+            Debug.WriteLine("Your choice have been saved");
 
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
 
             _dataQueueLCD.Add(new LCD_DTO()
             {
@@ -105,20 +108,19 @@ namespace BusinessLogic.Controller
                     "Please use the arrows to select age and press prepare to confirm"
             });
             Debug.WriteLine("Please use the arrows to select age and press prepare to confirm");
-            
-            while (!_button1Observer.IsPressed)
-            {
-                Thread.Sleep(0);
-            }
+
+            Thread.Sleep(1000);
+
+            ChooseAge();
 
             _dataQueueLCD.Add(new LCD_DTO()
             {
                 Message =
-                    "You choice have been saved"
+                    "Your choice have been saved"
             });
-            Debug.WriteLine("You choice have been saved");
+            Debug.WriteLine("Your choice have been saved");
 
-            Thread.Sleep(100);
+            Thread.Sleep(1000);
         }
         double MeasureZeroPoint()
         {
@@ -187,20 +189,20 @@ namespace BusinessLogic.Controller
                     "Measuring...        Please don't move PVC tap.."
             });
             Debug.WriteLine("Measuring...        Please don't move PVC tap..");
-            if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
-                //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
-            {
+            //if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
+            //    //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
+            //{
                 
-                    _dataQueueLCD.Add(new LCD_DTO()
-                    {
-                        Message =
-                            "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
-                    });
+            //        _dataQueueLCD.Add(new LCD_DTO()
+            //        {
+            //            Message =
+            //                "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
+            //        });
 
-                    Debug.WriteLine("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
+            //        Debug.WriteLine("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
                 
-                goto Start;
-            }
+            //    goto Start;
+            //}
             
             Adjustments_DTO DTO = new Adjustments_DTO();
             DTO.ZeroPoint = MeasureZeroPoint();
@@ -212,13 +214,116 @@ namespace BusinessLogic.Controller
                     "The device have been initialized. Press Start to start measuring"
             });
             Debug.WriteLine("The device have been initialized. Press Start to start measuring");
+            Thread.Sleep(1000);
         }
 
         int ChooseAge()
         {
+            int i = 0;
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =$"Age: {ageLs[i]}"
 
+            });
+            Debug.WriteLine($"Age: {ageLs[i]}");
+            while(!_button1Observer.IsPressed)
+            {
+                if (_button2Observer.IsPressed)
+                {
+                    if (i==0)
+                    {
+                        i = 110;
+                    }
+                    else
+                    {
+                        i--;
+                    }
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =$"Age: {ageLs[i]}"
+
+                    });
+                    Debug.WriteLine($"Age: {ageLs[i]}");
+                }
+
+                if (_button3Observer.IsPressed)
+                {
+                    if (i==110)
+                    {
+                        i = 0;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =$"Age: {ageLs[i]}"
+
+                    });
+                    Debug.WriteLine($"Age: {ageLs[i]}");
+                }
+            }
+
+            return i;
         }
-        
+
+
+        string ChooseGender()
+        {
+            int i = 0;
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =$"Gender: {genderLs[i]}"
+
+            });
+            Debug.WriteLine($"Gender: {genderLs[i]}");
+
+            while(!_button1Observer.IsPressed)
+            {
+                
+
+                if (_button2Observer.IsPressed)
+                {
+                    if (i==0)
+                    {
+                        i = 1;
+                    }
+                    else
+                    {
+                        i--;
+                    }
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =$"Gender: {genderLs[i]}"
+
+                    });
+                    Debug.WriteLine($"Gender: {genderLs[i]}");
+                }
+
+                if (_button3Observer.IsPressed)
+                {
+                    if (i==1)
+                    {
+                        i = 0;
+                    }
+                    else
+                    {
+                        i++;
+                    }
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =$"Gender: {genderLs[i]}"
+
+                    });
+                    Debug.WriteLine($"Gender: {genderLs[i]}");
+                }
+
+            }
+
+            return genderLs[i];
+        }
+
     }
 
 }

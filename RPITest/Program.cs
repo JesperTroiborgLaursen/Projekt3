@@ -169,7 +169,7 @@ namespace RPITest
 
             ////Starting UI and battery measure threads
             uiThread.Start();
-            batteryMeasureThread.Start();
+            //batteryMeasureThread.Start();
             writeToLcdThread.Start();
             
             
@@ -180,7 +180,7 @@ namespace RPITest
             startUpThread.Join();
 
             //Starting calibration thread which listens for button comb.
-            calibrationThread.Start();
+            //calibrationThread.Start();
 
             //Wait until start button is pressed and then measurement threads are started
             while (!buttonObserver2.IsPressed)

@@ -69,70 +69,77 @@ namespace DataAccesLogic.Boundaries
 
         public void Run()
         {
-            while(_calibrationEvent.WaitOne()) 
+            while(true)
             {
-                while (!Stop && _calibrationEvent.WaitOne())
+                while (_calibrationEvent.WaitOne())
                 {
-                    //Update battery
-                    MeasureBattery();
-                    if (_dataQueueAdjustments.Count != 0)
+                    while (!Stop && _calibrationEvent.WaitOne())
                     {
-                        var DTO = _dataQueueAdjustments.Take();
-                        if (DTO.Calibration != 0)
+                        //Update battery
+                        MeasureBattery();
+                        if (_dataQueueAdjustments.Count != 0)
                         {
-                            ConvertingFactor = DTO.Calibration;
+                            var DTO = _dataQueueAdjustments.Take();
+                            if (DTO.Calibration != 0)
+                            {
+                                ConvertingFactor = DTO.Calibration;
+                            }
+                            else if (DTO.ZeroPoint != 0)
+                            {
+                                zeroPoint = DTO.ZeroPoint;
+                            }
                         }
-                        else if (DTO.ZeroPoint != 0)
+
+                        var samplePack = new SamplePack();
+                        var ls = new List<Sample>();
+                        for (int i = 0; i < 50; i++)
                         {
-                            zeroPoint = DTO.ZeroPoint;
+                            ls.Add(new Sample()
+                            {
+                                Value = Convert.ToUInt16((adc.readADC_SingleEnded(2) *
+                                                          Math.Sqrt(ConvertingFactor * ConvertingFactor)) - zeroPoint)
+                            }); //Tager numerisk værdi for at sikre der ikke er minus værdier under test
+                            Thread.Sleep(20);
                         }
-                    }
 
-                    var samplePack = new SamplePack();
-                    var ls = new List<Sample>();
-                    for (int i = 0; i < 50; i++)
-                    {
-                        ls.Add(new Sample()
+                        samplePack.SampleList = ls;
+                        samplePack.Date = DateTime.Now;
+                        //samplePack.ID = id;
+                        //id++;
+
+                        //Her vil vi gemme i lokal DB
+                        Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
+                        Measure_DTO measureDto = new Measure_DTO() {SamplePack = samplePack};
+                        LocalDB_DTO localDbDto = new LocalDB_DTO() {SamplePack = samplePack};
+
+
+                        //Checking if queues have been closed
+                        if (!_dataQueueMeasure.IsCompleted && !_dataQueueBroadcast.IsCompleted &&
+                            !_dataQueueLocalDB.IsCompleted)
                         {
-                            Value = Convert.ToUInt16((adc.readADC_SingleEnded(2)*
-                                                      Math.Sqrt(ConvertingFactor * ConvertingFactor))-zeroPoint)
-                        });//Tager numerisk værdi for at sikre der ikke er minus værdier under test
-                        Thread.Sleep(20);
+                            _dataQueueBroadcast.Add(broadcastDto);
+                            _dataQueueMeasure.Add(measureDto);
+                            _dataQueueLocalDB.Add(localDbDto);
+                            _dataQueueAnalyze.Add((measureDto));
+                        }
+                        else
+                        {
+                            break;
+                        }
+
+                        //Sleep
+                        Thread.Sleep(0);
+
                     }
 
-                    samplePack.SampleList = ls;
-                    samplePack.Date = DateTime.Now;
-                    //samplePack.ID = id;
-                    //id++;
-
-                    //Her vil vi gemme i lokal DB
-                    Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
-                    Measure_DTO measureDto = new Measure_DTO() {SamplePack = samplePack};
-                    LocalDB_DTO localDbDto = new LocalDB_DTO() {SamplePack = samplePack};
-
-
-                    //Checking if queues have been closed
-                    if (!_dataQueueMeasure.IsCompleted && !_dataQueueBroadcast.IsCompleted && !_dataQueueLocalDB.IsCompleted)
-                    {
-                        _dataQueueBroadcast.Add(broadcastDto);
-                        _dataQueueMeasure.Add(measureDto);
-                        _dataQueueLocalDB.Add(localDbDto);
-                        _dataQueueAnalyze.Add((measureDto));
-                    }
-                    else
-                    {
-                        break;
-                    }
-
-                    //Sleep
                     Thread.Sleep(0);
 
                 }
-                Thread.Sleep(0);
-                
+
+                Thread.Sleep(1);
             }
 
-            _dataQueueBroadcast.CompleteAdding();
+            
         }
 
         void MeasureBattery()

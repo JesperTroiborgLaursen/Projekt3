@@ -58,7 +58,7 @@ namespace Presentation
                                 continue;
                             }
 
-                            Thread.Sleep(500);
+                            Thread.Sleep(2);
 
                         }
 
