@@ -11,6 +11,8 @@ using Domain.Models;
 
 namespace BussinessLogic.Controller
 {
+
+    //Left over from testing phase. Not going to be impl. in final system
     public class LCDProducer
     {
         private BlockingCollection<LCD_DTO> _dataQueueLCD;

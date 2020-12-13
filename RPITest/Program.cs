@@ -1,16 +1,11 @@
 ﻿using System.Collections.Concurrent;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using BusinessLogic.Controller;
-using BussinessLogic.Controller;
 using DataAccesLogic.Boundaries;
-using DataAccesLogic.Drivers;
 using Domain.Context;
 using Domain.DTOModels;
 using Microsoft.Extensions.DependencyInjection;
 using Presentation;
-using RaspberryPiCore.LCD;
 
 
 namespace RPITest
@@ -22,7 +17,7 @@ namespace RPITest
 
         private static Measure measure;
         private static Broadcast broadcast;
-        private static LCDProducer lcdProducer;
+        //private static LCDProducer lcdProducer;
         private static WriteToLCD writeToLcd;
         private static LocalDB localDb;
         private static UserInterface ui;
@@ -34,7 +29,7 @@ namespace RPITest
 
         private static Thread measureThread;
         private static Thread broadcastThread;
-        private static Thread lcdProducerThread;
+        //private static Thread lcdProducerThread;
         private static Thread writeToLcdThread;
         private static Thread saveToLocalDb;
         private static Thread uiThread;
@@ -53,8 +48,8 @@ namespace RPITest
         private static BlockingCollection<Analyze_DTO> dataQueueAlarm;
         private static BlockingCollection<Analyze_DTO> dataQueueAnalyzeLCD;
         private static BlockingCollection<Measure_DTO> dataQueueAnalyze;
-        private static BlockingCollection<LCD_DTO> dataQueueStartUpLCD;
-        private static BlockingCollection<LCD_DTO> dataQueueCalibrationLCD;
+        //private static BlockingCollection<LCD_DTO> dataQueueStartUpLCD;
+        //private static BlockingCollection<LCD_DTO> dataQueueCalibrationLCD;
         private static BlockingCollection<Adjustments_DTO> dataQueueAdjustments;
 
         private static ServiceCollection services;
@@ -156,8 +151,8 @@ namespace RPITest
             uiThread.IsBackground = true;
             batteryMeasureThread.IsBackground = true;
             writeToLcdThread.IsBackground = true;
-            
 
+            //For testing
             //SerLCD lcd = new SerLCD();
             //lcd.lcdDisplay();
             //lcd.lcdSetBackLight(238, 29, 203); //Makes color pink
@@ -173,17 +168,18 @@ namespace RPITest
 
 
             ////Starting UI and battery measure threads
-            //uiThread.Start();
-            //batteryMeasureThread.Start();
+            uiThread.Start();
+            batteryMeasureThread.Start();
             writeToLcdThread.Start();
+            
+            
+
+            ////Starting startup and measure thread, and waiting for startUp to be done
             startUpThread.Start();
-            writeToLcdThread.Join();
-            ////Starting startup thread, and waiting for it to be done
+            measureThread.Start();
+            startUpThread.Join();
 
-            //measureThread.Start();
-            //startUpThread.Join();
-
-            //Starting calibration
+            //Starting calibration thread which listens for button comb.
             calibrationThread.Start();
 
             //Wait until start button is pressed and then measurement threads are started
@@ -193,13 +189,13 @@ namespace RPITest
             }
 
 
-            
-            //broadcastThread.Start();
+
+            broadcastThread.Start();
             //lcdProducerThread.Start();
-            
-            //saveToLocalDb.Start();
-            //analyzeLogicThread.Start();
-            //alarmThread.Start();
+
+            saveToLocalDb.Start();
+            analyzeLogicThread.Start();
+            alarmThread.Start();
 
 
             //As long as stop button hasnt been pressed, threads are kept going
@@ -212,7 +208,7 @@ namespace RPITest
                 }
             }
 
-            //Shutting down threads by completing queues
+            //Shutting down threads by completing queues and setting stop props
             dataQueueLocalDb.CompleteAdding();
             dataQueueLCD.CompleteAdding();
             dataQueueBroadcast.CompleteAdding();
@@ -221,45 +217,45 @@ namespace RPITest
             alarmLogic.Stop = true;
             measure.Stop = true;
 
+            //Havent been impl. fully
+                ////Start again after stopped measure
+                //while (true)
+                //{
+                //    while (!buttonObserver1.IsPressed)
+                //    {
+                //        Thread.Sleep(0);
+                //    }
 
-            ////Start again after stopped measure
-            //while (true)
-            //{
-            //    while (!buttonObserver1.IsPressed)
-            //    {
-            //        Thread.Sleep(0);
-            //    }
+                //    dataQueueLocalDb.;
+                //    dataQueueLCD.CompleteAdding();
+                //    dataQueueBroadcast.CompleteAdding();
+                //    dataQueueMeasure.CompleteAdding();
 
-            //    dataQueueLocalDb.;
-            //    dataQueueLCD.CompleteAdding();
-            //    dataQueueBroadcast.CompleteAdding();
-            //    dataQueueMeasure.CompleteAdding();
+                //    calibrationThread.Start();
+                //    measureThread.Start();
+                //    broadcastThread.Start();
+                //    lcdProducerThread.Start();
+                //    writeToLcdThread.Start();
+                //    saveToLocalDb.Start();
 
-            //    calibrationThread.Start();
-            //    measureThread.Start();
-            //    broadcastThread.Start();
-            //    lcdProducerThread.Start();
-            //    writeToLcdThread.Start();
-            //    saveToLocalDb.Start();
+                //    //As long as stop button hasnt been pressed, threads are kept going
+                //    while (!buttonObserver4.IsPressed)
+                //    {
+                //        Thread.Sleep(0);
+                //    }
 
-            //    //As long as stop button hasnt been pressed, threads are kept going
-            //    while (!buttonObserver4.IsPressed)
-            //    {
-            //        Thread.Sleep(0);
-            //    }
-
-            //    //Shutting down threads by completing queues
-            //    dataQueueLocalDb.CompleteAdding();
-            //    dataQueueLCD.CompleteAdding();
-            //    dataQueueBroadcast.CompleteAdding();
-            //    dataQueueMeasure.CompleteAdding();
-            //    measure.Stop = true;
+                //    //Shutting down threads by completing queues
+                //    dataQueueLocalDb.CompleteAdding();
+                //    dataQueueLCD.CompleteAdding();
+                //    dataQueueBroadcast.CompleteAdding();
+                //    dataQueueMeasure.CompleteAdding();
+                //    measure.Stop = true;
 
 
 
-            //}
+                //}
 
-            //uiThread.Join();
+                //uiThread.Join();
         }
 
         

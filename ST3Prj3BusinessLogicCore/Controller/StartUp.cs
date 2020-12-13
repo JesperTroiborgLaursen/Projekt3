@@ -7,6 +7,7 @@ using System.Threading;
 using DataAccesLogic.Boundaries;
 using DataAccesLogic.Drivers;
 using Domain.DTOModels;
+using MathNet.Numerics;
 
 namespace BusinessLogic.Controller
 {
@@ -19,6 +20,8 @@ namespace BusinessLogic.Controller
         private ButtonObserver _button2Observer;
         private ButtonObserver _button3Observer;
         private ButtonObserver _button4Observer;
+        private List<int> ageLs;
+        private List<string> genderLs;
 
 
         private ManualResetEvent _calibrationEventMeasure;
@@ -46,77 +49,77 @@ namespace BusinessLogic.Controller
             _calibrationEventMeasure = calibrationEventMeasure;
             _dataQueueLCD = dataQueueLcd;
 
+            for (int i = 0; i < 110; i++)
+            {
+                ageLs[i] = i;
+            }
+
+            genderLs[0] = "Male";
+            genderLs[1] = "Female";
+
         }
         public void Run()
         {
-            Start:
-            
-                _dataQueueLCD.Add(new LCD_DTO()
-                {
-                    Message =
-                        "Welcome. Please press Prepare til proceed."
-                });
-                Debug.WriteLine("Welcome. Please press Prepare til proceed.");
-            
-
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "Welcome. Please press Prepare til proceed."
+            });
+            Debug.WriteLine("Welcome. Please press Prepare til proceed.");
             while (!_button1Observer.IsPressed)
             {
                 Thread.Sleep(0);
             }
 
-       
-               
-                _dataQueueLCD.Add(new LCD_DTO()
-                {
-                    Message =
-                        "Please position the PVC tap as shown in the manual and press Prepare to initialize the device"
-                });
-                Debug.WriteLine("Please position the PVC tap as shown in the manual and press Prepare to initialize the device");
+            PerformMetadata();
+            PerformZeroPointAdj();
             
-            while (!_button1Observer.IsPressed)
-            {
-                Thread.Sleep(0);
-            }
-     
-                
-                _dataQueueLCD.Add(new LCD_DTO()
-                {
-                    Message =
-                        "Measuring...        Please don't move PVC tap.."
-                });
-                Debug.WriteLine("Measuring...        Please don't move PVC tap..");
-                if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
-                                                                   //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
-            {
-                
-                    _dataQueueLCD.Add(new LCD_DTO()
-                    {
-                        Message =
-                            "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
-                    });
-
-                    Debug.WriteLine("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
-                
-                goto Start;
-            }
-            else
-            {
-                Adjustments_DTO DTO = new Adjustments_DTO();
-                DTO.ZeroPoint = MeasureZeroPoint();
-                _dataQueueAdjustments.Add(DTO);
-        
-                    _dataQueueLCD.Add(new LCD_DTO()
-                    {
-                        Message =
-                            "The device have been initialized. Press Start to start measuring"
-                    });
-                    Debug.WriteLine("The device have been initialized. Press Start to start measuring");
-               
-            }
-
-
         }
 
+        void PerformMetadata()
+        {
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "Please select gender and press Prepare to continue"
+            });
+            Debug.WriteLine("Please select gender and press Prepare to continue");
+            
+            while (!_button1Observer.IsPressed)
+            {
+                Thread.Sleep(0);
+            }
+
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "You choice have been saved"
+            });
+            Debug.WriteLine("You choice have been saved");
+
+            Thread.Sleep(100);
+
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "Please use the arrows to select age and press prepare to confirm"
+            });
+            Debug.WriteLine("Please use the arrows to select age and press prepare to confirm");
+            
+            while (!_button1Observer.IsPressed)
+            {
+                Thread.Sleep(0);
+            }
+
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "You choice have been saved"
+            });
+            Debug.WriteLine("You choice have been saved");
+
+            Thread.Sleep(100);
+        }
         double MeasureZeroPoint()
         {
             List<int> zeroPointMeasures = new List<int>();
@@ -160,5 +163,62 @@ namespace BusinessLogic.Controller
                 blockingCollection.TryTake(out _);
             }
         }
+
+        void PerformZeroPointAdj()
+        {
+            Start:
+            
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "Please position the PVC tap as shown in the manual and press Prepare to initialize the device"
+            });
+            Debug.WriteLine("Please position the PVC tap as shown in the manual and press Prepare to initialize the device");
+            
+            while (!_button1Observer.IsPressed)
+            {
+                Thread.Sleep(0);
+            }
+     
+                
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "Measuring...        Please don't move PVC tap.."
+            });
+            Debug.WriteLine("Measuring...        Please don't move PVC tap..");
+            if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
+                //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
+            {
+                
+                    _dataQueueLCD.Add(new LCD_DTO()
+                    {
+                        Message =
+                            "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
+                    });
+
+                    Debug.WriteLine("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
+                
+                goto Start;
+            }
+            
+            Adjustments_DTO DTO = new Adjustments_DTO();
+            DTO.ZeroPoint = MeasureZeroPoint();
+            _dataQueueAdjustments.Add(DTO);
+        
+            _dataQueueLCD.Add(new LCD_DTO()
+            {
+                Message =
+                    "The device have been initialized. Press Start to start measuring"
+            });
+            Debug.WriteLine("The device have been initialized. Press Start to start measuring");
+        }
+
+        int ChooseAge()
+        {
+
+        }
+        
     }
+
 }
