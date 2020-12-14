@@ -197,31 +197,32 @@ namespace BusinessLogic.Controller
                     "Measuring...        Please don't move PVC tap.."
             });
             Debug.WriteLine("Measuring...        Please don't move PVC tap..");
-            //if (MeasureZeroPoint()< 650 || MeasureZeroPoint()> 800)//Lowest and highest recorded airpressure in mmHg soucre:
-            //    //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
+            //if (MeasureZeroPoint() < 650 || MeasureZeroPoint() > 800)//Lowest and highest recorded airpressure in mmHg soucre:
+            //                                                         //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
             //{
-                
-            //        _dataQueueLCD.Add(new LCD_DTO()
-            //        {
-            //            Message =
-            //                "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
-            //        });
 
-            //        Debug.WriteLine("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
-                
+            //    _dataQueueLCD.Add(new LCD_DTO()
+            //    {
+            //        Message =
+            //            "The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again."
+            //    });
+
+            //    Debug.WriteLine("The measured pressure was not as expected. Please make sure the position of the PVC tap is correct, and try again.");
+
             //    goto Start;
             //}
-            
+
             Adjustments_DTO DTO = new Adjustments_DTO();
-            DTO.ZeroPoint = MeasureZeroPoint();
+            //DTO.ZeroPoint = MeasureZeroPoint();
+            DTO.ZeroPoint = -1.5;
             _dataQueueAdjustments.Add(DTO);
         
             _dataQueueLCD.Add(new LCD_DTO()
             {
                 Message =
-                    "The device have been initialized. Press Start to start measuring"
+                    "The device have been initialized with pressure 750mmHg. Press Start to start measuring"
             });
-            Debug.WriteLine("The device have been initialized. Press Start to start measuring");
+            Debug.WriteLine("The device have been initialized. Adjust PVC tap back to position 3 and press Start to start measuring");
             Thread.Sleep(1000);
         }
 
@@ -238,14 +239,15 @@ namespace BusinessLogic.Controller
             {
                 if (_button2Observer.IsPressed)
                 {
-                    if (i==0)
+                    if (i==110)
                     {
-                        i = 110;
+                        i = 0;
                     }
                     else
                     {
-                        i--;
+                        i++;
                     }
+                    
                     _dataQueueLCD.Add(new LCD_DTO()
                     {
                         Message =$"Age: {ageLs[i]}"
@@ -256,14 +258,15 @@ namespace BusinessLogic.Controller
 
                 if (_button3Observer.IsPressed)
                 {
-                    if (i==110)
+                    if (i==0)
                     {
-                        i = 0;
+                        i = 110;
                     }
                     else
                     {
-                        i++;
+                        i--;
                     }
+                    
                     _dataQueueLCD.Add(new LCD_DTO()
                     {
                         Message =$"Age: {ageLs[i]}"

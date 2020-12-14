@@ -13,7 +13,7 @@ namespace DataAccesLogic.Boundaries
     public class Broadcast //: IDataBroadcastLogic
     {
         private static int PORT = 11000;
-        private static string ip = "192.168.137.30"; //Standard networking broadcast IP
+        private static string ip = "192.168.137.168"; //Standard networking broadcast IP
         private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast;
         private BlockingCollection<MetaData_DTO> _dataQueueMetaData;
         private BlockingCollection<Alarm_DTO> _dataQueueAlarmToBroadcast;
@@ -46,15 +46,15 @@ namespace DataAccesLogic.Boundaries
             
             while (!_dataQueueBroadcast.IsCompleted)
             {
-                while (_dataQueueBroadcast.Count == 0 ||
-                       _dataQueueAlarmToBroadcast.Count == 0 || _dataQueueAnalyzeToBroadcast.Count == 0)
-                {
-                    Thread.Sleep(0);
-                }
+                //while (_dataQueueBroadcast.Count == 0 ||
+                //       _dataQueueAlarmToBroadcast.Count == 0 || _dataQueueAnalyzeToBroadcast.Count == 0)
+                //{
+                //    Thread.Sleep(0);
+                //}
 
-                message = $"{AlarmToString()}{id}\n{MetaDataToString()}{date}\n{AnalyzeToString()}{SamplePackToString()}";
+                message = $"{AlarmToString()}{id}\r\n{MetaDataToString()}{date}\r\n{AnalyzeToString()}{SamplePackToString()}";
                 //Debug.WriteLine(message);
-                
+
                 IPAddress broadcast = IPAddress.Parse(ip);
                 Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
@@ -89,7 +89,7 @@ namespace DataAccesLogic.Boundaries
 
                 foreach (var VARIABLE in samplePack.SampleList)
                 {
-                    result = $"{result}\n{VARIABLE.Value}";
+                    result = $"{result}\r\n{VARIABLE.Value}";
                 }
 
                 return result;
@@ -114,7 +114,7 @@ namespace DataAccesLogic.Boundaries
                 }
                 
                 
-                result = $"{AnalyzeDto.Dia}\n{AnalyzeDto.Sys}\n{AnalyzeDto.AvgBP}\n{AnalyzeDto.Pulse}";
+                result = $"{AnalyzeDto.Dia}\r\n{AnalyzeDto.Sys}\r\n{(int)AnalyzeDto.AvgBP}\r\n{AnalyzeDto.Pulse}";
             }
             catch (Exception e)
             {
@@ -138,7 +138,7 @@ namespace DataAccesLogic.Boundaries
                     AlarmDto = dto;
                 }
 
-                result = $"{AlarmDto.BpAlarm}\n{AlarmDto.PulseAlarm}\n{AlarmDto.BatteryAlarm}\n";
+                result = $"{AlarmDto.BpAlarm}\r\n{AlarmDto.PulseAlarm}\r\n{AlarmDto.BatteryAlarm}\r\n";
             }
             catch (Exception e)
             {
@@ -163,7 +163,7 @@ namespace DataAccesLogic.Boundaries
                     MetaDataDto = dto;
                 }
 
-                result = $"{MetaDataDto.Gender}\n{MetaDataDto.Age}\n";
+                result = $"{MetaDataDto.Gender}\r\n{MetaDataDto.Age}\r\n";
             }
             catch (Exception e)
             {

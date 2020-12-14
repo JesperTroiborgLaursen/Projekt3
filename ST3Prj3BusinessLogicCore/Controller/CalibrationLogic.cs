@@ -84,6 +84,7 @@ namespace BusinessLogic.Controller
                     _calibrationEventLcd.Set();
                     while (_dataQueueLCD.Count != 0)
                     {
+                        ClearQueueDisplay(_dataQueueLCD);
                         Thread.Sleep(1);
                     }
                     

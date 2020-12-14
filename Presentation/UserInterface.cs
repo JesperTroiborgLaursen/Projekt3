@@ -22,6 +22,7 @@ namespace Presentation
         public Button button3 { get; set; }
         public Button button4 { get; set; }
 
+        public bool startcal = false;
         public UserInterface()
         {
             //Creating buttons
@@ -47,12 +48,11 @@ namespace Presentation
 
                     button1.Notify();
                 }
-
                 if (button2.IsPressed())
                 {
                     button2.Notify();
                     int i = 0;
-                    bool startcal = false;
+                    
                     while (button2.IsPressed() && !startcal)
                     {
                         i = 0;
@@ -75,14 +75,14 @@ namespace Presentation
 
                     button2.Notify();
                 }
-
+                
                 if (button3.IsPressed())
                 {
                     if (button3.IsPressed())
                     {
                         button3.Notify();
                         int i = 0;
-                        bool startcal = false;
+                        
                         while (button3.IsPressed() && !startcal)
                         {
                             i = 0;

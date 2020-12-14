@@ -187,38 +187,32 @@ namespace RPITest
             startUpThread.Join();
 
             //Starting calibration thread which listens for button comb.
-            //calibrationThread.Start();
-
-
-            //Wait until start button is pressed and then measurement threads are started
-            while (!buttonObserver2.IsPressed ) //&& calibrationJoinEvent.WaitOne() == true
+            calibrationThread.Start();
+            
+            //Wait until start button is pressed and then measurement threads are started. If Calibration has been started, wait for it to be done
+            while (!buttonObserver2.IsPressed )
             {
+                while (buttonObserver3.startCal)
+                {
+                    Thread.Sleep(0);
+                }
                 Thread.Sleep(0);
             }
 
-            //while (calibrationJoinEvent.WaitOne() == false)
-            //{
-            //    Thread.Sleep(0);
-            //}
-
 
             broadcastThread.Start();
-            //lcdProducerThread.Start();
 
             saveToLocalDb.Start();
             analyzeLogicThread.Start();
-            alarmThread.Start();
-            //writeToLcdThread.Join();
+            alarmThread.Start(); 
+            
 
 
             //As long as stop button hasnt been pressed, threads are kept going
             while (!buttonObserver4.IsPressed)
             {
                 Thread.Sleep(0);
-                //while ()
-                //{
-                //    calibrationThread.Join();
-                //}
+                
             }
 
             //Shutting down threads by completing queues and setting stop props
