@@ -123,12 +123,14 @@ namespace BusinessLogic.Controller
             ClearQueueMeasure(_dataQueueMeasure);
             for (int i = 0; i < 3;)
             {
+                //Reset eventhandler for measure to begin measuring
                 _calibrationEventMeasure.Reset();
 
                 while (_dataQueueMeasure.Count == 0)
                 {
                     Thread.Sleep(10);
                 }
+                //Set eventhandler to stop measure again
                 _calibrationEventMeasure.Set();
 
                 if (_dataQueueMeasure.Count >= 1)

@@ -22,6 +22,7 @@ namespace Domain.Context
         protected override void OnModelCreating(ModelBuilder builder)
         {
 
+            //Seeding entities for db
             builder.Entity<SamplePack>().HasData(GetAllSamplePacks());
             builder.Entity<Sample>().HasData(GetSampleList());
 

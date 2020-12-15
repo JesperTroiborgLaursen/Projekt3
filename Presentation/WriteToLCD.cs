@@ -58,11 +58,8 @@ namespace Presentation
                        Thread.Sleep(2);
 
                    }
-
-                   Thread.Sleep(0);
-                    
-
-                   while (_dataQueueAnalyzeLCD.Count != 0)
+                   
+                   while (_calibrationEvent.WaitOne() && _dataQueueAnalyzeLCD.Count != 0)
                    {
                        try
                        {

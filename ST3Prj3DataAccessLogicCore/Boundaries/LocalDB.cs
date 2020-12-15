@@ -10,10 +10,9 @@ using Interfaces;
 
 namespace DataAccesLogic.Boundaries
 {
-    public class LocalDB : IDatabase
+    public class LocalDB
     {
         private BlockingCollection<LocalDB_DTO> _dataQueueLocalDb;
-        public ManualResetEvent _calibrationEvent { get; set; }
         private bool stop = false;
 
         public bool Stop
@@ -22,75 +21,75 @@ namespace DataAccesLogic.Boundaries
             set { stop = value; }
         }
 
-        public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb, ManualResetEvent manualResetEvent)
+        public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
         {
             _dataQueueLocalDb = dataQueueLocalDb;
-            _calibrationEvent = manualResetEvent;
-        }
-
-        public void SaveSamplePack(SamplePack samplePack)
-        {
-            using (var db = new SamplePackDBContext())
-            {
-                db.SamplePacks.Add(samplePack);
-                db.SaveChanges();
-            }
-            
-        }
-
-        public void DeleteSamplePack(int samplePackID)
-        {
-            var db = new SamplePackDBContext();
-            var samplePack = GetSamplePack(samplePackID);
-            db.Attach(samplePack);
-            db.Remove(samplePack);
-            db.SaveChanges();
-        }
-
-        public SamplePack GetSamplePack(int samplePackID)
-        {
-            var db = new SamplePackDBContext();
-            SamplePack samplePack = db.SamplePacks.Find(samplePackID);
-            return samplePack;
-        }
-
-        public List<SamplePack> GetAllSamplePacks()
-        {
-            var db = new SamplePackDBContext();
-            List<SamplePack> result = new List<SamplePack>(db.SamplePacks.ToList());
-            return result;
         }
 
         public void Run()
         {
             while (!Stop)
             {
-                while (_calibrationEvent.WaitOne())
+                var db = new SamplePackDBContext();
+                using (db)
                 {
-                    var db = new SamplePackDBContext();
-                    using (db)
+                    while (!_dataQueueLocalDb.IsCompleted)
                     {
-                        while (!_dataQueueLocalDb.IsCompleted && _calibrationEvent.WaitOne())
+                        try
                         {
-                            try
-                            {
-                                var container = _dataQueueLocalDb.Take();
-                                SamplePack samplePack = container.SamplePack;
+                            var container = _dataQueueLocalDb.Take();
+                            SamplePack samplePack = container.SamplePack;
 
-                                db.Add<SamplePack>(samplePack);
-                                db.SaveChanges();
+                            db.Add<SamplePack>(samplePack);
+                            db.SaveChanges();
 
-                            }
-                            catch (InvalidOperationException)
-                            {
-                                continue;
-                            }
-
-                            Thread.Sleep(1000);
                         }
+                        catch (InvalidOperationException)
+                        {
+                            continue;
+                        }
+
+                        Thread.Sleep(1000);
                     }
                 }
             }
         }
+
+
+
+
+        //Implemtation of IDatabase to be able to work further with the data collected in the local db and make it easy to impl. HL7 FHIR or other db's.
+        //public void SaveSamplePack(SamplePack samplePack)
+        //{
+        //    using (var db = new SamplePackDBContext())
+        //    {
+        //        db.SamplePacks.Add(samplePack);
+        //        db.SaveChanges();
+        //    }
+            
+        //}
+
+        //public void DeleteSamplePack(int samplePackID)
+        //{
+        //    var db = new SamplePackDBContext();
+        //    var samplePack = GetSamplePack(samplePackID);
+        //    db.Attach(samplePack);
+        //    db.Remove(samplePack);
+        //    db.SaveChanges();
+        //}
+
+        //public SamplePack GetSamplePack(int samplePackID)
+        //{
+        //    var db = new SamplePackDBContext();
+        //    SamplePack samplePack = db.SamplePacks.Find(samplePackID);
+        //    return samplePack;
+        //}
+
+        //public List<SamplePack> GetAllSamplePacks()
+        //{
+        //    var db = new SamplePackDBContext();
+        //    List<SamplePack> result = new List<SamplePack>(db.SamplePacks.ToList());
+        //    return result;
+        //}
     }
 }

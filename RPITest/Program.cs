@@ -58,8 +58,7 @@ namespace RPIMain
         public static ManualResetEvent calibrationEventLcd { get; set; }
         public static ManualResetEvent calibrationEventMeasure { get; set; }
         public static ManualResetEvent calibrationEventLocalDb { get; set; }
-        public static ManualResetEvent calibrationJoinEvent { get; set; }
-        
+
 
 
         static void Main(string[] args)
@@ -75,7 +74,6 @@ namespace RPIMain
             calibrationEventLcd = new ManualResetEvent(true);
             calibrationEventMeasure = new ManualResetEvent(true);
             calibrationEventLocalDb = new ManualResetEvent(true);
-            calibrationJoinEvent = new ManualResetEvent(false);
 
             //Create Observers
             buttonObserver1 = new ButtonObserver(ui.button1);
@@ -106,7 +104,7 @@ namespace RPIMain
 
             writeToLcd = new WriteToLCD(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
 
-            localDb = new LocalDB(dataQueueLocalDb, calibrationEventLocalDb);
+            localDb = new LocalDB(dataQueueLocalDb);
 
             batteryMeasureLogic = new BatteryMeasureLogic(dataQueueAdc,dataQueueBattery);
 
@@ -115,11 +113,11 @@ namespace RPIMain
             analyzeLogic = new AnalyzeLogic(dataQueueAlarm,dataQueueAnalyze, dataQueueBattery,dataQueueAnalyzeLCD, dataQueueAnalyzeToBroadcast);
 
             startUp = new StartUp(dataQueueMeasure, dataQueueAdjustments, dataQueueMetaData,
-                buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4, calibrationEventMeasure, dataQueueLCD);
+                buttonObserver1, buttonObserver2, buttonObserver3, buttonObserver4, calibrationEventMeasure, dataQueueLCD);
 
             calibrationLogic= new CalibrationLogic(buttonObserver1, buttonObserver2,buttonObserver3,buttonObserver4,
-                dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb,
-                calibrationJoinEvent, dataQueueMeasure, dataQueueAdjustments, measure.ConvertingFactor);
+                dataQueueLCD, calibrationEventLcd, calibrationEventMeasure,
+                dataQueueMeasure, dataQueueAdjustments, measure.ConvertingFactor);
 
             //Creating threads for producers and consumers
             measureThread = new Thread(measure.Run);
@@ -144,8 +142,9 @@ namespace RPIMain
             batteryMeasureThread.Start();
             writeToLcdThread.Start();
 
-            //Starting startup and measure thread, and waiting for startUp to be done
+            //Starting startup and measure thread, and waiting for startUp to be done. Securing with reset event, that measure don't start measuring before needed
             startUpThread.Start();
+            calibrationEventMeasure.Set();
             measureThread.Start();
             startUpThread.Join();
 
@@ -162,7 +161,7 @@ namespace RPIMain
                 Thread.Sleep(0);
             }
 
-
+            calibrationEventMeasure.Reset();
             broadcastThread.Start();
             saveToLocalDb.Start();
             analyzeLogicThread.Start();

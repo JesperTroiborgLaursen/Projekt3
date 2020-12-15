@@ -27,7 +27,6 @@ namespace DataAccesLogic.Boundaries
         private double convertingFactor =0.25965; //Value found by experimenting. Calibration adjustment isn't accurate.
         private double zeroPoint;
 
-
         public double ConvertingFactor
         {
             get { return convertingFactor; }
@@ -67,14 +66,12 @@ namespace DataAccesLogic.Boundaries
 
         public void Run()
         {
-            while(true)
+            while(!Stop)
             {
                 while (_calibrationEvent.WaitOne())
                 {
-                    while (!Stop && _calibrationEvent.WaitOne())
-                    {
-                        //Update battery
-                        MeasureBattery();
+                    //Update battery
+                    MeasureBattery();
                         if (_dataQueueAdjustments.Count != 0)
                         {
                             var DTO = _dataQueueAdjustments.Take();
@@ -125,7 +122,6 @@ namespace DataAccesLogic.Boundaries
                         //Sleep
                         Thread.Sleep(0);
 
-                    }
 
                     Thread.Sleep(0);
 

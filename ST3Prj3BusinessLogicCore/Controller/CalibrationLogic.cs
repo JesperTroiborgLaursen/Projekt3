@@ -24,9 +24,7 @@ namespace BusinessLogic.Controller
         
         public ManualResetEvent _calibrationEventMeasure { get; set; }
         public ManualResetEvent _calibrationEventLcd { get; set; }
-        public ManualResetEvent _calibrationEventLocalDb { get; set; }
-        private ManualResetEvent _calibrationJoinEvent;
-       
+
         public List<int> TestPressureList { get; private set; }
         private double[] ydata;
         private double[] xdata;
@@ -44,7 +42,6 @@ namespace BusinessLogic.Controller
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
             ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, BlockingCollection<LCD_DTO> dataQueue,
             ManualResetEvent calibrationEventLcd, ManualResetEvent calibrationEventMeasure,
-            ManualResetEvent calibrationEventLocalDb, ManualResetEvent calibrationJoinEvent,
             BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Adjustments_DTO> dataQueueAdjustments,
             double convertingFactor)
         {
@@ -53,8 +50,8 @@ namespace BusinessLogic.Controller
             _button3Observer = buttonObserver3;
             _button4Observer = buttonObserver4;
             TestPressureList = new List<int>();
-            TestPressureList.AddRange(new List<int>{10, 50,100,150,200,250,300}); 
-            xdata = new double[] { 10, 50, 100, 150, 200, 250, 300}; 
+            TestPressureList.AddRange(new List<int>{0, 50,100,150,200,250,300}); 
+            xdata = new double[] { 0, 50, 100, 150, 200, 250, 300}; 
             ydata = new double[xdata.Length];
             _convertingFactor = convertingFactor;
 
@@ -64,11 +61,6 @@ namespace BusinessLogic.Controller
 
             _calibrationEventMeasure = calibrationEventMeasure;
             _calibrationEventLcd = calibrationEventLcd;
-            _calibrationEventLocalDb = calibrationEventLocalDb;
-            _calibrationJoinEvent = calibrationJoinEvent;
-            
-           
-
 
         }
 
@@ -81,22 +73,30 @@ namespace BusinessLogic.Controller
             {
                 if (_button3Observer.startCal)
                 {
-                    _calibrationJoinEvent.Reset();
+                    //Stopping the threads needed for calibration
                     _calibrationEventMeasure.Set();
-                    _calibrationEventLocalDb.Set();
                     _calibrationEventLcd.Set();
+
+                    //Clearing queues
                     while (_dataQueueLCD.Count != 0)
                     {
                         ClearQueueDisplay(_dataQueueLCD);
                         Thread.Sleep(1);
                     }
+
+                    while (_dataQueueMeasure.Count != 0)
+                    {
+                        ClearQueueMeasure(_dataQueueMeasure);
+                        Thread.Sleep(1);
+                    }
                     
                     Calibrate();
+                    //Reset observer
                     _button3Observer.startCal = false;
+
+                    //Start threads again
                     _calibrationEventMeasure.Reset();
                     _calibrationEventLcd.Reset();
-                    _calibrationEventLocalDb.Reset();
-                    _calibrationJoinEvent.Set();
                 }
 
                 Thread.Sleep(0);
