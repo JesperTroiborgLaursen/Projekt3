@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http;
 using System.Threading;
 using DataAccesLogic.Boundaries;
-using DataAccesLogic.Drivers;
 using Domain.DTOModels;
-using Domain.Models;
-using Interfaces;
 using MathNet.Numerics; //lineær regressions pakke
 
 namespace BusinessLogic.Controller
@@ -36,6 +31,14 @@ namespace BusinessLogic.Controller
         private double[] ydata;
         private double[] xdata;
         private double _convertingFactor;
+
+        private bool stop = false;
+
+        public bool Stop
+        {
+            get { return stop; }
+            set { stop = value; }
+        }
 
 
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
@@ -74,7 +77,7 @@ namespace BusinessLogic.Controller
         public void Run()
         {
 
-            while (true)
+            while (!Stop)
             {
                 if (_button3Observer.startCal)
                 {
@@ -132,7 +135,6 @@ namespace BusinessLogic.Controller
                         breakFlag = true;
                         break;
                         //buttonObserver sættes til true igen når den slippes, så den hopper ikke ud af den org. løkke, der bruges et flag
-                            
                     }
                 }
 
@@ -151,12 +153,12 @@ namespace BusinessLogic.Controller
                 }
 
           
-                    _dataQueueLCD.Add(new LCD_DTO()
-                    {
-                        Message =
-                            "Calibration started."
-                    });
-                    Debug.WriteLine("Calibration started.");
+                _dataQueueLCD.Add(new LCD_DTO()
+                {
+                    Message =
+                        "Calibration started."
+                });
+                Debug.WriteLine("Calibration started.");
                 
 
                 int j = 0;
@@ -232,30 +234,21 @@ namespace BusinessLogic.Controller
                     }
 
                     //Der tages et gnms. af værdierne i listen med testtryk
-
                     if (lsTestPressure.Count != 0)
                     {
                         var result = lsTestPressure.Average();
                         ydata[j] = result;
                         j++;
                     }
-                            
-                        
-
-                    //Gnms. gemmes på i's plads i ydata-arrayet
-
-
                 }
 
 
                 Tuple<double, double> p = Fit.Line(xdata, ydata);
                 double b = p.Item1;
                 double a = p.Item2;
-                //a = a * _measure.ConvertingFactor;
-                //b = b * _measure.ConvertingFactor;
-               
 
-                    _dataQueueLCD.Add(new LCD_DTO()
+
+                _dataQueueLCD.Add(new LCD_DTO()
                     {
                         Message =
                             $"Original converting factor is: {_convertingFactor}" +
@@ -303,8 +296,6 @@ namespace BusinessLogic.Controller
                 {
                     break;
                 }
-
-                //_dataQueueMeasure.Take();
             }
             
 
@@ -315,6 +306,9 @@ namespace BusinessLogic.Controller
 
         public void ClearQueueMeasure(BlockingCollection<Measure_DTO> blockingCollection)
         {
+            //Made to be sure that only testpressure measurements are left in queue
+            //For at fully working system, it wouldn't be smart to clear and delete measured data, but because our system is working quite slowly
+            //it was necessary to secure a better calibration.
             while (blockingCollection.Count > 0)
             {
                 blockingCollection.TryTake(out _);

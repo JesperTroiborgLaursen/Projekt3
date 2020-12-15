@@ -8,11 +8,7 @@ namespace DataAccessLogic.Drivers
 {
     public class LedAlarm : IAlarmObserver
     {
-        //To typer af alarm, visuel og sensuel
-
-        //Led som alarm
-
-        //Somo lyd som alarm
+        //Not implemented
         public LedAlarm()
         {
 

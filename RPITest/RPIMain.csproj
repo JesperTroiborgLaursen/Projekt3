@@ -5,6 +5,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <RuntimeIdentifier>linux-arm</RuntimeIdentifier>
     <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+    <AssemblyName>RPIMain</AssemblyName>
+    <RootNamespace>RPIMain</RootNamespace>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

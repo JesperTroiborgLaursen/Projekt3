@@ -86,12 +86,6 @@ namespace BusinessLogic.Operations
         public CalculatePulse()
         {
            HeartBeatIndexList = new List<int>();
-
-            //10, 50, 80, 100, 140
-            //var 40
-            //Var 30
-            //var 20
-            //var 40
         }
 
         public List<int> FindPulseBeat(List<int> threeSecData)

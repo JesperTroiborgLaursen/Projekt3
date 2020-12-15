@@ -14,7 +14,13 @@ namespace DataAccesLogic.Boundaries
     {
         private BlockingCollection<LocalDB_DTO> _dataQueueLocalDb;
         public ManualResetEvent _calibrationEvent { get; set; }
-        //public SamplePackDBContext Context { get; set; }
+        private bool stop = false;
+
+        public bool Stop
+        {
+            get { return stop; }
+            set { stop = value; }
+        }
 
         public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb, ManualResetEvent manualResetEvent)
         {
@@ -57,31 +63,31 @@ namespace DataAccesLogic.Boundaries
 
         public void Run()
         {
-            while (_calibrationEvent.WaitOne())
+            while (!Stop)
             {
-                var db = new SamplePackDBContext();
-                using (db)
+                while (_calibrationEvent.WaitOne())
                 {
-                    while (!_dataQueueLocalDb.IsCompleted && _calibrationEvent.WaitOne())
+                    var db = new SamplePackDBContext();
+                    using (db)
                     {
-                        try
+                        while (!_dataQueueLocalDb.IsCompleted && _calibrationEvent.WaitOne())
                         {
-                            var container = _dataQueueLocalDb.Take();
-                            SamplePack samplePack = container.SamplePack;
+                            try
+                            {
+                                var container = _dataQueueLocalDb.Take();
+                                SamplePack samplePack = container.SamplePack;
 
-                            //using (var db = new SamplePackDBContext())
-                            //{
-                            db.Add<SamplePack>(samplePack);
-                            db.SaveChanges();
-                            //}
+                                db.Add<SamplePack>(samplePack);
+                                db.SaveChanges();
 
+                            }
+                            catch (InvalidOperationException)
+                            {
+                                continue;
+                            }
+
+                            Thread.Sleep(1000);
                         }
-                        catch (InvalidOperationException)
-                        {
-                            continue;
-                        }
-
-                        Thread.Sleep(1000);
                     }
                 }
             }

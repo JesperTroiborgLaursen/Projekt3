@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPIMain", "RPIMain\RPIMain.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestConsoleProject", "TestConsoleProject\TestConsoleProject.csproj", "{A2DEF937-E3F1-4D1A-ADF6-51E52A7CD36E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPITest", "RPITest\RPITest.csproj", "{2C934D9A-B31D-4430-9242-6CDB2E4986F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RPIMain", "RPITest\RPIMain.csproj", "{2C934D9A-B31D-4430-9242-6CDB2E4986F6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UDPListenerTestProject", "UDPListenerTestProject\UDPListenerTestProject.csproj", "{833B2FBD-6B93-4C3E-8C34-738F4810418F}"
 EndProject
@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic", "ST3Prj3Bus
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccessLogic", "ST3Prj3DataAccessLogicCore\DataAccessLogic.csproj", "{7FD08F80-29A8-4068-94BC-6AFF6335B96C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{72378B5F-ED99-49EF-A6DF-B93A8F1FE752}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Interfaces", "Interfaces\Interfaces.csproj", "{72378B5F-ED99-49EF-A6DF-B93A8F1FE752}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

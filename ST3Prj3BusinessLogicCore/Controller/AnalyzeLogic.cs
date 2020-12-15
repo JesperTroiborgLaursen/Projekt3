@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Security.AccessControl;
 using System.Threading;
 using BusinessLogic.Operations;
 using Domain.DTOModels;
@@ -98,8 +97,6 @@ namespace BusinessLogic.Controller
             List<int> lsSamples = new List<int>();
             for (int i = 0; i < 3;)
             {
-
-                
                 while (_dataQueueMeasure.Count == 0)
                 {
                     Thread.Sleep(50);

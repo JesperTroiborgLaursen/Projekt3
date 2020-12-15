@@ -8,16 +8,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Presentation;
 
 
-namespace RPITest
+namespace RPIMain
 {
     class Program
     {
-        //Working test project. Possible to read ADC, pack it to SamplePack and broadcast with UDP and receive on the listener. 
-        //Tested with Marcs RPI on Jespers Laptop, with HUAWEIP10 hotspot and Marcs computer for receiving with the project PRJ3UDPLIstener on nov. 4th 2020.
-
         private static Measure measure;
         private static Broadcast broadcast;
-        //private static LCDProducer lcdProducer;
         private static WriteToLCD writeToLcd;
         private static LocalDB localDb;
         private static UserInterface ui;
@@ -29,7 +25,6 @@ namespace RPITest
 
         private static Thread measureThread;
         private static Thread broadcastThread;
-        //private static Thread lcdProducerThread;
         private static Thread writeToLcdThread;
         private static Thread saveToLocalDb;
         private static Thread uiThread;
@@ -48,8 +43,6 @@ namespace RPITest
         private static BlockingCollection<Analyze_DTO> dataQueueAlarm;
         private static BlockingCollection<Analyze_DTO> dataQueueAnalyzeLCD;
         private static BlockingCollection<Measure_DTO> dataQueueAnalyze;
-        //private static BlockingCollection<LCD_DTO> dataQueueStartUpLCD;
-        //private static BlockingCollection<LCD_DTO> dataQueueCalibrationLCD;
         private static BlockingCollection<Adjustments_DTO> dataQueueAdjustments;
         private static BlockingCollection<MetaData_DTO> dataQueueMetaData;
         private static BlockingCollection<Alarm_DTO> dataQueueAlarmToBroadcast;
@@ -62,22 +55,18 @@ namespace RPITest
         private static ButtonObserver buttonObserver3;
         private static ButtonObserver buttonObserver4;
 
-       
-
         public static ManualResetEvent calibrationEventLcd { get; set; }
         public static ManualResetEvent calibrationEventMeasure { get; set; }
         public static ManualResetEvent calibrationEventLocalDb { get; set; }
-        public static ManualResetEvent calibrationJoinEvent;
+        public static ManualResetEvent calibrationJoinEvent { get; set; }
         
 
 
         static void Main(string[] args)
         {
-
             //Setting Dependency Injection for DB context
             services = new ServiceCollection();
             services.AddDbContext<SamplePackDBContext>();
-
 
             //Creating UserInterface
             ui = new UserInterface();
@@ -109,16 +98,11 @@ namespace RPITest
             dataQueueAnalyzeToBroadcast = new BlockingCollection<Analyze_DTO>();
             dataQueueAlarmToBroadcast = new BlockingCollection<Alarm_DTO>();
 
-
-
-
             //Creating objects
             measure = new Measure(dataQueueBroadcast, dataQueueMeasure, dataQueueLocalDb, dataQueueAdc,
                 dataQueueAdjustments, dataQueueAnalyze, calibrationEventMeasure);
 
             broadcast = new Broadcast(dataQueueBroadcast, dataQueueMetaData, dataQueueAlarmToBroadcast, dataQueueAnalyzeToBroadcast);
-
-            //lcdProducer = new LCDProducer(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
 
             writeToLcd = new WriteToLCD(dataQueueLCD, dataQueueAnalyzeLCD, calibrationEventLcd);
 
@@ -137,13 +121,9 @@ namespace RPITest
                 dataQueueLCD, calibrationEventLcd,calibrationEventMeasure,calibrationEventLocalDb,
                 calibrationJoinEvent, dataQueueMeasure, dataQueueAdjustments, measure.ConvertingFactor);
 
-      
-
-
             //Creating threads for producers and consumers
             measureThread = new Thread(measure.Run);
             broadcastThread = new Thread(broadcast.Run);
-            //lcdProducerThread = new Thread(lcdProducer.Run);
             writeToLcdThread = new Thread(writeToLcd.Run);
             saveToLocalDb = new Thread(localDb.Run);
             uiThread = new Thread(ui.Run);
@@ -158,30 +138,13 @@ namespace RPITest
             uiThread.IsBackground = true;
             batteryMeasureThread.IsBackground = true;
             writeToLcdThread.IsBackground = true;
-
-            //For testing
-            //SerLCD lcd = new SerLCD();
-            //lcd.lcdDisplay();
-            //lcd.lcdSetBackLight(238, 29, 203); //Makes color pink
-            //lcd.lcdSetContrast(0);
-
-            //while (true)
-            //{
-            //    lcd.lcdClear();
-            //    lcd.lcdPrint("test");
-            //    Thread.Sleep(500);
-            //}
-
-
-
-            ////Starting UI and battery measure threads
+            
+            //Starting UI and battery measure threads
             uiThread.Start();
             batteryMeasureThread.Start();
             writeToLcdThread.Start();
 
-
-
-            ////Starting startup and measure thread, and waiting for startUp to be done
+            //Starting startup and measure thread, and waiting for startUp to be done
             startUpThread.Start();
             measureThread.Start();
             startUpThread.Join();
@@ -201,7 +164,6 @@ namespace RPITest
 
 
             broadcastThread.Start();
-
             saveToLocalDb.Start();
             analyzeLogicThread.Start();
             alarmThread.Start(); 
@@ -215,54 +177,87 @@ namespace RPITest
                 
             }
 
-            //Shutting down threads by completing queues and setting stop props
+            //Shutting down threads and completing queues
             dataQueueLocalDb.CompleteAdding();
             dataQueueLCD.CompleteAdding();
             dataQueueBroadcast.CompleteAdding();
             dataQueueMeasure.CompleteAdding();
-            analyzeLogic.Stop = true;
-            alarmLogic.Stop = true;
+            dataQueueAdc.CompleteAdding();
+            dataQueueBattery.CompleteAdding();
+            dataQueueAlarm.CompleteAdding();
+            dataQueueAnalyze.CompleteAdding();
+            dataQueueAnalyzeLCD.CompleteAdding();
+            dataQueueAdjustments.CompleteAdding();
+            dataQueueMetaData.CompleteAdding();
+            dataQueueAnalyzeToBroadcast.CompleteAdding();
+            dataQueueAlarmToBroadcast.CompleteAdding();
+
             measure.Stop = true;
-
-            //Havent been impl. fully
-                ////Start again after stopped measure
-                //while (true)
-                //{
-                //    while (!buttonObserver1.IsPressed)
-                //    {
-                //        Thread.Sleep(0);
-                //    }
-
-                //    dataQueueLocalDb.;
-                //    dataQueueLCD.CompleteAdding();
-                //    dataQueueBroadcast.CompleteAdding();
-                //    dataQueueMeasure.CompleteAdding();
-
-                //    calibrationThread.Start();
-                //    measureThread.Start();
-                //    broadcastThread.Start();
-                //    lcdProducerThread.Start();
-                //    writeToLcdThread.Start();
-                //    saveToLocalDb.Start();
-
-                //    //As long as stop button hasnt been pressed, threads are kept going
-                //    while (!buttonObserver4.IsPressed)
-                //    {
-                //        Thread.Sleep(0);
-                //    }
-
-                //    //Shutting down threads by completing queues
-                //    dataQueueLocalDb.CompleteAdding();
-                //    dataQueueLCD.CompleteAdding();
-                //    dataQueueBroadcast.CompleteAdding();
-                //    dataQueueMeasure.CompleteAdding();
-                //    measure.Stop = true;
+            broadcast.Stop = true;
+            writeToLcd.Stop = true;
+            localDb.Stop = true;
+            batteryMeasureLogic.Stop = true;
+            alarmLogic.Stop = true;
+            analyzeLogic.Stop = true;
+            calibrationLogic.Stop = true;
 
 
 
-                //}
+            //Start again after stopped measure -> havent been fully impl.
+            //CompleteAdding() shouldn't be called on queues before completely shutting down program.
 
-                //uiThread.Join();
+            //Wait until start button is pressed and then measurement threads are started again. If Calibration has been started, wait for it to be done
+            //while (!buttonObserver2.IsPressed )
+            //{
+            //    while (buttonObserver3.startCal)
+            //    {
+            //        Thread.Sleep(0);
+            //    }
+            //    Thread.Sleep(0);
+            //}
+
+
+            //measure.Stop = false;
+            //broadcast.Stop = false;
+            //writeToLcd.Stop = false;
+            //localDb.Stop = false;
+            //batteryMeasureLogic.Stop = false;
+            //alarmLogic.Stop = false;
+            //analyzeLogic.Stop = false;
+            //calibrationLogic.Stop = false;
+
+
+
+            ////As long as stop button hasnt been pressed, threads are kept going
+            //while (!buttonObserver4.IsPressed)
+            //{
+            //    Thread.Sleep(0);
+
+            //}
+
+            ////Shutting down threads and completing queues
+            //dataQueueLocalDb.CompleteAdding();
+            //dataQueueLCD.CompleteAdding();
+            //dataQueueBroadcast.CompleteAdding();
+            //dataQueueMeasure.CompleteAdding();
+            //dataQueueAdc.CompleteAdding();
+            //dataQueueBattery.CompleteAdding();
+            //dataQueueAlarm.CompleteAdding();
+            //dataQueueAnalyze.CompleteAdding();
+            //dataQueueAnalyzeLCD.CompleteAdding();
+            //dataQueueAdjustments.CompleteAdding();
+            //dataQueueMetaData.CompleteAdding();
+            //dataQueueAnalyzeToBroadcast.CompleteAdding();
+            //dataQueueAlarmToBroadcast.CompleteAdding();
+
+            //measure.Stop = true;
+            //broadcast.Stop = true;
+            //writeToLcd.Stop = true;
+            //localDb.Stop = true;
+            //batteryMeasureLogic.Stop = true;
+            //alarmLogic.Stop = true;
+            //analyzeLogic.Stop = true;
+            //calibrationLogic.Stop = true;
         }
 
         

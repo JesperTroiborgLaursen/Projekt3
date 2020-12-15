@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DataAccesLogic.Drivers;
-using DataAccessLogic.Drivers;
+﻿using DataAccesLogic.Drivers;
 using Interfaces;
 
 namespace DataAccessLogic.Boundaries
@@ -12,7 +8,7 @@ namespace DataAccessLogic.Boundaries
         public AlarmConcreteSubject()
         {
             SomoAlarm somo = new SomoAlarm();
-            //LedAlarm led = new LedAlarm();
+            //LedAlarm led = new LedAlarm(); // Not impl.
             Attach(somo);
             //Attach(led);
         }

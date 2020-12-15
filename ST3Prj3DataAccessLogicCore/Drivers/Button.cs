@@ -1,6 +1,5 @@
 ﻿using System.Device.Gpio;
 using Interfaces;
-using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace DataAccesLogic.Drivers
 {

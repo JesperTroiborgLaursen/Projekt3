@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -10,10 +9,10 @@ using Domain.Models;
 
 namespace DataAccesLogic.Boundaries
 {
-    public class Broadcast //: IDataBroadcastLogic
+    public class Broadcast
     {
         private static int PORT = 11000;
-        private static string ip = "192.168.137.168"; //Standard networking broadcast IP
+        private static string ip = "192.168.137.168"; //IP for monitor
         private BlockingCollection<Broadcast_DTO> _dataQueueBroadcast;
         private BlockingCollection<MetaData_DTO> _dataQueueMetaData;
         private BlockingCollection<Alarm_DTO> _dataQueueAlarmToBroadcast;
@@ -21,6 +20,13 @@ namespace DataAccesLogic.Boundaries
         private string message;
         private DateTime date;
         private int id;
+        private bool stop = false;
+
+        public bool Stop
+        {
+            get { return stop; }
+            set { stop = value; }
+        }
         public Broadcast_DTO BroadcastDto{ get; set; }
         public MetaData_DTO MetaDataDto { get; set; }
         public Alarm_DTO AlarmDto { get; set; }
@@ -43,28 +49,24 @@ namespace DataAccesLogic.Boundaries
 
         public void Run()
         {
-            
-            while (!_dataQueueBroadcast.IsCompleted)
+            while(!Stop)
             {
-                //while (_dataQueueBroadcast.Count == 0 ||
-                //       _dataQueueAlarmToBroadcast.Count == 0 || _dataQueueAnalyzeToBroadcast.Count == 0)
-                //{
-                //    Thread.Sleep(0);
-                //}
+                while (!_dataQueueBroadcast.IsCompleted)
+                {
+                   message =
+                        $"{AlarmToString()}{id}\r\n{MetaDataToString()}{date}\r\n{AnalyzeToString()}{SamplePackToString()}";
 
-                message = $"{AlarmToString()}{id}\r\n{MetaDataToString()}{date}\r\n{AnalyzeToString()}{SamplePackToString()}";
-                //Debug.WriteLine(message);
+                   IPAddress broadcast = IPAddress.Parse(ip);
+                    Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
 
-                IPAddress broadcast = IPAddress.Parse(ip);
-                Socket s = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
+                    byte[] sendbuf = Encoding.ASCII.GetBytes(message);
 
-                byte[] sendbuf = Encoding.ASCII.GetBytes(message);
+                    IPEndPoint ep = new IPEndPoint(broadcast, PORT);
 
-                IPEndPoint ep = new IPEndPoint(broadcast, PORT);
+                    s.SendTo(sendbuf, ep);
 
-                s.SendTo(sendbuf, ep);
-                
-                Thread.Sleep(1000);
+                    Thread.Sleep(1000);
+                }
             }
 
         }

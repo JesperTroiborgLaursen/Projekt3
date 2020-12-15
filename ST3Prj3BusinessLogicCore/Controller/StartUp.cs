@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using DataAccesLogic.Boundaries;
-using DataAccesLogic.Drivers;
 using Domain.DTOModels;
-using MathNet.Numerics;
 
 namespace BusinessLogic.Controller
 {
@@ -25,17 +22,7 @@ namespace BusinessLogic.Controller
         private List<string> genderLs;
         private MetaData_DTO dto;
 
-
         private ManualResetEvent _calibrationEventMeasure;
-
-        
-        //private bool stop=false;
-
-        //public bool Stop
-        //{
-        //    get { return stop; }
-        //    set { stop = value; }
-        //}
 
         public StartUp(BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Adjustments_DTO> dataQueueAdjustments,
             BlockingCollection<MetaData_DTO> dataQueueMetaData, ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
@@ -70,7 +57,7 @@ namespace BusinessLogic.Controller
             _dataQueueLCD.Add(new LCD_DTO()
             {
                 Message =
-                    "Welcome. Please press Prepare t0 proceed."
+                    "Welcome. Please press Prepare to proceed."
             });
             Debug.WriteLine("Welcome. Please press Prepare to proceed.");
             
@@ -197,6 +184,8 @@ namespace BusinessLogic.Controller
                     "Measuring...        Please don't move PVC tap.."
             });
             Debug.WriteLine("Measuring...        Please don't move PVC tap..");
+
+            //Logic for rejecting bad zero point adjustments -> values from transducer haven't been good enough for the limits to work properly
             //if (MeasureZeroPoint() < 650 || MeasureZeroPoint() > 800)//Lowest and highest recorded airpressure in mmHg soucre:
             //                                                         //https://sciencing.com/understand-barometric-pressure-readings-5397464.html
             //{

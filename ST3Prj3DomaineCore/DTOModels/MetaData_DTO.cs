@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Domain.DTOModels
+﻿namespace Domain.DTOModels
 {
     public class MetaData_DTO
     {

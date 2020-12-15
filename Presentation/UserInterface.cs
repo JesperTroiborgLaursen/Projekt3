@@ -1,7 +1,5 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using DataAccesLogic.Drivers;
-using Interfaces;
 
 
 namespace Presentation
@@ -51,11 +49,10 @@ namespace Presentation
                 if (button2.IsPressed())
                 {
                     button2.Notify();
-                    int i = 0;
-                    
+
                     while (button2.IsPressed() && !startcal)
                     {
-                        i = 0;
+                        var i = 0;
                         while (button3.IsPressed() && button2.IsPressed())
                         {
                             if (button3.IsPressed() && button2.IsPressed())
@@ -81,11 +78,10 @@ namespace Presentation
                     if (button3.IsPressed())
                     {
                         button3.Notify();
-                        int i = 0;
-                        
+
                         while (button3.IsPressed() && !startcal)
                         {
-                            i = 0;
+                            var i = 0;
                             while (button3.IsPressed() && button2.IsPressed())
                             {
                                 if (button3.IsPressed() && button2.IsPressed())

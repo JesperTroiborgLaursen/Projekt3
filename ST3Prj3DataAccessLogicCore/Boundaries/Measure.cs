@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Security.AccessControl;
 using System.Threading;
 using Domain.DTOModels;
 using Domain.Models;
@@ -26,7 +24,7 @@ namespace DataAccesLogic.Boundaries
         private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
         public ManualResetEvent _calibrationEvent { get; set; }
 
-        private double convertingFactor =0.25965; //Beregnet a værdi = 3.7801
+        private double convertingFactor =0.25965; //Value found by experimenting. Calibration adjustment isn't accurate.
         private double zeroPoint;
 
 
@@ -38,7 +36,7 @@ namespace DataAccesLogic.Boundaries
 
         
 
-        //Stop til at stoppe måling. Når den skal stoppes, sættes denne til true.
+        //Stop for stopping thread
         private bool stop = false;
         
 
@@ -98,16 +96,13 @@ namespace DataAccesLogic.Boundaries
                             {
                                 Value = Convert.ToUInt16((adc.readADC_SingleEnded(2) *
                                                           Math.Sqrt(ConvertingFactor * ConvertingFactor)) - zeroPoint)
-                            }); //Tager numerisk værdi for at sikre der ikke er minus værdier under test
+                            }); //Taking numerical value
                             Thread.Sleep(20);
                         }
 
                         samplePack.SampleList = ls;
                         samplePack.Date = DateTime.Now;
-                        //samplePack.ID = id;
-                        //id++;
 
-                        //Her vil vi gemme i lokal DB
                         Broadcast_DTO broadcastDto = new Broadcast_DTO() {SamplePack = samplePack};
                         Measure_DTO measureDto = new Measure_DTO() {SamplePack = samplePack};
                         LocalDB_DTO localDbDto = new LocalDB_DTO() {SamplePack = samplePack};
