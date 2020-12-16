@@ -14,6 +14,8 @@ namespace DataAccessLogic.Drivers
 
         }
 
+        public int priority { get; set; }
+
         public void UpdateBattery(int priority)
         {
             throw new NotImplementedException();

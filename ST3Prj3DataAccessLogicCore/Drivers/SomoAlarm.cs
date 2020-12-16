@@ -170,6 +170,8 @@ namespace DataAccesLogic.Drivers
             StopAlarmSound();
         }
 
+        public int priority { get; set; }
+
         public void UpdateBattery(int priority)
         {
             PlayAlarmSound(priority);

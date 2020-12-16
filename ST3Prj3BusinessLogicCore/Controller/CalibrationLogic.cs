@@ -39,8 +39,8 @@ namespace BusinessLogic.Controller
         }
 
         //Cant delete this ctor, though it is never used
-            //Getting:
-                //System.MissingMethodException: Method not found
+        //Getting:
+        //System.MissingMethodException: Method not found
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
             ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, BlockingCollection<LCD_DTO> dataQueue,
             ManualResetEvent calibrationEventLcd, ManualResetEvent calibrationEventMeasure,
@@ -48,7 +48,22 @@ namespace BusinessLogic.Controller
             BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Adjustments_DTO> dataQueueAdjustments,
             double convertingFactor)
         {
-            
+            _button1Observer = buttonObserver1;
+            _button2Observer = buttonObserver2;
+            _button3Observer = buttonObserver3;
+            _button4Observer = buttonObserver4;
+            TestPressureList = new List<int>();
+            TestPressureList.AddRange(new List<int>{0, 50,100,150,200,250,300}); 
+            xdata = new double[] { 0, 50, 100, 150, 200, 250, 300}; 
+            ydata = new double[xdata.Length];
+            _convertingFactor = convertingFactor;
+
+            _dataQueueLCD = dataQueue;
+            _dataQueueMeasure = dataQueueMeasure;
+            _dataQueueAdjustments = dataQueueAdjustments;
+
+            _calibrationEventMeasure = calibrationEventMeasure;
+            _calibrationEventLcd = calibrationEventLcd;
         }
 
 
@@ -81,7 +96,6 @@ namespace BusinessLogic.Controller
 
         public void Run()
         {
-
             while (!Stop)
             {
                 if (_button3Observer.startCal)
@@ -235,7 +249,9 @@ namespace BusinessLogic.Controller
                             //Gemme de tre containers for første testtryk i liste
                             foreach (var sample in container.SamplePack.SampleList)
                             {
-                                lsTestPressure.Add((int) sample.Value/_convertingFactor);
+                                lsTestPressure.Add(TestPressureList[j]);
+
+                                //lsTestPressure.Add((int) sample.Value/_convertingFactor);
                             }
                             ClearQueueMeasure(_dataQueueMeasure);
                             i++;

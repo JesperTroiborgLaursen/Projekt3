@@ -5,9 +5,10 @@ namespace DataAccessLogic.Boundaries
 {
     public class AlarmConcreteSubject : AlarmSubject
     {
+        public IAlarmObserver somo { get; set; }
         public AlarmConcreteSubject()
         {
-            SomoAlarm somo = new SomoAlarm();
+            somo = new SomoAlarm();
             //LedAlarm led = new LedAlarm(); // Not impl.
             Attach(somo);
             //Attach(led);
