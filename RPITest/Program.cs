@@ -132,17 +132,28 @@ namespace RPIMain
             startUpThread = new Thread(startUp.Run);
 
 
-            //Setting background Threads
-            uiThread.IsBackground = true;
-            batteryMeasureThread.IsBackground = true;
-            writeToLcdThread.IsBackground = true;
+            ///Test det her før slet!
+            ///
+            ///
+            ///
+            ///NB
+            ///
+            ///NB
+            ///
+            /// NB
+            ////Setting background Threads
+            //uiThread.IsBackground = true;
+            //batteryMeasureThread.IsBackground = true;
+            //writeToLcdThread.IsBackground = true;
+            //alarmThread.IsBackground = true;
             
             //Starting UI and battery measure threads
             uiThread.Start();
             batteryMeasureThread.Start();
             writeToLcdThread.Start();
 
-            //Starting startup and measure thread, and waiting for startUp to be done. Securing with reset event, that measure don't start measuring before needed
+            //Starting startup and measure thread, and waiting for startUp to be done. Securing with reset event,
+            //that measure don't start measuring before needed
             startUpThread.Start();
             calibrationEventMeasure.Set();
             measureThread.Start();
