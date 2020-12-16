@@ -38,6 +38,19 @@ namespace BusinessLogic.Controller
             set { stop = value; }
         }
 
+        //Cant delete this ctor, though it is never used
+            //Getting:
+                //System.MissingMethodException: Method not found
+        public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
+            ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, BlockingCollection<LCD_DTO> dataQueue,
+            ManualResetEvent calibrationEventLcd, ManualResetEvent calibrationEventMeasure,
+            ManualResetEvent calibrationEventLocalDb, ManualResetEvent calibrationJoinEvent,
+            BlockingCollection<Measure_DTO> dataQueueMeasure, BlockingCollection<Adjustments_DTO> dataQueueAdjustments,
+            double convertingFactor)
+        {
+            
+        }
+
 
         public CalibrationLogic(ButtonObserver buttonObserver1, ButtonObserver buttonObserver2,
             ButtonObserver buttonObserver3, ButtonObserver buttonObserver4, BlockingCollection<LCD_DTO> dataQueue,

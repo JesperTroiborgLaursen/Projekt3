@@ -12,21 +12,25 @@ namespace DataAccesLogic.Boundaries
         public BlockingCollection<LocalDB_DTO> _dataQueueLocalDb;
         private bool stop = false;
 
+        //Cant delete this ctor, though it is never used
+             //Getting:
+                //System.MissingMethodException: Method not found
+        public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb, ManualResetEvent manualResetEvent)
+        {
+            
+        }
+
         public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
         {
             _dataQueueLocalDb = dataQueueLocalDb;
         }
+
 
         public bool Stop
         {
             get { return stop; }
             set { stop = value; }
         }
-
-        //public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
-        //{
-        //    _dataQueueLocalDb = dataQueueLocalDb;
-        //}
 
         public void Run()
         {
