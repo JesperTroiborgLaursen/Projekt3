@@ -222,7 +222,9 @@ namespace BusinessLogic.Controller
                             //Gemme de tre containers for første testtryk i liste
                             foreach (var sample in container.SamplePack.SampleList)
                             {
-                                lsTestPressure.Add((int) sample.Value/_convertingFactor);
+                                lsTestPressure.Add((int)sample.Value / _convertingFactor);
+                                //For testing
+                                //lsTestPressure.Add((int) TestPressureList[j]);
                             }
                             ClearQueueMeasure(_dataQueueMeasure);
                             i++;

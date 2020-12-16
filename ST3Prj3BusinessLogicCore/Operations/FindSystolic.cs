@@ -7,7 +7,8 @@ namespace BusinessLogic.Operations
         public int Find(List<int> threeSecData)
         {
             //Algorithm for finding systolic bp not impl.
-            return new int();
+            int hardCode = 110;
+            return hardCode;
         }
         
     }

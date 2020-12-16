@@ -74,9 +74,9 @@ namespace BusinessLogic.Controller
                 //Find puls
                 DTO.Pulse = calculatePulse.CalcPulse(threeSecData);
                 //Find Dia
-                findDiastolic.Find(threeSecData);
+                DTO.Dia = findDiastolic.Find(threeSecData);
                 //Find Sys
-                findSystolic.Find(threeSecData);
+                DTO.Sys = findSystolic.Find(threeSecData);
                 //Find Avg
                 DTO.AvgBP = bpAvg.Avg(threeSecData);
                 //Take battery voltage
