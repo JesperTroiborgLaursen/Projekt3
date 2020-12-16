@@ -13,7 +13,7 @@ namespace BusinessLogic.Controller
 
         public Analyze_DTO OldAnalyzeDto { get; set; }
         public AlarmConcreteSubject alarm { get; set; }
-        private Alarm_DTO dtoToBroadcast;
+        public Alarm_DTO dtoToBroadcast { get; set; }
 
         private bool stop=false;
         
@@ -68,7 +68,7 @@ namespace BusinessLogic.Controller
         }
 
 
-        void CheckBP(Analyze_DTO DTO)
+        public void CheckBP(Analyze_DTO DTO)
         {
             //Take BP fra en kø fra analyzeDataQueue
             //Hvis den nye er 20% højere eller lavere end den gamle

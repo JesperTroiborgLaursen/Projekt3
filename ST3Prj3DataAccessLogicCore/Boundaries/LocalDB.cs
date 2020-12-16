@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Domain.Context;
 using Domain.DTOModels;
 using Domain.Models;
-using Interfaces;
 
 namespace DataAccesLogic.Boundaries
 {
     public class LocalDB
     {
-        private BlockingCollection<LocalDB_DTO> _dataQueueLocalDb;
+        public BlockingCollection<LocalDB_DTO> _dataQueueLocalDb;
         private bool stop = false;
+
+        public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
+        {
+            _dataQueueLocalDb = dataQueueLocalDb;
+        }
 
         public bool Stop
         {
@@ -21,10 +23,10 @@ namespace DataAccesLogic.Boundaries
             set { stop = value; }
         }
 
-        public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
-        {
-            _dataQueueLocalDb = dataQueueLocalDb;
-        }
+        //public LocalDB(BlockingCollection<LocalDB_DTO> dataQueueLocalDb)
+        //{
+        //    _dataQueueLocalDb = dataQueueLocalDb;
+        //}
 
         public void Run()
         {

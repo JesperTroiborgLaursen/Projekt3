@@ -57,7 +57,7 @@ namespace RPIMain
 
         public static ManualResetEvent calibrationEventLcd { get; set; }
         public static ManualResetEvent calibrationEventMeasure { get; set; }
-        public static ManualResetEvent calibrationEventLocalDb { get; set; }
+        //public static ManualResetEvent calibrationEventLocalDb { get; set; }
 
 
 
@@ -73,7 +73,7 @@ namespace RPIMain
             //Creating calibrationevent
             calibrationEventLcd = new ManualResetEvent(true);
             calibrationEventMeasure = new ManualResetEvent(true);
-            calibrationEventLocalDb = new ManualResetEvent(true);
+            //calibrationEventLocalDb = new ManualResetEvent(true);
 
             //Create Observers
             buttonObserver1 = new ButtonObserver(ui.button1);
