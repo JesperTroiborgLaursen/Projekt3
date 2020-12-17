@@ -60,9 +60,9 @@ namespace Presentation
                                 i++;
                             }
 
-                            Thread.Sleep(0);
+                            Thread.Sleep(1);
 
-                            if (i > 500)
+                            if (i > 10000)
                             {
                                 button3.NotifyCalibration();
                                 startcal = true;
@@ -89,13 +89,14 @@ namespace Presentation
                                     i++;
                                 }
 
-                                Thread.Sleep(0);
+                                Thread.Sleep(1);
 
-                                if (i > 500)
+                                if (i > 10000)
                                 {
                                     button3.NotifyCalibration();
                                     startcal = true;
                                 }
+
                             }
                         }
 
