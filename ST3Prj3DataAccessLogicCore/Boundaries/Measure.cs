@@ -24,8 +24,8 @@ namespace DataAccesLogic.Boundaries
         private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
         public ManualResetEvent _calibrationEvent { get; set; }
 
-        private double convertingFactor =0.25965; //Value found by experimenting. Calibration adjustment isn't accurate.
-        private double zeroPoint;
+        private double convertingFactor =0.21065; //Value found by experimenting. Calibration adjustment isn't accurate.
+        private double zeroPoint = -10;
 
 
         public double ConvertingFactor
