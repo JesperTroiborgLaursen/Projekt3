@@ -132,21 +132,13 @@ namespace RPIMain
             startUpThread = new Thread(startUp.Run);
 
 
-            ///Test det her før slet!
-            ///
-            ///
-            ///
-            ///NB
-            ///
-            ///NB
-            ///
-            /// NB
-            ////Setting background Threads
-            //uiThread.IsBackground = true;
-            //batteryMeasureThread.IsBackground = true;
-            //writeToLcdThread.IsBackground = true;
-            //alarmThread.IsBackground = true;
-            
+
+            //Setting background Threads
+            uiThread.IsBackground = true;
+            batteryMeasureThread.IsBackground = true;
+            writeToLcdThread.IsBackground = true;
+            alarmThread.IsBackground = true;
+
             //Starting UI and battery measure threads
             uiThread.Start();
             batteryMeasureThread.Start();

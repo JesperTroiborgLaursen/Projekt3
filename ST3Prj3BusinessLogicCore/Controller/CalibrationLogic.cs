@@ -18,7 +18,6 @@ namespace BusinessLogic.Controller
         private static ButtonObserver _button4Observer;
 
         private BlockingCollection<LCD_DTO> _dataQueueLCD;
-        private BlockingCollection<LCD_DTO> _dataQueueCalibrationLCD;
         public BlockingCollection<Measure_DTO> _dataQueueMeasure;
         private BlockingCollection<Adjustments_DTO> _dataQueueAdjustments;
         
