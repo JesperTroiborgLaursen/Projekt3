@@ -67,11 +67,11 @@ namespace Presentation
 
                            lcd.lcdClear();
                            lcd.lcdPrint(
-                               $"{DateTime.Now}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
-                               $"   DIA:{container.Dia}   SYS:{container.Sys}   PULSE: {container.Pulse}"
+                               $"{DateTime.Now}    Battery:{(int)container.BatteryVoltageInPercent}      BP: {(int)container.AvgBP}" +
+                               $"   DIA:{(int)container.Dia}   SYS:{(int)container.Sys}   PULSE: {(int)container.Pulse}"
                            );
-                           Debug.WriteLine($"{DateTime.Now}    Battery:{container.BatteryVoltageInPercent}      BP: {container.AvgBP}" +
-                                           $"   DIA:{container.Dia}   SYS:{container.Sys}   PULSE: {container.Pulse}");
+                           Debug.WriteLine($"{DateTime.Now}    Battery:{(int)container.BatteryVoltageInPercent}      BP: {(int)container.AvgBP}" +
+                                           $"   DIA:{(int)container.Dia}   SYS:{(int)container.Sys}   PULSE: {(int)container.Pulse}");
 
                        }
                        catch (InvalidOperationException)
