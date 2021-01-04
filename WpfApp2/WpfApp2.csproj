@@ -1,9 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
-<!--This file is a setup for .Net Core 3.1 WPF App. Remark use of SDK and Target Framework-->
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UseWPF>true</UseWPF>
-  </PropertyGroup>
-
-</Project>
